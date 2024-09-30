@@ -9,18 +9,15 @@
             height: 100%;
             margin: 0;
         }
-
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
-
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
         }
-
         .dashboard-container {
             display: flex;
             flex-direction: column;
@@ -31,13 +28,11 @@
             border-radius: 8px;
             margin: auto;
         }
-
         .tabs {
             display: flex;
             justify-content: space-between;
             margin: 10px 0;
         }
-
         .tab-button {
             background-color: #007bff;
             color: white;
@@ -49,37 +44,25 @@
             margin: 0 5px;
             transition: background-color 0.3s;
         }
-
-        .tab-button:hover {
-            background-color: #0056b3;
-        }
-
         .tab-button.active {
             background-color: #0056b3;
         }
-
         #content {
             flex: 1;
-            overflow: hidden;
             display: flex;
             flex-direction: column;
-            width: 100%;
         }
-
         .tab-content {
             width: 100%;
             height: 100%;
-            padding: 10px;
             display: none;
             flex: 1;
         }
-
         iframe {
             border: none;
             width: 100%;
             height: 100%;
         }
-
         .logout-button {
             background-color: #d9534f;
             color: white;
@@ -91,16 +74,12 @@
             width: 95%;
             align-self: center;
         }
-
-        .logout-button:hover {
-            background-color: #c9302c;
-        }
     </style>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-    
+
         const firebaseConfig = {
             apiKey: "AIzaSyAwF9zniA7CBfEk0-EBnC7qTIveB1AQmYM",
             authDomain: "jupiter-1b026.firebaseapp.com",
@@ -110,7 +89,7 @@
             appId: "1:504918793683:web:bcc77e0a2c8a8e27d0e326",
             measurementId: "G-4SMG7QG8D0"
         };
-    
+
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
         const auth = getAuth(app);
@@ -143,15 +122,12 @@
             document.querySelector('.tab-button:nth-child(2)').addEventListener('click', () => showTab('verif'));
             document.querySelector('.tab-button:nth-child(3)').addEventListener('click', () => showTab('monitoring'));
 
-            // Tampilkan tab 'jadwal' saat halaman dimuat
             showTab('jadwal');
 
-            // Tambahkan event listener untuk tombol logout
             document.querySelector('.logout-button').addEventListener('click', () => {
                 signOut(auth).then(() => {
-                    window.location.href = 'index.html'; // Redirect ke halaman login
-                }).catch((error) => {
-                    console.error('Logout error:', error);
+                    console.log("User signed out.");
+                    window.location.href = 'index.html'; // Arahkan ke halaman login setelah logout
                 });
             });
         });

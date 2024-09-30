@@ -126,9 +126,13 @@
         // Cek status autentikasi
         onAuthStateChanged(auth, (user) => {
             if (!user) {
+                console.log("User not authenticated, redirecting...");
                 window.location.href = 'index.html';
+            } else {
+                console.log("User is authenticated.");
             }
         });
+
 
         function showTab(tabName) {
             const tabs = document.querySelectorAll('.tab-content');

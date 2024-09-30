@@ -101,7 +101,26 @@
             background-color: #c9302c;
         }
     </style>
-    <script>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAwF9zniA7CBfEk0-EBnC7qTIveB1AQmYM",
+            authDomain: "jupiter-1b026.firebaseapp.com",
+            projectId: "jupiter-1b026",
+            storageBucket: "jupiter-1b026.appspot.com",
+            messagingSenderId: "504918793683",
+            appId: "1:504918793683:web:bcc77e0a2c8a8e27d0e326",
+            measurementId: "G-4SMG7QG8D0"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+
         function showTab(tabName) {
             const tabs = document.querySelectorAll('.tab-content');
             tabs.forEach(tab => tab.style.display = 'none');

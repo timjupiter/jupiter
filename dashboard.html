@@ -107,7 +107,6 @@
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
     
-        // Your web app's Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyAwF9zniA7CBfEk0-EBnC7qTIveB1AQmYM",
             authDomain: "jupiter-1b026.firebaseapp.com",
@@ -118,12 +117,10 @@
             measurementId: "G-4SMG7QG8D0"
         };
     
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const analytics = getAnalytics(app);
         const auth = getAuth(app);
-    
-        // Cek status autentikasi
+
         onAuthStateChanged(auth, (user) => {
             if (!user) {
                 console.log("User not authenticated, redirecting...");
@@ -133,33 +130,17 @@
             }
         });
 
-
-        function showTab(tabName) {
-            const tabs = document.querySelectorAll('.tab-content');
-            tabs.forEach(tab => tab.style.display = 'none');
-            document.getElementById(tabName).style.display = 'block';
-
-            const buttons = document.querySelectorAll('.tab-button');
-            buttons.forEach(button => button.classList.remove('active'));
-            buttons.forEach(button => {
-                if (button.textContent.toLowerCase() === tabName) {
-                    button.classList.add('active');
-                }
-            });
-        }
-
         document.addEventListener('DOMContentLoaded', () => {
-            document.querySelector('.tab-button.active').addEventListener('click', () => showTab('jadwal'));
-            document.querySelector('.tab-button:nth-child(2)').addEventListener('click', () => showTab('verif'));
-            document.querySelector('.tab-button:nth-child(3)').addEventListener('click', () => showTab('monitoring'));
-
-            showTab('jadwal');
-
             document.querySelector('.logout-button').addEventListener('click', () => {
-                window.location.href = 'index.html'; // Arahkan ke index.html
+                auth.signOut().then(() => {
+                    window.location.href = 'index.html';
+                }).catch((error) => {
+                    console.error('Logout error:', error);
+                });
             });
         });
     </script>
+
 </head>
 <body>
     <div class="dashboard-container">

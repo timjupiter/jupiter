@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verifikasi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+        }
+        .paste-text-container {
+            padding: 15px;
+            border: 2px solid #007bff;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .row {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        label {
+            width: 100%;
+            margin-bottom: 10px; /* Jarak antara label dan textarea */
+            font-weight: bold;
+        }
+        textarea {
+            width: 100%;
+            height: 150px; /* Tinggi textarea */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        .output-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .button-container {
+            display: flex;
+            align-items: center;
+        }
+        .copy-button {
+            padding: 10px 15px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .copy-button:hover {
+            background-color: #0056b3;
+        }
+        .notification {
+            display: none;
+            margin-top: 10px;
+            color: green;
+            font-weight: bold;
+            transition: opacity 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="paste-text-container">
+            <label for="inputText">Copas Req Dari Provider disini :</label>
+            <textarea id="inputText" style="font-size: 18px;"></textarea>
+        </div>
+
+        <div class="row output-container">
+            <div>
+                <label for="verifikasi">Verifikasi:</label>
+                <textarea id="verifikasi"></textarea>
+                <div class="button-container">
+                    <button class="copy-button" onclick="copyToClipboard('verifikasi')">Copy</button>
+                </div>
+            </div>
+            <div>
+                <label for="temporary">Temporary:</label>
+                <textarea id="temporary"></textarea>
+                <div class="button-container">
+                    <button class="copy-button" onclick="copyToClipboard('temporary')">Copy</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="notification" id="notification">Teks telah disalin!</div>
+    </div>
+
+    <script>
+        // Update textareas with input
+        document.getElementById('inputText').addEventListener('input', function() {
+            const inputValue = this.value;
+            document.getElementById('verifikasi').value = `*Summary sudah sesuai standarisasi*\n\n${inputValue}\n\n*Note :  -*\n*Beam : *\n*SQF : *\n*ESNO : *`;
+            document.getElementById('temporary').value = `*Summary Temporary*\n\n${inputValue}\n\n*Note :   XPOLL Belum Lolos (RECHECK), SQF dan ESNO Sesuai Standarisasi*\n*Beam : *\n*SQF : *\n*ESNO : *`;
+        });
+
+        // Copy text to clipboard function
+        function copyToClipboard(textareaId) {
+            const textarea = document.getElementById(textareaId);
+            textarea.select();
+            document.execCommand('copy');
+            
+            const notification = document.getElementById('notification');
+            notification.style.display = 'block';
+            notification.style.opacity = 1;
+
+            // Fade out effect
+            setTimeout(() => {
+                notification.style.opacity = 0;
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 500); // Waktu untuk menghilang
+            }, 1500); // Waktu tampilan sebelum menghilang
+        }
+    </script>
+
+</body>
+</html>

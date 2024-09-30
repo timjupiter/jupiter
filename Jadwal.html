@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABSENSI SHIFT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px; /* Space between columns */
+            margin-bottom: 20px; /* Space between containers */
+        }
+        .box-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 0; /* Remove space between box and button */
+            margin-bottom: 30px; /* Add extra space between rows */
+        }
+        .label {
+            font-weight: bold;
+            margin-bottom: 10px; /* Increased space between label and box */
+            text-align: center;
+        }
+        .box {
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            position: relative;
+            box-sizing: border-box;
+            height: 300px; /* Example height, adjust as needed */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        textarea {
+            width: 100%;
+            height: calc(100% - 40px); /* Adjust height to fit within box minus button space */
+            padding: 10px;
+            box-sizing: border-box;
+            border: none;
+            background: none;
+            resize: none; /* Disable resizing */
+            overflow: auto; /* Enable scrolling if content exceeds size */
+            font-family: Arial, sans-serif;
+            white-space: pre-wrap; /* Preserve formatting */
+        }
+        button {
+            width: 100%; /* Make button full width of the box */
+            padding: 10px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            box-sizing: border-box; /* Ensure button width includes padding */
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        /* Feedback message */
+        .feedback {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            display: none; /* Initially hidden */
+            opacity: 1;
+            transition: opacity 0.5s ease-out; /* Fade-out effect */
+        }
+        .section {
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .section h2 {
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1><center>ABSENSI SHIFT</center></h1>
+    
+    <div class="section" id="full_personil">
+        <h2><center>WAN Jupiter, Jupiter OPS, NOC All Operator</center></h2>
+        <div class="container">
+            <!-- Full personil data will be inserted here -->
+        </div>
+    </div>
+    
+    <div class="section" id="no_full_personil">
+        <h2><center>CAN-WAN-SHD-OST-NOC, Telegram Grup Berkah</center></h2>
+        <div class="container">
+            <!-- No full personil data will be inserted here -->
+        </div>
+    </div>
+    
+    <div id="feedback" class="feedback">Copied to clipboard!</div> <!-- Feedback message -->
+
+    <script>
+        function copyToClipboard(id) {
+            var copyText = document.getElementById(id);
+            copyText.select();
+            document.execCommand('copy');
+
+            // Show feedback message
+            var feedback = document.getElementById('feedback');
+            feedback.style.display = 'block';
+            feedback.style.opacity = '1';
+
+            // Fade out the feedback message after 1 second
+            setTimeout(() => {
+                feedback.style.opacity = '0';
+                setTimeout(() => {
+                    feedback.style.display = 'none';
+                }, 500); // Matches the transition time
+            }, 1000);
+        }
+
+        async function fetchData() {
+            const apiURL = 'https://script.google.com/macros/s/AKfycbzLvy2NrliOy_ie2Er-tl6ZUc4kalBpp07vJKn1iXuEHfL8BufeoLcZVdcR6Re_tF6nwA/exec'; // URL Google Apps Script
+            
+            try {
+                const response = await fetch(apiURL);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok.');
+                }
+                const json = await response.json();
+                
+                console.log('Fetched Data:', json); // Log fetched data for debugging
+
+                // Labels for the cells
+                const labels = {
+                    'E50': 'Shift 1',
+                    'O50': 'Shift 2',
+                    'Y50': 'Shift 3',
+                    'E51': 'Shift 1',
+                    'O51': 'Shift 2',
+                    'Y51': 'Shift 3'
+                };
+
+                // Containers for full personil and no full personil
+                const fullPersonilContainer = document.querySelector('#full_personil .container');
+                const noFullPersonilContainer = document.querySelector('#no_full_personil .container');
+                
+                const fullPersonilCells = ['E50', 'O50', 'Y50'];
+                const noFullPersonilCells = ['E51', 'O51', 'Y51'];
+
+                // Function to create and append box elements
+                function createBox(cellId, container) {
+                    const boxWrapper = document.createElement('div');
+                    boxWrapper.className = 'box-wrapper';
+
+                    // Create label
+                    const label = document.createElement('div');
+                    label.className = 'label';
+                    label.innerText = labels[cellId] || cellId; // Fallback to cellId if label not found
+                    
+                    const box = document.createElement('div');
+                    box.className = 'box';
+
+                    // Create and append textarea
+                    const textarea = document.createElement('textarea');
+                    textarea.id = `${cellId}_textarea`;
+                    textarea.readOnly = true;
+                    textarea.textContent = json[cellId] || 'No Data';
+                    box.appendChild(textarea);
+
+                    // Create and append button
+                    const button = document.createElement('button');
+                    button.innerText = 'Copy';
+                    button.onclick = () => copyToClipboard(`${cellId}_textarea`);
+                    box.appendChild(button);
+
+                    boxWrapper.appendChild(label);
+                    boxWrapper.appendChild(box);
+                    
+                    container.appendChild(boxWrapper);
+                }
+
+                // Create and insert HTML elements for each cell in the respective container
+                fullPersonilCells.forEach(cellId => createBox(cellId, fullPersonilContainer));
+                noFullPersonilCells.forEach(cellId => createBox(cellId, noFullPersonilContainer));
+
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                document.getElementById('full_personil').querySelector('.container').innerHTML = 'Failed to load data.';
+                document.getElementById('no_full_personil').querySelector('.container').innerHTML = 'Failed to load data.';
+            }
+        }
+
+        fetchData();
+    </script>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoring Jupiter</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        #clock {
+            font-size: 60px;
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-bottom: 20px;
+        }
+        .message-container {
+            margin-bottom: 20px;
+        }
+        .message-wrapper {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px; /* Default margin */
+        }
+        .message {
+            font-size: 24px;
+            background-color: #fff;
+            color: #333;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            flex: 1;
+            margin-right: 10px;
+        }
+        .copy-button {
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .copy-button:hover {
+            background-color: #0056b3;
+            transition: background-color 0.3s ease;
+        }
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #28a745;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
+        }
+        .notification.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        @keyframes blink {
+            0% {
+                background-color: #333;
+                color: #fff;
+            }
+            50% {
+                background-color: #ff0000; /* Red background */
+                color: #000; /* Black text */
+            }
+            100% {
+                background-color: #333;
+                color: #fff;
+            }
+        }
+        .blinking {
+            animation: blink 1s step-start infinite;
+        }
+        /* Apply specific margin-bottom only to message3 */
+        .message-wrapper:nth-child(3) {
+            margin-bottom: 30px; /* Adjust spacing as needed */
+        }
+    </style>
+</head>
+<body>
+    <div id="clock"></div>
+    <div class="message-container">
+        <div class="message-wrapper">
+            <div id="message1" class="message"></div>
+            <button class="copy-button" onclick="copyMessage('message1')">Copy</button>
+        </div>
+        <div class="message-wrapper">
+            <div id="message2" class="message"></div>
+            <button class="copy-button" onclick="copyMessage('message2')">Copy</button>
+        </div>
+        <div class="message-wrapper">
+            <div id="message3" class="message"></div>
+            <button class="copy-button" onclick="copyMessage('message3')">Copy</button>
+        </div>
+        <div class="message-wrapper">
+            <div id="message4" class="message"></div>
+            <button class="copy-button" onclick="copyMessage('message4')">Copy</button>
+        </div>
+        <div class="message-wrapper">
+            <div id="message5" class="message"></div>
+            <button class="copy-button" onclick="copyMessage('message5')">Copy</button>
+        </div>
+        <div class="message-wrapper">
+            <div id="message6" class="message"></div>
+            <button class="copy-button" onclick="copyMessage('message6')">Copy</button>
+        </div>
+    </div>
+    <div id="notification" class="notification">Message copied to clipboard!</div>
+    <script>
+        function updateClock() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+            const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+
+            const clockElement = document.getElementById('clock');
+            clockElement.textContent = `${formattedTime}:${String(seconds).padStart(2, '0')}`;
+            document.title = `${formattedTime} | Monitoring Jupiter`;
+
+            const messageTime = hours % 2 === 1 
+                ? `${String((hours + 1) % 24).padStart(2, '0')}:00` 
+                : `${String(hours).padStart(2, '0')}:00`;
+
+            document.getElementById('message1').textContent = `Brisat & Satdiv pukul ${messageTime} WIB`;
+            document.getElementById('message2').textContent = `All Beam pukul ${messageTime} WIB`;
+            document.getElementById('message3').textContent = `All beam Inroute & Outroute pukul ${messageTime} WIB`;
+            document.getElementById('message4').textContent = `Inroute All Gateway`;
+            document.getElementById('message5').textContent = `Outroute All Gateway`;
+			document.getElementById('message6').textContent = `Inroute & Outroute All Gateway ${messageTime} WIB`;
+			
+            // Handle blinking effect
+            if (hours % 2 === 0 && minutes === 0 && seconds === 0) {
+                clockElement.classList.add('blinking');
+                setTimeout(() => {
+                    clockElement.classList.remove('blinking');
+                }, 60000); // Ensure blinking class is removed after 1 minute
+            } else {
+                clockElement.classList.remove('blinking');
+            }
+        }
+
+        function copyMessage(id) {
+            const message = document.getElementById(id).textContent;
+            navigator.clipboard.writeText(message).then(() => {
+                showNotification('Message copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy message: ', err);
+            });
+        }
+
+        function showNotification(text) {
+            const notification = document.getElementById('notification');
+            notification.textContent = text;
+            notification.classList.add('show');
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 2000);
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+</body>
+</html>

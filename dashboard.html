@@ -32,11 +32,6 @@
             margin: auto;
         }
 
-        h1 {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
         .tabs {
             display: flex;
             justify-content: space-between;
@@ -102,10 +97,9 @@
         }
     </style>
     <script type="module">
-        // Import Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
     
         const firebaseConfig = {
             apiKey: "AIzaSyAwF9zniA7CBfEk0-EBnC7qTIveB1AQmYM",
@@ -130,17 +124,38 @@
             }
         });
 
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.style.display = 'none');
+            document.getElementById(tabName).style.display = 'block';
+
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => button.classList.remove('active'));
+            buttons.forEach(button => {
+                if (button.textContent.toLowerCase() === tabName) {
+                    button.classList.add('active');
+                }
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
+            document.querySelector('.tab-button.active').addEventListener('click', () => showTab('jadwal'));
+            document.querySelector('.tab-button:nth-child(2)').addEventListener('click', () => showTab('verif'));
+            document.querySelector('.tab-button:nth-child(3)').addEventListener('click', () => showTab('monitoring'));
+
+            // Tampilkan tab 'jadwal' saat halaman dimuat
+            showTab('jadwal');
+
+            // Tambahkan event listener untuk tombol logout
             document.querySelector('.logout-button').addEventListener('click', () => {
-                auth.signOut().then(() => {
-                    window.location.href = 'index.html';
+                signOut(auth).then(() => {
+                    window.location.href = 'index.html'; // Redirect ke halaman login
                 }).catch((error) => {
                     console.error('Logout error:', error);
                 });
             });
         });
     </script>
-
 </head>
 <body>
     <div class="dashboard-container">

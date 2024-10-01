@@ -56,13 +56,16 @@
         .copy-button {
             padding: 10px 15px;
             border: none;
-            background-color: #007bff;
+            background: linear-gradient(45deg, #007bff, #0056b3); /* Gradient background */
             color: white;
-            border-radius: 4px;
+            border-radius: 5px; /* Rounded corners */
             cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
         }
         .copy-button:hover {
-            background-color: #0056b3;
+            background: linear-gradient(45deg, #0056b3, #007bff); /* Reverse gradient on hover */
+            transform: scale(1.05); /* Scale up on hover */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
         }
         .notification {
             display: none;

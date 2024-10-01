@@ -195,21 +195,25 @@
             const hours = now.getHours();
             const minutes = now.getMinutes();
             const seconds = now.getSeconds();
+            
             const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
-
+            
             const clockElement = document.getElementById('clock');
             clockElement.textContent = `${formattedTime}:${String(seconds).padStart(2, '0')}`;
-            document.title = `${formattedTime} | Monitoring Jupiter`;
-
+            
+            // Update the document title with the clock
+            document.title = `${formattedTime} | Jupiter Dashboard`;
+            
             const messageTime = hours % 2 === 1 
                 ? `${String((hours + 1) % 24).padStart(2, '0')}:00` 
                 : `${String(hours).padStart(2, '0')}:00`;
-
+        
             document.getElementById('message1').textContent = `Brisat & Satdiv pukul ${messageTime} WIB`;
             document.getElementById('message2').textContent = `All Beam pukul ${messageTime} WIB`;
             document.getElementById('message3').textContent = `All beam Inroute & Outroute pukul ${messageTime} WIB`;
             document.getElementById('message4').textContent = `Inroute & Outroute All Gateway ${messageTime} WIB`;
         }
+
 
         document.getElementById('menuSelect').addEventListener('change', function() {
             const selectedMenu = this.value;

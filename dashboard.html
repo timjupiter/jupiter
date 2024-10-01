@@ -130,9 +130,23 @@
         });
     }
 
+    // Update the clock in the tab title
+    function updateClock() {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const formattedTime = `${hours}:${minutes}`;
+
+        document.title = `${formattedTime} | JUPITER Dashboard`;
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
         showTab('jadwal');
+        updateClock(); // Update clock on load
 
+        // Update the clock every minute
+        setInterval(updateClock, 60000);
+        
         document.querySelector('.tab-button.active').addEventListener('click', () => showTab('jadwal'));
         document.querySelector('.tab-button:nth-child(2)').addEventListener('click', () => showTab('verif'));
         document.querySelector('.tab-button:nth-child(3)').addEventListener('click', () => showTab('monitoring'));

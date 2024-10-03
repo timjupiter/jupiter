@@ -132,7 +132,7 @@
         }
 
         async function fetchData() {
-            const apiURL = 'https://script.google.com/macros/s/AKfycbzLvy2NrliOy_ie2Er-tl6ZUc4kalBpp07vJKn1iXuEHfL8BufeoLcZVdcR6Re_tF6nwA/exec'; // URL Google Apps Script
+            const apiURL = 'https://script.google.com/macros/s/AKfycbxhd_jy4L-vhslu7NBiIz9JJSeg6mI9TENOqRA9h6gfLgJeFE-5zBnIOQLazDODNbKI3A/exec'; // URL Google Apps Script
             
             try {
                 const response = await fetch(apiURL);
@@ -143,22 +143,23 @@
                 
                 console.log('Fetched Data:', json); // Log fetched data for debugging
 
-                // Labels for the cells
-                const labels = {
-                    'E50': 'Shift 1',
-                    'O50': 'Shift 2',
-                    'Y50': 'Shift 3',
-                    'E51': 'Shift 1',
-                    'O51': 'Shift 2',
-                    'Y51': 'Shift 3'
-                };
+			// Labels for the cells
+			const labels = {
+				'E59': 'Shift 1',
+				'O59': 'Shift 2',
+				'Y59': 'Shift 3',
+				'E60': 'Shift 1',
+				'O60': 'Shift 2',
+				'Y60': 'Shift 3'
+			};
 
-                // Containers for full personil and no full personil
-                const fullPersonilContainer = document.querySelector('#full_personil .container');
-                const noFullPersonilContainer = document.querySelector('#no_full_personil .container');
-                
-                const fullPersonilCells = ['E50', 'O50', 'Y50'];
-                const noFullPersonilCells = ['E51', 'O51', 'Y51'];
+			// Containers for full personil and no full personil
+			const fullPersonilContainer = document.querySelector('#full_personil .container');
+			const noFullPersonilContainer = document.querySelector('#no_full_personil .container');
+
+			const fullPersonilCells = ['E59', 'O59', 'Y59'];
+			const noFullPersonilCells = ['E60', 'O60', 'Y60'];
+
 
                 // Function to create and append box elements
                 function createBox(cellId, container) {

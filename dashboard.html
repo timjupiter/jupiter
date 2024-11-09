@@ -150,6 +150,7 @@
         document.querySelector('.tab-button.active').addEventListener('click', () => showTab('jadwal'));
         document.querySelector('.tab-button:nth-child(2)').addEventListener('click', () => showTab('verif'));
         document.querySelector('.tab-button:nth-child(3)').addEventListener('click', () => showTab('monitoring'));
+        document.querySelector('.tab-button:nth-child(4)').addEventListener('click', () => showTab('h2h')); // New tab for H2H
 
         // Logout functionality
         document.querySelector('.logout-button').addEventListener('click', () => {
@@ -183,6 +184,7 @@
             <button onclick="showTab('jadwal')" class="tab-button active">JADWAL</button>
             <button onclick="showTab('verif')" class="tab-button">VERIF</button>
             <button onclick="showTab('monitoring')" class="tab-button">MONITORING</button>
+            <button onclick="showTab('h2h')" class="tab-button">H2H</button> <!-- New Tab -->
         </div>
 
         <div id="content">
@@ -194,6 +196,9 @@
             </div>
             <div id="monitoring" class="tab-content">
                 <iframe src="monitoring.html"></iframe>
+            </div>
+            <div id="h2h" class="tab-content"> <!-- New Tab Content -->
+                <iframe src="h2h.html"></iframe>
             </div>
         </div>
 

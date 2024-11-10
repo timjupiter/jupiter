@@ -148,26 +148,38 @@
     <div id="notification" class="notification">Message copied to clipboard!</div>
 
     <script>
-        function updateClock() {
-            const now = new Date();
-            const hours = now.getHours();
-            const minutes = now.getMinutes();
-            const seconds = now.getSeconds();
-            
-            const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
-            
-            const clockElement = document.getElementById('clock');
-            clockElement.textContent = `${formattedTime}:${String(seconds).padStart(2, '0')}`;
-            
-            // Update message times every hour
-            const messageTime = `${String(hours).padStart(2, '0')}:00 WIB`;  // Update MM to 00
-            
-            // Update messages with formatted time
-            document.getElementById('message1').textContent = `Berikut MRTG Link H2H BI SDWAN PSCF via Lintas pada pukul ${messageTime}`;
-            document.getElementById('message2').textContent = `Berikut MRTG Link H2H BI SDWAN PSCF via Telkom pada pukul ${messageTime}`;
-            document.getElementById('message3').textContent = `Berikut MRTG Link H2H BI SDWAN BSCF via Lintas pada pukul ${messageTime}`;
-            document.getElementById('message4').textContent = `Berikut MRTG Link H2H BI SDWAN BSCF via Telkom pada pukul ${messageTime}`;
-        }
+		function updateClock() {
+			const now = new Date();
+			const hours = now.getHours();
+			const minutes = now.getMinutes();
+			const seconds = now.getSeconds();
+			
+			const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+			
+			const clockElement = document.getElementById('clock');
+			clockElement.textContent = `${formattedTime}:${String(seconds).padStart(2, '0')}`;
+			
+			// Menambahkan 30 menit untuk mendapatkan jam berikutnya dengan menit = 00
+			let adjustedHours = hours;
+			
+			// Jika menit >= 30, setel jam ke jam berikutnya
+			if (minutes >= 30) {
+				adjustedHours += 1;
+			}
+
+			// Jika jam mencapai 24, reset ke 0 (jam 00:00)
+			if (adjustedHours === 24) {
+				adjustedHours = 0;
+			}
+			
+			const messageTime = `${String(adjustedHours).padStart(2, '0')}:00 WIB`;
+
+			// Update messages dengan jam yang telah disesuaikan dan menit selalu 00
+			document.getElementById('message1').textContent = `Berikut MRTG Link H2H BI SDWAN PSCF via Lintas pada pukul ${messageTime}`;
+			document.getElementById('message2').textContent = `Berikut MRTG Link H2H BI SDWAN PSCF via Telkom pada pukul ${messageTime}`;
+			document.getElementById('message3').textContent = `Berikut MRTG Link H2H BI SDWAN BSCF via Lintas pada pukul ${messageTime}`;
+			document.getElementById('message4').textContent = `Berikut MRTG Link H2H BI SDWAN BSCF via Telkom pada pukul ${messageTime}`;
+		}
 
         function copyMessage(id) {
             const message = document.getElementById(id).textContent;

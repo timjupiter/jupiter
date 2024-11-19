@@ -1,22 +1,85 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitoring Jupiter - Update Jam</title>
+    <title>Template H2H</title>
     <style>
+        /* CSS untuk HTML1 */
         body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
             display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #e9ecef;
-            font-family: 'Arial', sans-serif;
+            justify-content: space-between;
+            gap: 20px;
         }
 
-        #clock {
+        #html1 {
+            width: 48%;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #html1 label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        #html1 input, #html1 select, #html1 textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        #html1 #result, #html1 #updateResult {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            min-height: 80px;
+            max-height: 200px;
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        #html1 button {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+
+        #html1 button:hover {
+            background-color: #45a049;
+        }
+
+        #html1 #copyButton, #html1 #copyUpdateButton {
+            display: none;
+            margin-top: 10px;
+        }
+
+        /* CSS untuk HTML2 */
+        #html2 {
+            width: 48%;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #html2 #clock {
             font-size: 60px;
             background-color: #343a40;
             color: #fff;
@@ -25,26 +88,27 @@
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
             margin-bottom: 50px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
 
-        .container {
-            display: block;  /* Menampilkan elemen secara vertikal */
+        #html2 .container {
+            display: block;
             width: 90%;
-            max-width: 600px;  /* Membatasi lebar kontainer */
+            max-width: 600px;
             padding: 30px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             border-radius: 15px;
             background-color: #ffffff;
         }
 
-        .message-container {
-            margin-bottom: 20px;  /* Menambahkan jarak antar panel */
+        #html2 .message-container {
+            margin-bottom: 20px;
             background-color: #f8f9fa;
             padding: 15px;
             border-radius: 8px;
         }
 
-        .message-wrapper {
+        #html2 .message-wrapper {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -53,11 +117,11 @@
             padding: 10px 0;
         }
 
-        .message-wrapper:last-child {
+        #html2 .message-wrapper:last-child {
             border-bottom: none;
         }
 
-        .copy-button {
+        #html2 .copy-button {
             padding: 9px;
             background: linear-gradient(45deg, #007bff, #0056b3);
             color: #fff;
@@ -72,13 +136,13 @@
             width: 33%;
         }
 
-        .copy-button:hover {
+        #html2 .copy-button:hover {
             background: linear-gradient(45deg, #0056b3, #007bff);
             transform: scale(1.05);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
 
-        .notification {
+        #html2 .notification {
             position: fixed;
             bottom: 20px;
             left: 50%;
@@ -93,115 +157,205 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
 
-        .notification.show {
+        #html2 .notification.show {
             opacity: 1;
             visibility: visible;
         }
 
         @media (max-width: 600px) {
-            .container {
-                width: 100%;  /* Agar kontainer lebih lebar pada layar kecil */
+            body {
+                flex-direction: column;
+                gap: 10px;
+            }
+            #html1, #html2 {
+                width: 100%;
             }
         }
     </style>
 </head>
 <body>
-    <div id="clock"></div>
-    <div class="container">
-        <!-- Panel 1-4 dengan waktu yang terupdate setiap jam -->
-        <div class="message-container">
-            <div class="message-wrapper">
-                <div id="message1" class="message"></div>
-                <button class="copy-button" onclick="copyMessage('message1')">Copy</button>
-            </div>
-            <div class="message-wrapper">
-                <div id="message2" class="message"></div>
-                <button class="copy-button" onclick="copyMessage('message2')">Copy</button>
-            </div>
-            <div class="message-wrapper">
-                <div id="message3" class="message"></div>
-                <button class="copy-button" onclick="copyMessage('message3')">Copy</button>
-            </div>
-            <div class="message-wrapper">
-                <div id="message4" class="message"></div>
-                <button class="copy-button" onclick="copyMessage('message4')">Copy</button>
-            </div>
-        </div>
 
-        <!-- Panel 5-7 tanpa update jam (pesan statis) -->
-        <div class="message-container">
-            <div class="message-wrapper">
-                <div id="message5" class="message">DASHBOARD NETWORK BACKHAUL UKER PSCF, BSCF & ODC</div>
-                <button class="copy-button" onclick="copyMessage('message5')">Copy</button>
-            </div>
-            <div class="message-wrapper">
-                <div id="message6" class="message">DASHBOARD NETWORK BACKHAUL H2H PSCF, BSCF & ODC</div>
-                <button class="copy-button" onclick="copyMessage('message6')">Copy</button>
-            </div>
-            <div class="message-wrapper">
-                <div id="message7" class="message">DASHBOARD BACKHAUL UKER TRAFFIC UTILIZATION PSCF, BSCF & ODC</div>
-                <button class="copy-button" onclick="copyMessage('message7')">Copy</button>
-            </div>
-        </div>
+    <!-- HTML1 -->
+    <div id="html1">
+        <h2>Template Kata - Kata Report</h2>
+
+        <!-- Form Input -->
+        <form id="statusForm">
+            <label for="deviceName">Nama Perangkat :</label>
+            <input type="text" id="deviceName" required>
+
+            <label for="status">Status Ping & Traceroute :</label>
+            <select id="status" required>
+                <option value="online">Online</option>
+                <option value="offline">Offline</option>
+            </select>
+
+            <button type="submit" id="submitButton" disabled>Tampilkan Hasil</button>
+        </form>
+
+        <!-- Output Section -->
+        <div id="result"></div>
+
+        <!-- Copy Button for Result -->
+        <button id="copyButton">Copy Hasil</button>
+
+        <!-- Update Status Section -->
+        <textarea id="updateResult" rows="5" readonly></textarea>
+
+        <!-- Copy Button for Update Result -->
+        <button id="copyUpdateButton">Copy Update</button>
     </div>
 
-    <div id="notification" class="notification">Message copied to clipboard!</div>
+    <!-- HTML2 -->
+    <div id="html2">
+        <div id="clock"></div>
+        <div class="container">
+            <!-- Panel 1-4 dengan waktu yang terupdate setiap jam -->
+            <div class="message-container">
+                <div class="message-wrapper">
+                    <div id="message1" class="message"></div>
+                    <button class="copy-button" onclick="copyMessage('message1')">Copy</button>
+                </div>
+                <div class="message-wrapper">
+                    <div id="message2" class="message"></div>
+                    <button class="copy-button" onclick="copyMessage('message2')">Copy</button>
+                </div>
+                <div class="message-wrapper">
+                    <div id="message3" class="message"></div>
+                    <button class="copy-button" onclick="copyMessage('message3')">Copy</button>
+                </div>
+                <div class="message-wrapper">
+                    <div id="message4" class="message"></div>
+                    <button class="copy-button" onclick="copyMessage('message4')">Copy</button>
+                </div>
+            </div>
+
+            <!-- Panel 5-7 tanpa update jam (pesan statis) -->
+            <div class="message-container">
+                <div class="message-wrapper">
+                    <div id="message5" class="message">DASHBOARD NETWORK BACKHAUL UKER PSCF, BSCF & ODC</div>
+                    <button class="copy-button" onclick="copyMessage('message5')">Copy</button>
+                </div>
+                <div class="message-wrapper">
+                    <div id="message6" class="message">DASHBOARD NETWORK BACKHAUL H2H PSCF, BSCF & ODC</div>
+                    <button class="copy-button" onclick="copyMessage('message6')">Copy</button>
+                </div>
+                <div class="message-wrapper">
+                    <div id="message7" class="message">DASHBOARD BACKHAUL UKER TRAFFIC UTILIZATION PSCF, BSCF & ODC</div>
+                    <button class="copy-button" onclick="copyMessage('message7')">Copy</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="notification" class="notification">Message copied to clipboard!</div>
+    </div>
 
     <script>
-		function updateClock() {
-			const now = new Date();
-			const hours = now.getHours();
-			const minutes = now.getMinutes();
-			const seconds = now.getSeconds();
-			
-			const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
-			
-			const clockElement = document.getElementById('clock');
-			clockElement.textContent = `${formattedTime}:${String(seconds).padStart(2, '0')}`;
-			
-			// Menambahkan 30 menit untuk mendapatkan jam berikutnya dengan menit = 00
-			let adjustedHours = hours;
-			
-			// Jika menit >= 30, setel jam ke jam berikutnya
-			if (minutes >= 30) {
-				adjustedHours += 1;
-			}
+        // Script untuk HTML1
+        document.getElementById('statusForm').addEventListener('input', function() {
+            const deviceName = document.getElementById('deviceName').value.trim();
+            const status = document.getElementById('status').value;
+            document.getElementById('submitButton').disabled = !(deviceName && status);
+        });
 
-			// Jika jam mencapai 24, reset ke 0 (jam 00:00)
-			if (adjustedHours === 24) {
-				adjustedHours = 0;
-			}
-			
-			const messageTime = `${String(adjustedHours).padStart(2, '0')}:00 WIB`;
+        document.getElementById('statusForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const deviceName = document.getElementById('deviceName').value.trim();
+            const status = document.getElementById('status').value;
+            let resultText = '';
+            
+            if (status === 'online') {
+                resultText = `FYI, Saat ini koneksi *${deviceName}* termonitor *DOWN* pada dashboard monica, namun hasil pengecekan trace dan ping *ONLINE* Terimakasih`;
+            } else if (status === 'offline') {
+                resultText = `FYI, Saat ini koneksi *${deviceName}* pada dashboard monica. Hasil pengecekan traceroute & ping terpantau *OFFLINE*. Saat ini sedang kami lakukan pengecekan lebih lanjut. Terimakasih`;
+            }
+            
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = resultText;
+            resultDiv.style.display = 'block';
 
-			// Update messages dengan jam yang telah disesuaikan dan menit selalu 00
-			document.getElementById('message1').textContent = `Berikut MRTG Link H2H BI SDWAN PSCF via Lintas pada pukul ${messageTime}`;
-			document.getElementById('message2').textContent = `Berikut MRTG Link H2H BI SDWAN PSCF via Telkom pada pukul ${messageTime}`;
-			document.getElementById('message3').textContent = `Berikut MRTG Link H2H BI SDWAN BSCF via Lintas pada pukul ${messageTime}`;
-			document.getElementById('message4').textContent = `Berikut MRTG Link H2H BI SDWAN BSCF via Telkom pada pukul ${messageTime}`;
-		}
+            document.getElementById('copyButton').style.display = 'inline-block';
 
-        function copyMessage(id) {
-            const message = document.getElementById(id).textContent;
-            navigator.clipboard.writeText(message).then(() => {
-                showNotification('Message copied to clipboard!');
-            }).catch(err => {
-                console.error('Failed to copy message: ', err);
+            const updateResultText = document.getElementById('updateResult');
+            updateResultText.value = `UPDATE, Kami informasikan kembali saat ini *${deviceName}* sudah termonitor *UP* kembali pada dashboard monica. Terimakasih.`;
+            
+            updateResultText.style.display = 'block';
+            document.getElementById('copyUpdateButton').style.display = 'inline-block';
+        });
+
+        document.getElementById('copyButton').addEventListener('click', function() {
+            const resultText = document.getElementById('result').textContent;
+            navigator.clipboard.writeText(resultText).then(function() {
+                const copyButton = document.getElementById('copyButton');
+                copyButton.textContent = 'Hasil disalin!';
+                setTimeout(function() {
+                    copyButton.textContent = 'Copy Hasil';
+                }, 500);
+            }).catch(function(err) {
+                alert('Gagal menyalin teks: ' + err);
             });
+        });
+
+        document.getElementById('copyUpdateButton').addEventListener('click', function() {
+            const updateText = document.getElementById('updateResult').value;
+            navigator.clipboard.writeText(updateText).then(function() {
+                const copyUpdateButton = document.getElementById('copyUpdateButton');
+                copyUpdateButton.textContent = 'Update disalin!';
+                setTimeout(function() {
+                    copyUpdateButton.textContent = 'Copy Update';
+                }, 500);
+            }).catch(function(err) {
+                alert('Gagal menyalin teks: ' + err);
+            });
+        });
+
+        // Script untuk HTML2
+        function copyMessage(messageId) {
+            const messageElement = document.getElementById(messageId);
+            if (messageElement) {
+                const textToCopy = messageElement.textContent || messageElement.innerText;
+                navigator.clipboard.writeText(textToCopy).then(function() {
+                    const notification = document.getElementById('notification');
+                    notification.classList.add('show');
+                    setTimeout(function() {
+                        notification.classList.remove('show');
+                    }, 2000);
+                }).catch(function(err) {
+                    alert('Gagal menyalin teks: ' + err);
+                });
+            }
         }
 
-        function showNotification(text) {
-            const notification = document.getElementById('notification');
-            notification.textContent = text;
-            notification.classList.add('show');
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 2000);
+        function updateClock() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+            
+            const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+            
+            const clockElement = document.getElementById('clock');
+            clockElement.textContent = `${formattedTime}:${String(seconds).padStart(2, '0')}`;
+            
+            let adjustedHours = hours;
+            if (minutes >= 30) {
+                adjustedHours += 1;
+            }
+            if (adjustedHours === 24) {
+                adjustedHours = 0;
+            }
+            
+            const messageTime = `${String(adjustedHours).padStart(2, '0')}:00 WIB`;
+
+            document.getElementById('message1').textContent = `Berikut MRTG Link H2H BI SDWAN PSCF via Lintas pada pukul ${messageTime}`;
+            document.getElementById('message2').textContent = `Berikut MRTG Link H2H BI SDWAN PSCF via Telkom pada pukul ${messageTime}`;
+            document.getElementById('message3').textContent = `Berikut MRTG Link H2H BI SDWAN BSCF via Lintas pada pukul ${messageTime}`;
+            document.getElementById('message4').textContent = `Berikut MRTG Link H2H BI SDWAN BSCF via Telkom pada pukul ${messageTime}`;
         }
 
-        // Update the clock every second and messages every hour
         setInterval(updateClock, 1000);
         updateClock();  // Initial call to set messages immediately
     </script>
+
 </body>
 </html>

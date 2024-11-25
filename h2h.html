@@ -269,13 +269,13 @@
 if (status === 'online') {
     resultText = `FYI,
 
-Saat ini koneksi *${deviceName}* termonitor *DOWN* pada dashboard monica, namun hasil pengecekan trace dan ping *ONLINE*.
+Kami informasikan bahwa status koneksi *${deviceName}* termonitor *DOWN* pada dashboard monica, namun hasil pengecekan trace dan ping *ONLINE*.
 
 Terimakasih.`;
 } else if (status === 'offline') {
     resultText = `FYI,
 
-Saat ini koneksi *${deviceName}* termonitor *DOWN* pada dashboard monica. Hasil pengecekan traceroute & ping terpantau *OFFLINE*, Saat ini sedang kami lakukan pengecekan lebih lanjut.
+Kami informasikan bahwa status koneksi *${deviceName}* termonitor *DOWN* pada dashboard monica, hasil pengecekan traceroute dan ping *OFFLINE*dan saat ini sedang dalam pengecekan lebih lanjut.
 
 Terimakasih.`;
 }
@@ -291,7 +291,7 @@ Terimakasih.`;
 if (status === 'online') {
     updateResultText.value = `UPDATE, 
 
-Kami informasikan kembali saat ini *${deviceName}* sudah termonitor *UP* kembali pada dashboard monica. 
+Kami informasikan saat ini *${deviceName}* sudah termonitor *NORMAL* kembali pada dashboard monica. 
 
 Terimakasih.`;
 } else if (status === 'offline') {

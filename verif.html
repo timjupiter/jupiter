@@ -91,6 +91,22 @@
                 flex-direction: column; /* Ensure columns stack in each row */
                 flex: 1; /* Allow each row to take equal space */
             }
+		
+		.notification {
+			display: none;
+			position: absolute;
+			top: 10px;  /* Adjust this for positioning */
+			left: 50%;
+			transform: translateX(-50%);
+			background-color: #28a745;  /* Green color for success */
+			color: white;
+			padding: 10px;
+			border-radius: 5px;
+			font-weight: bold;
+			text-align: center;
+			opacity: 0;
+			transition: opacity 0.5s ease;
+			}
         }
     </style>
 </head>

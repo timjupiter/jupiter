@@ -51,24 +51,25 @@
             box-sizing: border-box;
             font-size: 18px;
         }
-		.button-container {
-			display: flex;
-			align-items: center;
-			justify-content: flex-end;
-			gap: 15px;  /* Mengatur jarak antara tombol dan textarea */
-		}
-		.copy-button, .clear-button {
-			padding: 10px 15px;
-			border: none;
-			background: linear-gradient(45deg, #007bff, #0056b3);
-			color: white;
-			border-radius: 10px;
-			cursor: pointer;
-			transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-			width: 100%; /* Tombol akan menyesuaikan lebar dengan container */
-			margin-left: 10px; /* Jarak horizontal antara tombol */
-			margin-top: 10px;  /* Jarak vertikal antara tombol dan textarea */
-		}
+        .button-container {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 15px;  /* Adjusts gap between button and textarea */
+        }
+        .copy-button, .clear-button {
+            padding: 10px 15px;
+            border: none;
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            width: 100%; /* Button width matches the width of textarea */
+            margin-left: 10px; /* Horizontal space between buttons */
+            margin-top: 10px;  /* Vertical space between buttons and textareas */
+            font-size: 16px; /* Button font size consistency */
+        }
         .copy-button:hover, .clear-button:hover {
             background: linear-gradient(45deg, #0056b3, #007bff);
             transform: scale(1.05);
@@ -76,37 +77,29 @@
         }
         .notification {
             display: none;
-            margin-top: 10px;
-            color: green;
+            position: absolute;
+            top: 10px;  /* Positioning notification at the top */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #28a745;  /* Green background for success message */
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
             font-weight: bold;
+            text-align: center;
+            opacity: 0;
             transition: opacity 0.5s ease;
         }
 
         /* Media Query for landscape orientation */
         @media (orientation: landscape) {
             .output-container {
-                flex-direction: row; /* Change to row in landscape */
+                flex-direction: row; /* Arrange rows side by side in landscape mode */
             }
             .row {
-                flex-direction: column; /* Ensure columns stack in each row */
-                flex: 1; /* Allow each row to take equal space */
+                flex-direction: column; /* Stack content within each row */
+                flex: 1; /* Ensure each row takes equal space */
             }
-		
-		.notification {
-			display: none;
-			position: absolute;
-			top: 10px;  /* Adjust this for positioning */
-			left: 50%;
-			transform: translateX(-50%);
-			background-color: #28a745;  /* Green color for success */
-			color: white;
-			padding: 10px;
-			border-radius: 5px;
-			font-weight: bold;
-			text-align: center;
-			opacity: 0;
-			transition: opacity 0.5s ease;
-			}
         }
     </style>
 </head>
@@ -117,7 +110,7 @@
             <label for="inputText">Copas Req Dari Provider disini :</label>
             <textarea id="inputText" style="font-size: 18px;"></textarea>
             <div class="button-container">
-                <button class="clear-button" onclick="clearInput()">Clear</button>
+                <button class="clear-button" onclick="clearInput()" aria-label="Clear Text">Clear</button>
             </div>
         </div>
 
@@ -126,14 +119,14 @@
                 <label for="verifikasi">Verifikasi:</label>
                 <textarea id="verifikasi"></textarea>
                 <div class="button-container">
-                    <button class="copy-button" onclick="copyToClipboard('verifikasi')">Copy</button>
+                    <button class="copy-button" onclick="copyToClipboard('verifikasi')" aria-label="Copy Verifikasi">Copy</button>
                 </div>
             </div>
             <div class="row">
                 <label for="temporary">Temporary:</label>
                 <textarea id="temporary"></textarea>
                 <div class="button-container">
-                    <button class="copy-button" onclick="copyToClipboard('temporary')">Copy</button>
+                    <button class="copy-button" onclick="copyToClipboard('temporary')" aria-label="Copy Temporary">Copy</button>
                 </div>
             </div>
         </div>

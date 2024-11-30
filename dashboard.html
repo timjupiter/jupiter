@@ -89,93 +89,103 @@
             background-color: #c9302c;
         }
     </style>
-    <script type="module">
+<script type="module">
     // Firebase SDK Imports
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
     import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
 
-    // Your Firebase configuration
-    const firebaseConfig = {
-        apiKey: "AIzaSyAwF9zniA7CBfEk0-EBnC7qTIveB1AQmYM",
-        authDomain: "jupiter-1b026.firebaseapp.com",
-        projectId: "jupiter-1b026",
-        storageBucket: "jupiter-1b026.appspot.com",
-        messagingSenderId: "504918793683",
-        appId: "1:504918793683:web:bcc77e0a2c8a8e27d0e326",
-        measurementId: "G-4SMG7QG8D0"
-    };
+    // Load Firebase configuration from JSON Bin
+    const binUrl = "https://api.jsonbin.io/v3/b/674b3c62e41b4d34e45d751e";
+    const masterKey = "$2a$10$u8KhWa.JMwDgpWqqm09K3OhAUkT9SD/MuXqn2Yg9W9plP.pxTtiMC";
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    // Check for authenticated user
-    onAuthStateChanged(auth, (user) => {
-        if (!user) {
-            window.location.href = 'index.html'; // Redirect to login page if not authenticated
+    fetch(binUrl, {
+        headers: {
+            "X-Master-Key": masterKey
         }
-    });
-
-    // Show specific tab
-    function showTab(tabName) {
-        const tabs = document.querySelectorAll('.tab-content');
-        tabs.forEach(tab => tab.style.display = 'none');
-        document.getElementById(tabName).style.display = 'block';
-
-        const buttons = document.querySelectorAll('.tab-button');
-        buttons.forEach(button => button.classList.remove('active'));
-        buttons.forEach(button => {
-            if (button.textContent.toLowerCase() === tabName) {
-                button.classList.add('active');
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Failed to fetch Firebase config: ${response.statusText}`);
             }
-        });
-    }
+            return response.json();
+        })
+        .then(data => {
+            const firebaseConfig = data.record;
 
-    // Update the clock in the tab title
-    function updateClock() {
-        const now = new Date();
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        const formattedTime = `${hours}:${minutes}`;
+            // Initialize Firebase
+            const app = initializeApp(firebaseConfig);
+            const auth = getAuth(app);
 
-        document.title = `${formattedTime} | JUPITER Dashboard`;
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        showTab('jadwal');
-        updateClock(); // Update clock on load
-
-        // Update the clock every minute
-        setInterval(updateClock, 60000);
-        
-        document.querySelector('.tab-button.active').addEventListener('click', () => showTab('jadwal'));
-        document.querySelector('.tab-button:nth-child(2)').addEventListener('click', () => showTab('verif'));
-        document.querySelector('.tab-button:nth-child(3)').addEventListener('click', () => showTab('monitoring'));
-        document.querySelector('.tab-button:nth-child(4)').addEventListener('click', () => showTab('h2h')); // New tab for H2H
-
-        // Logout functionality
-        document.querySelector('.logout-button').addEventListener('click', () => {
-            signOut(auth).then(() => {
-                window.location.href = 'index.html'; // Redirect to login page
-            }).catch((error) => {
-                console.error('Logout error: ', error);
+            // Check for authenticated user
+            onAuthStateChanged(auth, (user) => {
+                if (!user) {
+                    window.location.href = 'index.html'; // Redirect to login page if not authenticated
+                }
             });
-        });
 
-        // Keyboard navigation
-        document.addEventListener('keydown', (event) => {
-            const activeButton = document.querySelector('.tab-button.active');
-            const buttons = Array.from(document.querySelectorAll('.tab-button'));
-            const currentIndex = buttons.indexOf(activeButton);
+            // Show specific tab
+            function showTab(tabName) {
+                const tabs = document.querySelectorAll('.tab-content');
+                tabs.forEach(tab => tab.style.display = 'none');
+                document.getElementById(tabName).style.display = 'block';
 
-            if (event.key === 'ArrowRight') {
-                const nextIndex = (currentIndex + 1) % buttons.length;
-                buttons[nextIndex].click();
-            } else if (event.key === 'ArrowLeft') {
-                const prevIndex = (currentIndex - 1 + buttons.length) % buttons.length;
-                buttons[prevIndex].click();
+                const buttons = document.querySelectorAll('.tab-button');
+                buttons.forEach(button => button.classList.remove('active'));
+                buttons.forEach(button => {
+                    if (button.textContent.toLowerCase() === tabName) {
+                        button.classList.add('active');
+                    }
+                });
             }
-        });
-    });
+
+            // Update the clock in the tab title
+            function updateClock() {
+                const now = new Date();
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const formattedTime = `${hours}:${minutes}`;
+
+                document.title = `${formattedTime} | JUPITER Dashboard`;
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                showTab('jadwal');
+                updateClock(); // Update clock on load
+
+                // Update the clock every minute
+                setInterval(updateClock, 60000);
+
+                document.querySelector('.tab-button.active').addEventListener('click', () => showTab('jadwal'));
+                document.querySelector('.tab-button:nth-child(2)').addEventListener('click', () => showTab('verif'));
+                document.querySelector('.tab-button:nth-child(3)').addEventListener('click', () => showTab('monitoring'));
+                document.querySelector('.tab-button:nth-child(4)').addEventListener('click', () => showTab('h2h')); // New tab for H2H
+
+                // Logout functionality
+                document.querySelector('.logout-button').addEventListener('click', () => {
+                    signOut(auth).then(() => {
+                        window.location.href = 'index.html'; // Redirect to login page
+                    }).catch((error) => {
+                        console.error('Logout error: ', error);
+                    });
+                });
+
+                // Keyboard navigation
+                document.addEventListener('keydown', (event) => {
+                    const activeButton = document.querySelector('.tab-button.active');
+                    const buttons = Array.from(document.querySelectorAll('.tab-button'));
+                    const currentIndex = buttons.indexOf(activeButton);
+
+                    if (event.key === 'ArrowRight') {
+                        const nextIndex = (currentIndex + 1) % buttons.length;
+                        buttons[nextIndex].click();
+                    } else if (event.key === 'ArrowLeft') {
+                        const prevIndex = (currentIndex - 1 + buttons.length) % buttons.length;
+                        buttons[prevIndex].click();
+                    }
+                });
+            });
+        })
+        .catch(error => console.error("Error loading Firebase config:", error));
 </script>
 </head>
 <body>

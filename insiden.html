@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Insiden</title>
+    <style>
+        /* CSS Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+
+        /* Container Style */
+        .form-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 800px;
+            margin: auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #007bff;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        label {
+            font-size: 1rem;
+            color: #333;
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .copy-btn {
+            margin-left: 10px;
+            background-color: #28a745;
+        }
+
+        .copy-btn:hover {
+            background-color: #218838;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .form-container {
+                padding: 15px;
+                width: 100%;
+            }
+
+            textarea {
+                font-size: 0.9rem;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+    <script>
+        function updateFields() {
+            const incidentType = document.getElementById('incidentType').value;
+            const nameField = document.getElementById('incidentName');
+            const descriptionField = document.getElementById('incidentDescription');
+            const rootCauseField = document.getElementById('rootCause');
+            const actionField = document.getElementById('action');
+
+            if (incidentType === 'Hujan') {
+                nameField.value = 'Penurunan persentase XXX pada Dashboard Beta-INMS XX%';
+                descriptionField.value = 'Terjadi penurunan persentase remote XXX pada Dashboard Beta-INMS XX%\nBerikut terlampir remote yang termonitor offline :';
+                rootCauseField.value = 'Terjadi hujan deras di wilayah XXX, remote yang terdampak otomatis melakukan swing to foreign yang menyebabkan terjadinya penurunan persentase XXX pada Dashboard Beta-INMS.';
+            } else if (incidentType === 'Kelistrikan') {
+                nameField.value = 'Penurunan persentase XXX pada Dashboard Beta-INMS XX%';
+                descriptionField.value = 'Terjadi penurunan persentase remote XXX pada Dashboard Beta-INMS XX%\nBerikut terlampir remote yang termonitor offline :';
+                rootCauseField.value = 'Terjadi pemadaman listrik di wilayah XXX.';
+            } else {
+                // Clear fields if no valid selection
+                nameField.value = '';
+                descriptionField.value = '';
+                rootCauseField.value = '';
+                actionField.value = '';
+            }
+            updateCombinedOutput();
+        }
+
+        // Function to copy text to clipboard
+        function copyToClipboard(id) {
+            const copyText = document.getElementById(id);
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); // For mobile devices
+            document.execCommand("copy");
+            alert("Teks berhasil disalin: " + copyText.value);
+        }
+
+        // Function to clear the form
+        function clearForm() {
+            document.getElementById('incidentType').value = '';
+            document.getElementById('incidentName').value = '';
+            document.getElementById('incidentDescription').value = '';
+            document.getElementById('rootCause').value = '';
+            document.getElementById('action').value = '';
+            document.getElementById('combinedOutput').value = '';
+        }
+
+        // Function to update the combined output
+        function updateCombinedOutput() {
+            const nameField = document.getElementById('incidentName').value;
+            const descriptionField = document.getElementById('incidentDescription').value;
+            const rootCauseField = document.getElementById('rootCause').value;
+            const actionField = document.getElementById('action').value;
+
+            // Format the combined output
+            const combinedOutput = `${nameField}\n\nDeskripsi Insiden :\n${descriptionField}\n\nRoot Cause :\n${rootCauseField}\n\nAction :\n${actionField}`;
+            document.getElementById('combinedOutput').value = combinedOutput;
+        }
+    </script>
+</head>
+<body>
+
+    <div class="form-container">
+        <h1>Form Insiden</h1>
+    
+        <form action="#" method="post">
+            <label for="incidentType">Insiden:</label>
+            <select id="incidentType" name="incidentType" onchange="updateFields()">
+                <option value="">Pilih Insiden</option>
+                <option value="Hujan">Hujan</option>
+                <option value="Kelistrikan">Kelistrikan</option>
+            </select><br><br>
+
+            <label for="incidentName">Nama Insiden:</label>
+            <input type="text" id="incidentName" name="incidentName" readonly>
+            <button type="button" class="copy-btn" onclick="copyToClipboard('incidentName')">Copy</button><br><br>
+
+            <label for="incidentDescription">Deskripsi Insiden:</label><br>
+            <textarea id="incidentDescription" name="incidentDescription" rows="4" cols="50" readonly></textarea>
+            <button type="button" class="copy-btn" onclick="copyToClipboard('incidentDescription')">Copy</button><br><br>
+
+            <label for="rootCause">Root Cause:</label><br>
+            <textarea id="rootCause" name="rootCause" rows="4" cols="50" readonly></textarea>
+            <button type="button" class="copy-btn" onclick="copyToClipboard('rootCause')">Copy</button><br><br>
+
+            <label for="action">Action (Tindakan yang diambil):</label><br>
+            <textarea id="action" name="action" rows="4" cols="50"></textarea>
+            <button type="button" class="copy-btn" onclick="copyToClipboard('action')">Copy</button><br><br>
+
+            <button type="button" onclick="clearForm()">Clear Form</button>
+        </form>
+
+        <h2>Insiden:</h2>
+        <textarea id="combinedOutput" rows="8" cols="80" readonly></textarea><br><br>
+
+        <button type="button" onclick="copyToClipboard('combinedOutput')">Copy</button>
+    </div>
+
+</body>
+</html>

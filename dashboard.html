@@ -194,11 +194,17 @@
         // Show selected tab
         function showTab(tabName) {
             const tabs = document.querySelectorAll('.tab-content');
+            const buttons = document.querySelectorAll('.tab-button');
+
+            // Hide all tab contents
             tabs.forEach(tab => tab.style.display = 'none');
+            // Show the selected tab
             document.getElementById(tabName).style.display = 'block';
 
-            const buttons = document.querySelectorAll('.tab-button');
+            // Remove 'active' class from all buttons
             buttons.forEach(button => button.classList.remove('active'));
+
+            // Add 'active' class to the clicked button
             buttons.forEach(button => {
                 if (button.textContent.toLowerCase() === tabName) {
                     button.classList.add('active');

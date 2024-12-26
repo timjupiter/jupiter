@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WNO Dashboard</title>
+    <!-- Impor Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
     <style>
         /* CSS Reset */
         * {
@@ -46,10 +49,17 @@
             flex: 1;
             margin: 0 5px;
             transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .tab-button:hover, .tab-button.active {
             background-color: #0056b3;
+        }
+
+        .tab-button i {
+            margin-right: 8px; /* Jarak antara ikon dan teks */
         }
 
         #content {
@@ -89,6 +99,7 @@
             background-color: #c9302c;
         }
     </style>
+    
     <script type="module">
         const _0x12d9=["\x61\x70\x69\x4B\x65\x79","AIzaSyAwF9zniA7CBfEk0-EBnC7qTIveB1AQmYM","\x61\x75\x74\x68\x44\x6F\x6D\x61\x69\x6E","jupiter-1b026.firebaseapp.com","\x70\x72\x6F\x6A\x65\x63\x74\x49\x64","jupiter-1b026","\x73\x74\x6F\x72\x61\x67\x65\x42\x75\x63\x6B\x65\x74","jupiter-1b026.appspot.com","\x6D\x65\x73\x73\x61\x67\x69\x6E\x67\x53\x65\x6E\x64\x65\x72\x49\x64","504918793683","\x61\x70\x70\x49\x64","1:504918793683:web:bcc77e0a2c8a8e27d0e326","\x6D\x65\x61\x73\x75\x72\x65\x6D\x65\x6E\x74\x49\x64","G-4SMG7QG8D0"];
         const _0x34b1={};
@@ -173,10 +184,18 @@
 <body>
     <div class="dashboard-container">
         <div class="tabs">
-            <button onclick="showTab('jadwal')" class="tab-button active">JADWAL</button>
-            <button onclick="showTab('verif')" class="tab-button">VERIFIKASI</button>
-            <button onclick="showTab('monitoring')" class="tab-button">MONITORING</button>
-            <button onclick="showTab('h2h')" class="tab-button">H2H</button>
+            <button onclick="showTab('jadwal')" class="tab-button active">
+                <i class="fas fa-calendar"></i> JADWAL
+            </button>
+            <button onclick="showTab('verif')" class="tab-button">
+                <i class="fas fa-check-circle"></i> VERIFIKASI
+            </button>
+            <button onclick="showTab('monitoring')" class="tab-button">
+                <i class="fas fa-tachometer-alt"></i> MONITORING
+            </button>
+            <button onclick="showTab('h2h')" class="tab-button">
+                <i class="fas fa-users"></i> H2H
+            </button>
         </div>
 
         <div id="content">

@@ -125,16 +125,21 @@
 
         function showTab(tabName) {
             const tabs = document.querySelectorAll('.tab-content');
-            tabs.forEach(tab => tab.style.display = 'none');
-            document.getElementById(tabName).style.display = 'block';
+            tabs.forEach(tab => tab.style.display = 'none'); // Sembunyikan semua tab
 
+            const activeTab = document.getElementById(tabName);
+            if (activeTab) {
+                activeTab.style.display = 'block'; // Tampilkan tab yang dipilih
+            }
+
+            // Perbarui status tombol aktif
             const buttons = document.querySelectorAll('.tab-button');
-            buttons.forEach(button => button.classList.remove('active'));
-            buttons.forEach(button => {
-                if (button.textContent.toLowerCase() === tabName) {
-                    button.classList.add('active');
-                }
-            });
+            buttons.forEach(button => button.classList.remove('active')); // Hapus kelas 'active' dari semua tombol
+
+            const activeButton = Array.from(buttons).find(button => button.textContent.trim().toLowerCase() === tabName.toLowerCase());
+            if (activeButton) {
+                activeButton.classList.add('active'); // Tambahkan kelas 'active' pada tombol yang sesuai
+            }
         }
 
         function updateClock() {
@@ -152,7 +157,8 @@
 
             setInterval(updateClock, 60000);
             
-            document.querySelector('.tab-button.active').addEventListener('click', () => showTab('jadwal'));
+            // Menambahkan event listener pada tombol tab
+            document.querySelector('.tab-button:nth-child(1)').addEventListener('click', () => showTab('jadwal'));
             document.querySelector('.tab-button:nth-child(2)').addEventListener('click', () => showTab('verif'));
             document.querySelector('.tab-button:nth-child(3)').addEventListener('click', () => showTab('monitoring'));
             document.querySelector('.tab-button:nth-child(4)').addEventListener('click', () => showTab('h2h'));
@@ -184,18 +190,10 @@
 <body>
     <div class="dashboard-container">
         <div class="tabs">
-            <button onclick="showTab('jadwal')" class="tab-button active">
-                <i class="fas fa-calendar"></i> JADWAL
-            </button>
-            <button onclick="showTab('verif')" class="tab-button">
-                <i class="fas fa-check-circle"></i> VERIFIKASI
-            </button>
-            <button onclick="showTab('monitoring')" class="tab-button">
-                <i class="fas fa-tachometer-alt"></i> MONITORING
-            </button>
-            <button onclick="showTab('h2h')" class="tab-button">
-                <i class="fas fa-users"></i> H2H
-            </button>
+            <button onclick="showTab('jadwal')" class="tab-button active"><i class="fas fa-calendar"></i>JADWAL</button>
+            <button onclick="showTab('verif')" class="tab-button"><i class="fas fa-check-circle"></i>VERIFIKASI</button>
+            <button onclick="showTab('monitoring')" class="tab-button"><i class="fas fa-tachometer-alt"></i>MONITORING</button>
+            <button onclick="showTab('h2h')" class="tab-button"><i class="fas fa-users"></i>H2H</button>
         </div>
 
         <div id="content">

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -94,21 +93,21 @@
 <body>
     <div class="section" id="full_personil">
         <h2><center>WNO (H2H - JUPITER), Jupiter OPS, NOC All Operator</center></h2>
-        <div class="container">
+        <div class="container" id="fullPersonilContainer">
             <!-- Full personil data will be inserted here -->
         </div>
     </div>
     
     <div class="section" id="no_full_personil">
         <h2><center>CAN-WAN-SHD-OST-NOC, Telegram Grup Berkah</center></h2>
-        <div class="container">
+        <div class="container" id="noFullPersonilContainer">
             <!-- No full personil data will be inserted here -->
         </div>
     </div>
     
     <div class="section" id="monitoring">
         <h2><center>Monitoring</center></h2>
-        <div class="container">
+        <div class="container" id="monitoringContainer">
             <!-- Monitoring data will be inserted here -->
         </div>
     </div>
@@ -157,10 +156,12 @@
                     'Y61': 'Shift 3'
                 };
 
-                const fullPersonilContainer = document.querySelector('#full_personil .container');
-                const noFullPersonilContainer = document.querySelector('#no_full_personil .container');
-                const monitoringContainer = document.querySelector('#monitoring .container');
+                // Containers for data
+                const fullPersonilContainer = document.getElementById('fullPersonilContainer');
+                const noFullPersonilContainer = document.getElementById('noFullPersonilContainer');
+                const monitoringContainer = document.getElementById('monitoringContainer');
 
+                // Data cells
                 const fullPersonilCells = ['E59', 'O59', 'Y59'];
                 const noFullPersonilCells = ['E60', 'O60', 'Y60'];
                 const monitoringCells = ['E61', 'O61', 'Y61'];
@@ -172,7 +173,7 @@
                     const label = document.createElement('div');
                     label.className = 'label';
                     label.innerText = labels[cellId] || cellId;
-                    
+
                     const box = document.createElement('div');
                     box.className = 'box';
 
@@ -189,10 +190,16 @@
 
                     boxWrapper.appendChild(label);
                     boxWrapper.appendChild(box);
-                    
+
                     container.appendChild(boxWrapper);
                 }
 
+                // Clean the containers before adding new data
+                fullPersonilContainer.innerHTML = '';
+                noFullPersonilContainer.innerHTML = '';
+                monitoringContainer.innerHTML = '';
+
+                // Add new data to containers
                 fullPersonilCells.forEach(cellId => createBox(cellId, fullPersonilContainer));
                 noFullPersonilCells.forEach(cellId => createBox(cellId, noFullPersonilContainer));
                 monitoringCells.forEach(cellId => createBox(cellId, monitoringContainer));
@@ -205,7 +212,11 @@
             }
         }
 
+        // Initial data fetch
         fetchData();
+
+        // Set interval to refresh data every 5 minutes (300,000 milliseconds)
+        setInterval(fetchData, 300000); // 5 minutes in milliseconds
     </script>
 </body>
 </html>

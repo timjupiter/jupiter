@@ -111,14 +111,19 @@
             const rootCauseField = document.getElementById('rootCause');
             const actionField = document.getElementById('action');
 
+            // Clear action field before setting new value
+            actionField.value = "";
+
             if (incidentType === 'Hujan') {
                 nameField.value = 'Penurunan persentase XXX pada Dashboard Beta-INMS XX%';
                 descriptionField.value = 'Terjadi penurunan persentase remote XXX pada Dashboard Beta-INMS XX%\nBerikut terlampir remote yang termonitor offline :';
                 rootCauseField.value = 'Terjadi hujan deras di wilayah XXX, remote yang terdampak otomatis melakukan swing to foreign yang menyebabkan terjadinya penurunan persentase XXX pada Dashboard Beta-INMS.';
+                actionField.value = "- Melakukan pengecekan remote-remote yang terdampak offline\n- Melakukan pengecekan Inroute - Outroute beam yang terdampak\n- Melakukan pengecekan alarm pada HUB Jupiter\n- Melakukan Koordinasi dengan Provider dan PET IT remote yang terdampak offline";
             } else if (incidentType === 'Kelistrikan') {
                 nameField.value = 'Penurunan persentase XXX pada Dashboard Beta-INMS XX%';
                 descriptionField.value = 'Terjadi penurunan persentase remote XXX pada Dashboard Beta-INMS XX%\nBerikut terlampir remote yang termonitor offline :';
                 rootCauseField.value = 'Terjadi pemadaman listrik di wilayah XXX.';
+                actionField.value = "- Melakukan pengecekan remote-remote yang terdampak offline\n- Melakukan pengecekan Inroute - Outroute beam yang terdampak\n- Melakukan pengecekan alarm pada HUB Jupiter\n- Melakukan Koordinasi dengan Provider dan PET IT remote yang terdampak offline";
             } else {
                 // Clear fields if no valid selection
                 nameField.value = '';
@@ -126,7 +131,6 @@
                 rootCauseField.value = '';
                 actionField.value = '';
             }
-            updateCombinedOutput();
         }
 
         // Function to copy text to clipboard
@@ -145,19 +149,6 @@
             document.getElementById('incidentDescription').value = '';
             document.getElementById('rootCause').value = '';
             document.getElementById('action').value = '';
-            document.getElementById('combinedOutput').value = '';
-        }
-
-        // Function to update the combined output
-        function updateCombinedOutput() {
-            const nameField = document.getElementById('incidentName').value;
-            const descriptionField = document.getElementById('incidentDescription').value;
-            const rootCauseField = document.getElementById('rootCause').value;
-            const actionField = document.getElementById('action').value;
-
-            // Format the combined output
-            const combinedOutput = `${nameField}\n\nDeskripsi Insiden :\n${descriptionField}\n\nRoot Cause :\n${rootCauseField}\n\nAction :\n${actionField}`;
-            document.getElementById('combinedOutput').value = combinedOutput;
         }
     </script>
 </head>
@@ -179,11 +170,11 @@
             <button type="button" class="copy-btn" onclick="copyToClipboard('incidentName')">Copy</button><br><br>
 
             <label for="incidentDescription">Deskripsi Insiden:</label><br>
-            <textarea id="incidentDescription" name="incidentDescription" rows="4" cols="50" readonly></textarea>
+            <textarea id="incidentDescription" name="incidentDescription" rows="4" cols="50"></textarea>
             <button type="button" class="copy-btn" onclick="copyToClipboard('incidentDescription')">Copy</button><br><br>
 
             <label for="rootCause">Root Cause:</label><br>
-            <textarea id="rootCause" name="rootCause" rows="4" cols="50" readonly></textarea>
+            <textarea id="rootCause" name="rootCause" rows="4" cols="50"></textarea>
             <button type="button" class="copy-btn" onclick="copyToClipboard('rootCause')">Copy</button><br><br>
 
             <label for="action">Action (Tindakan yang diambil):</label><br>
@@ -193,10 +184,6 @@
             <button type="button" onclick="clearForm()">Clear Form</button>
         </form>
 
-        <h2>Insiden:</h2>
-        <textarea id="combinedOutput" rows="8" cols="80" readonly></textarea><br><br>
-
-        <button type="button" onclick="copyToClipboard('combinedOutput')">Copy</button>
     </div>
 
 </body>

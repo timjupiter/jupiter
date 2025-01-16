@@ -3,68 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABSENSI SHIFT (REFRESH UNTUK UPDATE DATA)</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             padding: 20px;
         }
+        .section {
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            padding: 20px;
+            box-sizing: border-box;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .section h2 {
+            text-align: center;
+            margin-top: 0;
+        }
         .container {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
             gap: 20px;
-            margin-bottom: 20px;
         }
         .box-wrapper {
             display: flex;
             flex-direction: column;
-            gap: 0;
-            margin-bottom: 30px;
+            margin-bottom: 10px;
         }
         .label {
             font-weight: bold;
-            margin-bottom: 10px;
             text-align: center;
+            margin-bottom: 5px;
         }
         .box {
             border: 1px solid #ddd;
             background-color: #f9f9f9;
-            position: relative;
-            box-sizing: border-box;
-            height: 300px;
+            height: 250px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 10px;
         }
         textarea {
             width: 100%;
-            height: calc(100% - 40px);
-            padding: 10px;
-            box-sizing: border-box;
+            height: 100%;
             border: none;
             background: none;
             resize: none;
             overflow: auto;
             font-family: Arial, sans-serif;
+            text-align: left;
             white-space: pre-wrap;
         }
         button {
             width: 100%;
-            padding: 10px;
+            padding: 8px;
             border: none;
             background: linear-gradient(45deg, #007bff, #0056b3);
             color: white;
             cursor: pointer;
-            box-sizing: border-box;
             border-radius: 5px;
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            transition: 0.3s ease;
         }
         button:hover {
             background: linear-gradient(45deg, #0056b3, #007bff);
             transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
         .feedback {
             position: fixed;
@@ -75,43 +81,38 @@
             padding: 10px;
             border-radius: 5px;
             display: none;
-            opacity: 1;
             transition: opacity 0.5s ease-out;
         }
-        .section {
-            border: 1px solid #ddd;
-            background-color: #f9f9f9;
-            padding: 20px;
-            box-sizing: border-box;
-            border-radius: 10px;
+
+        /* Responsif */
+        @media (min-width: 768px) {
+            .container {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
-        .section h2 {
-            margin-top: 0;
+        @media (max-width: 767px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
     <div class="section" id="full_personil">
-        <h2><center>WNO (H2H - JUPITER), Jupiter OPS, NOC All Operator</center></h2>
-        <div class="container" id="fullPersonilContainer">
-            <!-- Full personil data will be inserted here -->
-        </div>
+        <h2>WNO (H2H - JUPITER), Jupiter OPS, NOC All Operator</h2>
+        <div class="container"></div>
     </div>
-    
+
     <div class="section" id="no_full_personil">
-        <h2><center>CAN-WAN-SHD-OST-NOC, Telegram Grup Berkah</center></h2>
-        <div class="container" id="noFullPersonilContainer">
-            <!-- No full personil data will be inserted here -->
-        </div>
+        <h2>CAN-WAN-SHD-OST-NOC, Telegram Grup Berkah</h2>
+        <div class="container"></div>
     </div>
-    
+
     <div class="section" id="monitoring">
-        <h2><center>Monitoring</center></h2>
-        <div class="container" id="monitoringContainer">
-            <!-- Monitoring data will be inserted here -->
-        </div>
+        <h2>Monitoring</h2>
+        <div class="container"></div>
     </div>
-    
+
     <div id="feedback" class="feedback">Copied to clipboard!</div>
 
     <script>
@@ -122,13 +123,8 @@
 
             var feedback = document.getElementById('feedback');
             feedback.style.display = 'block';
-            feedback.style.opacity = '1';
-
             setTimeout(() => {
-                feedback.style.opacity = '0';
-                setTimeout(() => {
-                    feedback.style.display = 'none';
-                }, 500);
+                feedback.style.display = 'none';
             }, 1000);
         }
 
@@ -141,27 +137,17 @@
                     throw new Error('Network response was not ok.');
                 }
                 const json = await response.json();
-                
-                console.log('Fetched Data:', json);
 
                 const labels = {
-                    'E59': 'Shift 1',
-                    'O59': 'Shift 2',
-                    'Y59': 'Shift 3',
-                    'E60': 'Shift 1',
-                    'O60': 'Shift 2',
-                    'Y60': 'Shift 3',
-                    'E61': 'Shift 1',
-                    'O61': 'Shift 2',
-                    'Y61': 'Shift 3'
+                    'E59': 'Shift 1', 'O59': 'Shift 2', 'Y59': 'Shift 3',
+                    'E60': 'Shift 1', 'O60': 'Shift 2', 'Y60': 'Shift 3',
+                    'E61': 'Shift 1', 'O61': 'Shift 2', 'Y61': 'Shift 3'
                 };
 
-                // Containers for data
-                const fullPersonilContainer = document.getElementById('fullPersonilContainer');
-                const noFullPersonilContainer = document.getElementById('noFullPersonilContainer');
-                const monitoringContainer = document.getElementById('monitoringContainer');
+                const fullPersonilContainer = document.querySelector('#full_personil .container');
+                const noFullPersonilContainer = document.querySelector('#no_full_personil .container');
+                const monitoringContainer = document.querySelector('#monitoring .container');
 
-                // Data cells
                 const fullPersonilCells = ['E59', 'O59', 'Y59'];
                 const noFullPersonilCells = ['E60', 'O60', 'Y60'];
                 const monitoringCells = ['E61', 'O61', 'Y61'];
@@ -173,7 +159,7 @@
                     const label = document.createElement('div');
                     label.className = 'label';
                     label.innerText = labels[cellId] || cellId;
-
+                    
                     const box = document.createElement('div');
                     box.className = 'box';
 
@@ -190,16 +176,9 @@
 
                     boxWrapper.appendChild(label);
                     boxWrapper.appendChild(box);
-
                     container.appendChild(boxWrapper);
                 }
 
-                // Clean the containers before adding new data
-                fullPersonilContainer.innerHTML = '';
-                noFullPersonilContainer.innerHTML = '';
-                monitoringContainer.innerHTML = '';
-
-                // Add new data to containers
                 fullPersonilCells.forEach(cellId => createBox(cellId, fullPersonilContainer));
                 noFullPersonilCells.forEach(cellId => createBox(cellId, noFullPersonilContainer));
                 monitoringCells.forEach(cellId => createBox(cellId, monitoringContainer));
@@ -212,11 +191,7 @@
             }
         }
 
-        // Initial data fetch
         fetchData();
-
-        // Set interval to refresh data every 1 hour
-        setInterval(fetchData, 3600000);  // 1 jam dalam milidetik (3600000 ms)
     </script>
 </body>
 </html>

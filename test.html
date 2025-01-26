@@ -31,29 +31,43 @@
             padding: 10px;
             border-bottom: 1px solid #ddd;
         }
-        input, button {
+        .input-container {
+            display: flex;
+            width: 100%;
+            gap: 10px;
+        }
+        input {
             width: 100%;
             padding: 10px;
-            margin-top: 10px;
             border-radius: 4px;
             border: 1px solid #ddd;
         }
         button {
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
             background-color: #007bff;
             color: white;
-            border: none;
             cursor: pointer;
+            flex-shrink: 0;
         }
         button:hover {
             background-color: #0056b3;
+        }
+        input, button {
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
     <div id="chat-container">
         <h2>Realtime Chat</h2>
+        <div>
+            <label for="username">Username: </label>
+            <input type="text" id="username" placeholder="Enter your username" required>
+        </div>
         <ul id="messages"></ul>
-        <form id="chat-form">
+        <form id="chat-form" class="input-container">
             <input type="text" id="message-input" placeholder="Enter your message" required>
             <button type="submit">Send</button>
         </form>
@@ -62,7 +76,7 @@
     <script>
         // Replace with your actual Ably API Key
         const API_KEY = 'akwaMQ.OO9vAw:KFEExZHoAv3r0HoMjcqK8c7kmpTHQ1U8ORlpou1p5RQ';
-        const CHANNEL_NAME = 'Jupichat';  // The name of your channel
+        const CHANNEL_NAME = 'chat-channel';  // The name of your channel
 
         // Initialize Ably
         const ably = new Ably.Realtime(API_KEY);
@@ -71,7 +85,7 @@
         // Display messages as they are received
         channel.subscribe('new-message', function(message) {
             const li = document.createElement('li');
-            li.textContent = message.data;
+            li.textContent = `${message.data.username}: ${message.data.message}`;
             document.getElementById('messages').appendChild(li);
         });
 
@@ -79,13 +93,19 @@
         const form = document.getElementById('chat-form');
         form.addEventListener('submit', function(e) {
             e.preventDefault();
-            const message = document.getElementById('message-input').value;
+            const username = document.getElementById('username').value.trim();
+            const message = document.getElementById('message-input').value.trim();
 
-            // Publish the message to the channel
-            channel.publish('new-message', message);
+            // Check if username and message are provided
+            if (username && message) {
+                // Publish the message to the channel with the username
+                channel.publish('new-message', { username: username, message: message });
 
-            // Clear the input field after sending the message
-            document.getElementById('message-input').value = '';
+                // Clear the input fields after sending the message
+                document.getElementById('message-input').value = '';
+            } else {
+                alert("Please enter a username and a message.");
+            }
         });
     </script>
 </body>

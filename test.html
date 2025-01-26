@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chatbox Realtime Firebase</title>
+    <title>Test Firebase - Chat</title>
     <script type="module">
-        // Konfigurasi Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyAwF9zniA7CBfEk0-EBnC7qTIveB1AQmYM",
             authDomain: "jupiter-1b026.firebaseapp.com",
@@ -17,16 +16,11 @@
             measurementId: "G-4SMG7QG8D0"
         };
 
-        // Mengimpor library Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getDatabase, ref, set, push, onChildAdded } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+        import { getDatabase, ref, set, push, onValue } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
-        // Menginisialisasi aplikasi Firebase
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
-
-        // Referensi ke path chat di Firebase Realtime Database
-        const chatRef = ref(database, 'chat/');
 
         // Fungsi untuk mengirim pesan ke Firebase
         function sendMessage() {
@@ -34,118 +28,47 @@
             const userName = document.getElementById("userName").value;
 
             if (message.trim() !== "") {
-                // Menambahkan log untuk melihat apa yang dikirim
-                console.log("Mengirim pesan:", message);
-                console.log("Nama Pengguna:", userName);
-
-                // Push pesan ke database Firebase
-                push(chatRef, {
+                push(ref(database, 'chat/'), {
                     username: userName,
                     message: message,
                     timestamp: new Date().toISOString()
                 })
                 .then(() => {
                     document.getElementById("message").value = ""; // Clear input
-                    console.log("Pesan berhasil dikirim ke Firebase!");
                 })
                 .catch((error) => {
-                    console.error("Error sending message: ", error);
+                    console.error("Error sending message:", error);
                 });
             } else {
                 console.log("Pesan kosong, tidak dikirim.");
             }
         }
 
-        // Fungsi untuk mendengarkan pesan baru yang ditambahkan
-        onChildAdded(chatRef, (data) => {
-            const messageData = data.val();
-            const messageElement = document.createElement("div");
-            messageElement.classList.add("chat-message");
+        // Fungsi untuk menampilkan pesan secara real-time
+        function displayMessages(snapshot) {
+            const messages = snapshot.val();
+            const chatBox = document.getElementById("chatBox");
+            chatBox.innerHTML = ''; // Kosongkan chat box sebelum menambahkan pesan baru
 
-            messageElement.innerHTML = `<strong>${messageData.username}:</strong> ${messageData.message} <span class="timestamp">${messageData.timestamp}</span>`;
-            document.getElementById("chat-box").appendChild(messageElement);
+            for (let key in messages) {
+                const message = messages[key];
+                const messageElement = document.createElement("div");
+                messageElement.textContent = `${message.username}: ${message.message}`;
+                chatBox.appendChild(messageElement);
+            }
+        }
 
-            // Scroll ke bawah chat
-            document.getElementById("chat-box").scrollTop = document.getElementById("chat-box").scrollHeight;
-        });
+        // Mengambil dan menampilkan pesan secara real-time
+        const chatRef = ref(database, 'chat/');
+        onValue(chatRef, displayMessages);
     </script>
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-
-        .chat-container {
-            width: 100%;
-            max-width: 600px;
-            margin: 50px auto;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        #chat-box {
-            height: 300px;
-            overflow-y: scroll;
-            border: 1px solid #ddd;
-            padding: 10px;
-            margin-bottom: 10px;
-            background-color: #f9f9f9;
-            border-radius: 5px;
-        }
-
-        .chat-message {
-            margin-bottom: 10px;
-            padding: 8px;
-            background-color: #e9ecef;
-            border-radius: 5px;
-        }
-
-        .chat-message .timestamp {
-            font-size: 0.8em;
-            color: gray;
-            margin-left: 5px;
-        }
-
-        #message, #userName {
-            width: calc(100% - 20px);
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-        }
-
-        button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-    </style>
 </head>
 <body>
-    <div class="chat-container">
-        <h2>Chatbox Realtime</h2>
-        <div id="chat-box">
-            <!-- Pesan chat akan muncul di sini -->
-        </div>
+    <h1>Chat with Firebase Realtime Database</h1>
+    <input type="text" id="userName" placeholder="Your Name" />
+    <input type="text" id="message" placeholder="Type a message..." />
+    <button onclick="sendMessage()">Kirim Pesan</button>
 
-        <!-- Input untuk username dan pesan -->
-        <input type="text" id="userName" placeholder="Masukkan nama pengguna" required>
-        <textarea id="message" rows="3" placeholder="Tulis pesan..." required></textarea>
-        <button onclick="sendMessage()">Kirim Pesan</button>
-    </div>
+    <div id="chatBox" style="margin-top: 20px; border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: auto;"></div>
 </body>
 </html>

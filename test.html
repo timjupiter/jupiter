@@ -1,74 +1,92 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Firebase - Chat</title>
-    <script type="module">
-        const firebaseConfig = {
-            apiKey: "AIzaSyAwF9zniA7CBfEk0-EBnC7qTIveB1AQmYM",
-            authDomain: "jupiter-1b026.firebaseapp.com",
-            databaseURL: "https://console.firebase.google.com/project/jupiter-1b026/database/jupiter-1b026-default-rtdb/data/~2F",
-            projectId: "jupiter-1b026",
-            storageBucket: "jupiter-1b026.appspot.com",
-            messagingSenderId: "504918793683",
-            appId: "1:504918793683:web:bcc77e0a2c8a8e27d0e326",
-            measurementId: "G-4SMG7QG8D0"
-        };
-
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getDatabase, ref, set, push, onValue } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
-
-        const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
-
-        // Fungsi untuk mengirim pesan ke Firebase
-        function sendMessage() {
-            const message = document.getElementById("message").value;
-            const userName = document.getElementById("userName").value;
-
-            if (message.trim() !== "") {
-                push(ref(database, 'chat/'), {
-                    username: userName,
-                    message: message,
-                    timestamp: new Date().toISOString()
-                })
-                .then(() => {
-                    document.getElementById("message").value = ""; // Clear input
-                })
-                .catch((error) => {
-                    console.error("Error sending message:", error);
-                });
-            } else {
-                console.log("Pesan kosong, tidak dikirim.");
-            }
+    <title>Realtime Chat with Ably</title>
+    <script src="https://cdn.ably.io/lib/ably.min-1.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f7f7f7;
         }
-
-        // Fungsi untuk menampilkan pesan secara real-time
-        function displayMessages(snapshot) {
-            const messages = snapshot.val();
-            const chatBox = document.getElementById("chatBox");
-            chatBox.innerHTML = ''; // Kosongkan chat box sebelum menambahkan pesan baru
-
-            for (let key in messages) {
-                const message = messages[key];
-                const messageElement = document.createElement("div");
-                messageElement.textContent = `${message.username}: ${message.message}`;
-                chatBox.appendChild(messageElement);
-            }
+        #chat-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
         }
-
-        // Mengambil dan menampilkan pesan secara real-time
-        const chatRef = ref(database, 'chat/');
-        onValue(chatRef, displayMessages);
-    </script>
+        #messages {
+            list-style-type: none;
+            padding: 0;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        #messages li {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-    <h1>Chat with Firebase Realtime Database</h1>
-    <input type="text" id="userName" placeholder="Your Name" />
-    <input type="text" id="message" placeholder="Type a message..." />
-    <button onclick="sendMessage()">Kirim Pesan</button>
+    <div id="chat-container">
+        <h2>Realtime Chat</h2>
+        <ul id="messages"></ul>
+        <form id="chat-form">
+            <input type="text" id="message-input" placeholder="Enter your message" required>
+            <button type="submit">Send</button>
+        </form>
+    </div>
 
-    <div id="chatBox" style="margin-top: 20px; border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: auto;"></div>
+    <script>
+        // Replace with your actual Ably API Key
+        const API_KEY = 'akwaMQ.OO9vAw:KFEExZHoAv3r0HoMjcqK8c7kmpTHQ1U8ORlpou1p5RQ';
+        const CHANNEL_NAME = 'Jupichat';  // The name of your channel
+
+        // Initialize Ably
+        const ably = new Ably.Realtime(API_KEY);
+        const channel = ably.channels.get(CHANNEL_NAME);
+
+        // Display messages as they are received
+        channel.subscribe('new-message', function(message) {
+            const li = document.createElement('li');
+            li.textContent = message.data;
+            document.getElementById('messages').appendChild(li);
+        });
+
+        // Handle sending messages
+        const form = document.getElementById('chat-form');
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const message = document.getElementById('message-input').value;
+
+            // Publish the message to the channel
+            channel.publish('new-message', message);
+
+            // Clear the input field after sending the message
+            document.getElementById('message-input').value = '';
+        });
+    </script>
 </body>
 </html>

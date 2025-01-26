@@ -169,6 +169,7 @@
             document.querySelector('.tab-button:nth-child(2)').addEventListener('click', () => showTab('verif'));
             document.querySelector('.tab-button:nth-child(3)').addEventListener('click', () => showTab('monitoring'));
             document.querySelector('.tab-button:nth-child(4)').addEventListener('click', () => showTab('h2h'));
+            document.querySelector('.tab-button:nth-child(5)').addEventListener('click', () => showTab('test')); // Event listener untuk tab "Test"
 
             document.querySelector('.logout-button').addEventListener('click', () => {
                 signOut(auth).then(() => {
@@ -201,6 +202,8 @@
             <button onclick="showTab('verif')" class="tab-button"><i class="fas fa-check-circle"></i>VERIFIKASI</button>
             <button onclick="showTab('monitoring')" class="tab-button"><i class="fas fa-tachometer-alt"></i>MONITORING</button>
             <button onclick="showTab('h2h')" class="tab-button"><i class="fas fa-users"></i>H2H</button>
+            <!-- Tab Test -->
+            <button onclick="showTab('test')" class="tab-button"><i class="fas fa-flask"></i>TEST</button>
         </div>
 
         <div id="content">
@@ -215,6 +218,10 @@
             </div>
             <div id="h2h" class="tab-content">
                 <iframe src="h2h.html"></iframe>
+            </div>
+            <!-- Tab Test Content -->
+            <div id="test" class="tab-content">
+                <iframe src="test.html"></iframe>
             </div>
         </div>
         <button class="logout-button"><i class="fas fa-sign-out-alt"></i>Logout</button>

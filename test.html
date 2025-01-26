@@ -34,6 +34,10 @@
             const userName = document.getElementById("userName").value;
 
             if (message.trim() !== "") {
+                // Menambahkan log untuk melihat apa yang dikirim
+                console.log("Mengirim pesan:", message);
+                console.log("Nama Pengguna:", userName);
+
                 // Push pesan ke database Firebase
                 push(chatRef, {
                     username: userName,
@@ -42,10 +46,13 @@
                 })
                 .then(() => {
                     document.getElementById("message").value = ""; // Clear input
+                    console.log("Pesan berhasil dikirim ke Firebase!");
                 })
                 .catch((error) => {
                     console.error("Error sending message: ", error);
                 });
+            } else {
+                console.log("Pesan kosong, tidak dikirim.");
             }
         }
 

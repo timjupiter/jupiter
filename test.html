@@ -6,62 +6,86 @@
     <title>Realtime Chat with Ably</title>
     <script src="https://cdn.ably.io/lib/ably.min-1.js"></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: #f7f7f7;
-        }
-        #chat-container {
-            max-width: 600px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-        }
-        #messages {
-            list-style-type: none;
-            padding: 0;
-            max-height: 300px;
-            overflow-y: auto;
-            margin-bottom: 20px;
-        }
-        #messages li {
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-        .input-container {
-            display: flex;
-            width: 100%;
-            gap: 10px;
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-        }
-        button {
-            padding: 10px;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-            background-color: #007bff;
-            color: white;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        input, button {
-            font-size: 14px;
-        }
+		body {
+			font-family: Arial, sans-serif;
+			margin: 0;
+			padding: 0;
+			background: #f7f7f7;
+		}
+
+		#chat-container {
+			max-width: 800px;
+			margin: 50px auto;
+			padding: 20px;
+			background-color: white;
+			border-radius: 8px;
+			box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+		}
+
+		#messages {
+			list-style-type: none;
+			padding: 0;
+			max-height: 600px;
+			overflow-y: auto;
+			margin-bottom: 20px;
+		}
+
+		#messages li {
+			padding: 10px;
+			border-bottom: 1px solid #ddd;
+		}
+
+		/* Username input style */
+		#username {
+			width: 97%;
+			padding: 10px;
+			border-radius: 4px;
+			border: 1px solid #ddd;
+			font-size: 14px;
+		}
+
+		label {
+			font-size: 14px;
+			margin-bottom: 5px;
+			display: inline-block;
+		}
+
+		/* Input and button container for messages */
+		.input-container {
+			display: flex;
+			width: 100%;
+			gap: 10px;
+		}
+
+		input {
+			width: 100%;
+			padding: 10px;
+			border-radius: 4px;
+			border: 1px solid #ddd;
+		}
+
+		button {
+			padding: 10px;
+			border-radius: 4px;
+			border: 1px solid #ddd;
+			background-color: #007bff;
+			color: white;
+			cursor: pointer;
+			flex-shrink: 0;
+		}
+
+		button:hover {
+			background-color: #0056b3;
+		}
+
+		input, button {
+			font-size: 14px;
+		}
     </style>
 </head>
 <body>
     <div id="chat-container">
-        <h2>Realtime Chat</h2>
+        <h2>Jupi Chat</h2>
         <div>
             <label for="username">Username: </label>
             <input type="text" id="username" placeholder="Enter your username" required>

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test Firebase</title>
     <script type="module">
+        // Konfigurasi Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyAwF9zniA7CBfEk0-EBnC7qTIveB1AQmYM",
             authDomain: "jupiter-1b026.firebaseapp.com",
@@ -16,14 +17,17 @@
             measurementId: "G-4SMG7QG8D0"
         };
 
+        // Mengimpor library Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
+        // Menginisialisasi aplikasi Firebase
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
 
         // Fungsi untuk menulis data ke Firebase
         function writeUserData(userId, name, email) {
+            console.log("Writing data:", { userId, name, email }); // Menampilkan data di console untuk debugging
             set(ref(database, 'users/' + userId), {
                 username: name,
                 email: email
@@ -54,8 +58,14 @@
 </head>
 <body>
     <h1>Test Firebase</h1>
+
+    <!-- Tombol untuk menulis data -->
     <button onclick="writeUserData('user2', 'John Doe', 'john@example.com')">Write Data</button>
+
+    <!-- Tombol untuk membaca data -->
     <button onclick="readUserData('user2')">Read Data</button>
+
+    <!-- Area untuk menampilkan respon -->
     <div id="response" style="margin-top: 20px; font-weight: bold; color: blue;"></div>
 </body>
 </html>

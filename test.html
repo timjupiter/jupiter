@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Firebase</title>
+    <script type="module">
+        const firebaseConfig = {
+            apiKey: "AIzaSyAwF9zniA7CBfEk0-EBnC7qTIveB1AQmYM",
+            authDomain: "jupiter-1b026.firebaseapp.com",
+            databaseURL: "https://jupiter-1b026.firebaseio.com",
+            projectId: "jupiter-1b026",
+            storageBucket: "jupiter-1b026.appspot.com",
+            messagingSenderId: "504918793683",
+            appId: "1:504918793683:web:bcc77e0a2c8a8e27d0e326",
+            measurementId: "G-4SMG7QG8D0"
+        };
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        // Fungsi untuk menulis data ke Firebase
+        function writeUserData(userId, name, email) {
+            set(ref(database, 'users/' + userId), {
+                username: name,
+                email: email
+            })
+            .then(() => {
+                document.getElementById("response").innerText = "Data berhasil ditulis!";
+            })
+            .catch((error) => {
+                document.getElementById("response").innerText = "Error menulis data: " + error;
+            });
+        }
+
+        // Fungsi untuk membaca data dari Firebase
+        function readUserData(userId) {
+            const dbRef = ref(database);
+            get(child(dbRef, 'users/' + userId)).then((snapshot) => {
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    document.getElementById("response").innerText = `Data yang dibaca: ${JSON.stringify(data)}`;
+                } else {
+                    document.getElementById("response").innerText = "No data available";
+                }
+            }).catch((error) => {
+                document.getElementById("response").innerText = "Error membaca data: " + error;
+            });
+        }
+    </script>
+</head>
+<body>
+    <h1>Test Firebase</h1>
+    <button onclick="writeUserData('user2', 'John Doe', 'john@example.com')">Write Data</button>
+    <button onclick="readUserData('user2')">Read Data</button>
+    <div id="response" style="margin-top: 20px; font-weight: bold; color: blue;"></div>
+</body>
+</html>

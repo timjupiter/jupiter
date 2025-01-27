@@ -5,100 +5,143 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Realtime Chat with Ably</title>
     <script src="https://cdn.ably.io/lib/ably.min-1.js"></script>
+    <!-- Include W3.CSS for styling -->
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <style>
-		body {
-			font-family: Arial, sans-serif;
-			margin: 0;
-			padding: 0;
-			background: #f7f7f7;
-		}
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
 
-		#chat-container {
-			max-width: 800px;
-			margin: 50px auto;
-			padding: 20px;
-			background-color: white;
-			border-radius: 8px;
-			box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-		}
+        #chat-container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: 80vh;
+            max-height: 700px;
+        }
 
-		#messages {
-			list-style-type: none;
-			padding: 0;
-			max-height: 600px;
-			overflow-y: auto;
-			margin-bottom: 20px;
-		}
+        #chat-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-		#messages li {
-			padding: 10px;
-			border-bottom: 1px solid #ddd;
-		}
+        #messages {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
 
-		/* Username input style */
-		#username {
-			width: 97%;
-			padding: 10px;
-			border-radius: 4px;
-			border: 1px solid #ddd;
-			font-size: 14px;
-		}
+        #messages li {
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            border-radius: 15px;
+            position: relative;
+            max-width: 80%;
+            display: flex;
+            align-items: center;
+            word-wrap: break-word;
+        }
 
-		label {
-			font-size: 14px;
-			margin-bottom: 5px;
-			display: inline-block;
-		}
+        /* Your message styling (align to the right) */
+        .user-message {
+            background-color: #e6f7ff;
+            margin-left: auto; /* Align to the right */
+            margin-right: 0;
+        }
 
-		/* Input and button container for messages */
-		.input-container {
-			display: flex;
-			width: 100%;
-			gap: 10px;
-		}
+        /* Other user's message styling (align to the left) */
+        .other-message {
+            background-color: #f1f1f1;
+            margin-left: 0;
+            margin-right: auto; /* Align to the left */
+        }
 
-		input {
-			width: 100%;
-			padding: 10px;
-			border-radius: 4px;
-			border: 1px solid #ddd;
-		}
+        .message-text {
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 10px;
+            max-width: 100%;
+        }
 
-		button {
-			padding: 10px;
-			border-radius: 4px;
-			border: 1px solid #ddd;
-			background-color: #007bff;
-			color: white;
-			cursor: pointer;
-			flex-shrink: 0;
-		}
+        .message-username {
+            font-weight: bold;
+            font-size: 14px;
+            display: block;
+        }
 
-		button:hover {
-			background-color: #0056b3;
-		}
+        .message-content {
+            font-size: 16px;
+            word-wrap: break-word;
+        }
 
-		input, button {
-			font-size: 14px;
-		}
+        .input-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        #username, #message-input {
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+            width: 100%;
+        }
+
+        button {
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        label {
+            font-size: 14px;
+            margin-bottom: 5px;
+            display: inline-block;
+        }
+
     </style>
 </head>
 <body>
-    <div id="chat-container">
-        <h2>Jupi Chat</h2>
-        <div>
-            <label for="username">Username: </label>
-            <input type="text" id="username" placeholder="Enter your username" required>
+
+    <div id="chat-container" class="w3-card-4 w3-white">
+        <div id="chat-header" class="w3-center w3-blue w3-padding-16">
+            <h2>Jupi Chat</h2>
         </div>
-        <ul id="messages"></ul>
+
+        <div class="w3-margin-bottom">
+            <label for="username" class="w3-label">Username:</label>
+            <input type="text" id="username" placeholder="Enter your username" required class="w3-input w3-border">
+        </div>
+
+        <ul id="messages" class="w3-ul w3-card-2 w3-padding-16"></ul>
+
         <form id="chat-form" class="input-container">
-            <input type="text" id="message-input" placeholder="Enter your message" required>
-            <button type="submit">Send</button>
+            <input type="text" id="message-input" placeholder="Enter your message" required class="w3-input w3-border">
+            <button type="submit" class="w3-btn w3-blue w3-margin-left">Send</button>
         </form>
     </div>
 
     <script>
-        // Replace with your actual Ably API Key
         const API_KEY = 'akwaMQ.OO9vAw:KFEExZHoAv3r0HoMjcqK8c7kmpTHQ1U8ORlpou1p5RQ';
         const CHANNEL_NAME = 'chat-channel';  // The name of your channel
 
@@ -109,8 +152,37 @@
         // Display messages as they are received
         channel.subscribe('new-message', function(message) {
             const li = document.createElement('li');
-            li.textContent = `${message.data.username}: ${message.data.message}`;
+            const username = message.data.username;
+            const messageText = message.data.message;
+            
+            // Create message element
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message-text');
+            
+            // Create username span
+            const usernameElement = document.createElement('span');
+            usernameElement.classList.add('message-username');
+            usernameElement.textContent = `${username}: `;
+            
+            // Create message content span
+            const messageContentElement = document.createElement('span');
+            messageContentElement.classList.add('message-content');
+            messageContentElement.textContent = messageText;
+            
+            // Append username and message content to the message element
+            messageElement.appendChild(usernameElement);
+            messageElement.appendChild(messageContentElement);
+
+            // Add styles for user vs other users' messages
+            if (username === document.getElementById('username').value) {
+                li.classList.add('user-message'); // Align user message to the right
+            } else {
+                li.classList.add('other-message'); // Align other users' message to the left
+            }
+
+            li.appendChild(messageElement);
             document.getElementById('messages').appendChild(li);
+            li.scrollIntoView({ behavior: 'smooth' });
         });
 
         // Handle sending messages
@@ -120,9 +192,8 @@
             const username = document.getElementById('username').value.trim();
             const message = document.getElementById('message-input').value.trim();
 
-            // Check if username and message are provided
             if (username && message) {
-                // Publish the message to the channel with the username
+                // Publish the message to the channel
                 channel.publish('new-message', { username: username, message: message });
 
                 // Clear the input fields after sending the message
@@ -132,5 +203,6 @@
             }
         });
     </script>
+
 </body>
 </html>

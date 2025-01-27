@@ -309,12 +309,20 @@ document.getElementById('statusForm').addEventListener('submit', function(e) {
     document.getElementById('copyButton').style.display = 'inline-block';
 
     // Text area for status specific text
-    const updateResultText = document.getElementById('updateResult');
-    if (status === 'online') {
-        updateResultText.value = `UPDATE,\n\nKami informasikan kembali saat ini remote berikut :\n${devicesList}\nsudah termonitor *ONLINE* kembali pada dashboard monica.\n\nTerimakasih.`;
-    } else if (status === 'offline') {
-        updateResultText.value = `UPDATE,\n\nKami informasikan kembali saat ini remote berikut :\n${devicesList}\nsudah termonitor *ONLINE* kembali pada dashboard monica.\n\nTerimakasih.`;
-    }
+	if (deviceNames.length > 1) {
+	    if (status === 'online') {
+	        updateResultText.value = `UPDATE,\n\nKami informasikan kembali saat ini remote berikut :\n${devicesList}\nsudah termonitor *ONLINE* kembali pada dashboard monica.\n\nTerimakasih.`;
+	    } else if (status === 'offline') {
+	        updateResultText.value = `UPDATE,\n\nKami informasikan kembali saat ini remote berikut :\n${devicesList}\nsudah termonitor *ONLINE* kembali pada dashboard monica.\n\nTerimakasih.`;
+	    }
+	} else {
+	    const deviceName = deviceNames[0].trim();
+	    if (status === 'online') {
+	        updateResultText.value = `UPDATE,\n\nKami informasikan kembali saat ini remote *${deviceName}* sudah termonitor *ONLINE* kembali pada dashboard monica.\n\nTerimakasih.`;
+	    } else if (status === 'offline') {
+	        updateResultText.value = `UPDATE,\n\nKami informasikan kembali saat ini remote *${deviceName}* sudah termonitor *ONLINE* kembali pada dashboard monica.\n\nTerimakasih.`;
+	    }
+	}
 
     updateResultText.style.display = 'block';
     document.getElementById('copyUpdateButton').style.display = 'inline-block';

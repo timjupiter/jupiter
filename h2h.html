@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,8 +15,9 @@
             gap: 20px;
         }
 
-        #html1, #html2 {
-            width: calc(50% - 10px);  /* Equal width for both sections, adjusting for gap */
+        #html1,
+        #html2 {
+            width: calc(50% - 10px);
         }
 
         /* HTML1 Styles */
@@ -33,7 +35,9 @@
             margin-bottom: 5px;
         }
 
-        #html1 input, #html1 select, #html1 textarea {
+        #html1 input,
+        #html1 select,
+        #html1 textarea {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
@@ -43,7 +47,8 @@
             white-space: pre-wrap;
         }
 
-        #html1 #result, #html1 #updateResult {
+        #html1 #result,
+        #html1 #updateResult {
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
@@ -53,17 +58,12 @@
             background-color: #f8f9fa;
             font-family: Arial, sans-serif;
             font-size: 14px;
-            overflow-y: auto;  /* Allows scrolling if content exceeds max-height */
-            display: none;  /* Initially hidden */
-            white-space: pre-wrap;  /* Preserves whitespace formatting */
-            resize: vertical;  /* Add this line to make it resizable vertically */
+            overflow-y: auto;
+            display: none;
+            white-space: pre-wrap;
+            resize: vertical;
         }
 
-        /* To make both vertically resizable */
-        #html1 #updateResult {
-            resize: vertical;  /* Ensure this line is also present */
-        }
-        
         #html1 button {
             padding: 10px 15px;
             background-color: #4CAF50;
@@ -78,7 +78,8 @@
             background-color: #45a049;
         }
 
-        #html1 #copyButton, #html1 #copyUpdateButton {
+        #html1 #copyButton,
+        #html1 #copyUpdateButton {
             display: none;
             margin-top: 10px;
         }
@@ -92,7 +93,7 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
-            align-items: center; /* Align children (clock and container) center horizontally */
+            align-items: center;
         }
 
         #html2 #clock {
@@ -105,18 +106,18 @@
             margin-bottom: 10px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             text-align: center;
-            width: 100%; /* Ensure the clock fills the available width */
-            max-width: 300px; /* Optional, to prevent it from becoming too large */
+            width: 100%;
+            max-width: 300px;
         }
 
         #html2 .container {
-            display: block;  /* Makes the container a block element */
-            width: 100%;     /* Ensure the container takes up the full width of its parent */
+            display: block;
+            width: 100%;
             padding: 30px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             border-radius: 15px;
             background-color: #ffffff;
-            margin-top: 20px; /* Adds some space between the clock and the container */
+            margin-top: 20px;
             box-sizing: border-box;
         }
 
@@ -187,17 +188,19 @@
                 flex-direction: column;
                 gap: 10px;
             }
-            #html1, #html2 {
+
+            #html1,
+            #html2 {
                 width: 100%;
             }
         }
     </style>
 </head>
+
 <body>
     <!-- HTML1 -->
     <div id="html1">
         <h2 style="text-align: center;">Kata - kata hari ini</h2>
-
         <!-- Form Input -->
         <form id="statusForm">
             <label for="deviceName">Nama Perangkat :</label>
@@ -274,23 +277,20 @@
     </div>
 
     <script>
-        document.getElementById('statusForm').addEventListener('input', function() {
+        // Form Input Validation and Result Display
+        document.getElementById('statusForm').addEventListener('input', function () {
             const deviceName = document.getElementById('deviceName').value.trim();
             const status = document.getElementById('status').value;
             document.getElementById('submitButton').disabled = !(deviceName && status);
         });
 
-        document.getElementById('statusForm').addEventListener('submit', function(e) {
+        document.getElementById('statusForm').addEventListener('submit', function (e) {
             e.preventDefault();
             const deviceNames = document.getElementById('deviceName').value.trim().split(',');
             const status = document.getElementById('status').value;
             let resultText = '';
             let devicesList = deviceNames.map(name => `*${name.trim()}*`).join('\n');
 
-            console.log('deviceNames:', deviceNames);
-            console.log('status:', status);
-
-            // Generate result text for multiple or single devices
             if (deviceNames.length > 1) {
                 if (status === 'online') {
                     resultText = `FYI,\n\nKami informasikan bahwa status koneksi remote berikut :\n${devicesList}\ntermonitor *DOWN* pada dashboard monica, namun hasil pengecekan trace dan ping *ONLINE*.\n\nTerimakasih.`;
@@ -309,7 +309,6 @@
             const resultDiv = document.getElementById('result');
             resultDiv.textContent = resultText;
             resultDiv.style.display = 'block';
-
             document.getElementById('copyButton').style.display = 'inline-block';
 
             // Update result for updateResult
@@ -323,9 +322,9 @@
             } else {
                 const deviceName = deviceNames[0].trim();
                 if (status === 'online') {
-                    updateResultText.value = `UPDATE,\n\nKami informasikan kembali saat ini remote *${deviceName}* sudah termonitor *ONLINE* kembali pada dashboard monica.\n\nTerimakasih.`;
+                    updateResultText.value = `UPDATE,\n\nKami informasikan kembali remote ${deviceName} sudah termonitor *ONLINE* kembali pada dashboard monica.\n\nTerimakasih.`;
                 } else if (status === 'offline') {
-                    updateResultText.value = `UPDATE,\n\nKami informasikan kembali saat ini remote *${deviceName}* sudah termonitor *ONLINE* kembali pada dashboard monica.\n\nTerimakasih.`;
+                    updateResultText.value = `UPDATE,\n\nKami informasikan kembali remote ${deviceName} sudah termonitor *ONLINE* kembali pada dashboard monica.\n\nTerimakasih.`;
                 }
             }
 
@@ -333,22 +332,31 @@
             document.getElementById('copyUpdateButton').style.display = 'inline-block';
         });
 
-        // Copy function
-        function copyMessage(messageId) {
-            const messageText = document.getElementById(messageId).textContent.trim();
-            if (messageText) {
-                navigator.clipboard.writeText(messageText).then(() => {
-                    showNotification();
-                });
-            }
-        }
+        // Add event listener for "Copy Hasil" button
+        document.getElementById('copyButton').addEventListener('click', function () {
+            const resultDiv = document.getElementById('result');
+            const textToCopy = resultDiv.textContent;
+            copyTextToClipboard(textToCopy);
+        });
 
-        function showNotification() {
-            const notification = document.getElementById('notification');
-            notification.classList.add('show');
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 3000);
+        // Add event listener for "Copy Update" button
+        document.getElementById('copyUpdateButton').addEventListener('click', function () {
+            const updateResultText = document.getElementById('updateResult');
+            const textToCopy = updateResultText.value;
+            copyTextToClipboard(textToCopy);
+        });
+
+        // Function to copy text to clipboard
+        function copyTextToClipboard(text) {
+            navigator.clipboard.writeText(text).then(function () {
+                const notification = document.getElementById('notification');
+                notification.classList.add('show');
+                setTimeout(function () {
+                    notification.classList.remove('show');
+                }, 2000);
+            }).catch(function (err) {
+                alert('Gagal menyalin teks: ' + err);
+            });
         }
 
         // Update the clock every second
@@ -356,35 +364,19 @@
             const now = new Date();
             document.getElementById('clock').textContent = now.toLocaleTimeString();
         }, 1000);
-		
-        // Script untuk HTML2
-        function copyMessage(messageId) {
-            const messageElement = document.getElementById(messageId);
-            if (messageElement) {
-                const textToCopy = messageElement.textContent || messageElement.innerText;
-                navigator.clipboard.writeText(textToCopy).then(function() {
-                    const notification = document.getElementById('notification');
-                    notification.classList.add('show');
-                    setTimeout(function() {
-                        notification.classList.remove('show');
-                    }, 2000);
-                }).catch(function(err) {
-                    alert('Gagal menyalin teks: ' + err);
-                });
-            }
-        }
 
+        // Update the messages based on the current time
         function updateClock() {
             const now = new Date();
             const hours = now.getHours();
             const minutes = now.getMinutes();
             const seconds = now.getSeconds();
-            
+
             const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
-            
+
             const clockElement = document.getElementById('clock');
             clockElement.textContent = `${formattedTime}:${String(seconds).padStart(2, '0')}`;
-            
+
             let adjustedHours = hours;
             if (minutes >= 30) {
                 adjustedHours += 1;
@@ -392,7 +384,7 @@
             if (adjustedHours === 24) {
                 adjustedHours = 0;
             }
-            
+
             const messageTime = `${String(adjustedHours).padStart(2, '0')}:00 WIB`;
 
             document.getElementById('message1').textContent = `Berikut MRTG Link H2H SDWAN BI-FAST & SKN PSCF via Lintas pada pukul ${messageTime}`;
@@ -402,8 +394,29 @@
             document.getElementById('message5').textContent = `Berikut MRTG Link H2H BI SDWAN-SSSS BSCF via Lintas pada pukul ${messageTime}`;
         }
 
+        // Initial call to set messages immediately
+        updateClock();
+
+        // Update messages every second
         setInterval(updateClock, 1000);
-        updateClock();  // Initial call to set messages immediately
+
+        // Copy function
+        function copyMessage(messageId) {
+            const messageElement = document.getElementById(messageId);
+            if (messageElement) {
+                const textToCopy = messageElement.textContent || messageElement.innerText;
+                navigator.clipboard.writeText(textToCopy).then(function () {
+                    const notification = document.getElementById('notification');
+                    notification.classList.add('show');
+                    setTimeout(function () {
+                        notification.classList.remove('show');
+                    }, 2000);
+                }).catch(function (err) {
+                    alert('Gagal menyalin teks: ' + err);
+                });
+            }
+        }
     </script>
 </body>
+
 </html>

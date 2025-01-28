@@ -61,23 +61,24 @@
             border-bottom: none;
         }
 
-		.custom-textarea {
-			width: 95.5%; /* Menyamakan lebar dengan select */
-			height: 150px;
-			padding: 10px; /* Sesuaikan padding agar lebih seimbang */
-			border-radius: 5px;
-			border: 1px solid #ced4da;
-			background-color: #fdfdfe;
-			box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-			font-weight: bold;
-			text-align: left;
-			margin-bottom: 5px;
-			overflow-y: auto;
-		}
+        .custom-textarea {
+            width: 95.5%; /* Menyamakan lebar dengan select */
+            height: 150px;
+            padding: 10px; /* Sesuaikan padding agar lebih seimbang */
+            border-radius: 5px;
+            border: 1px solid #ced4da;
+            background-color: #fdfdfe;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            font-weight: bold;
+            text-align: left;
+            margin-bottom: 5px;
+            overflow-y: auto;
+            white-space: pre-wrap; /* Menjaga format teks dengan new lines */
+        }
 
         select {
             width: 100%;
-			margin-bottom: 10px;
+            margin-bottom: 10px;
             margin-top: 5px;
             padding: 12px;
             border-radius: 5px;
@@ -146,7 +147,6 @@
                 margin-bottom: 20px;
             }
         }
-		
     </style>
 </head>
 <body>
@@ -175,7 +175,7 @@
                 <select id="menuSelect">
                     <option value="">Select Menu</option>
                     <option value="C-BAND">C-BAND</option>
-                    <option value="EXT-C">EXT-C</option>
+                    <option value="EXT-C">EXT C</option>
                     <option value="KU BAND">KU BAND</option>
                     <option value="SATDIV">SATDIV</option>
                     <option value="Beam XXX">BEAM</option>
@@ -202,16 +202,14 @@
                 </select>
             </div>
 
-            <div id="infoTextarea" class="custom-textarea" contenteditable="true">
-            </div>
+            <div id="infoTextarea" class="custom-textarea" contenteditable="true"></div>
             
             <div class="form-actions">
                 <button class="copy-button" onclick="copyTextarea()" style="width: 48%;">Copy Text</button>
                 <button class="copy-button" onclick="clearForm()" style="width: 48%;">Clear Form</button>
             </div>
 
-            <div id="updateMessage" class="custom-textarea" contenteditable="true" style="margin-top: 20px;">
-            </div>
+            <div id="updateMessage" class="custom-textarea" contenteditable="true" style="margin-top: 20px;"></div>
             
             <div class="form-actions">
                 <button class="copy-button" onclick="updateMessageText()" style="width: 48%;">Copy Update</button>
@@ -265,52 +263,55 @@
             updateTextarea(selectedMenu, selectedBeam);
         });
 
-		function updateTextarea(mainMenu, beam) {
-			const textarea = document.getElementById('infoTextarea');
-			const updateMessage = document.getElementById('updateMessage');
-			
-			let menuText = beam || mainMenu;
+        function updateTextarea(mainMenu, beam) {
+            const textarea = document.getElementById('infoTextarea');
+            const updateMessage = document.getElementById('updateMessage');
+            
+            let menuText = beam || mainMenu;
 
-			if (menuText) {
-				// Text with asterisks for WhatsApp (and newlines for display in textarea)
-				const messageText = `*Fyi,*\n\nTermonitor terjadi penurunan presentase *Jupiter ${menuText}* pada dashboard BETA-INMS, Saat ini sedang dalam pengecekan.\n\nTerima kasih`;
-				const updateText = `*Update*\n\nTermonitor presentase *Jupiter ${menuText}* sudah berangsur normal kembali pada dashboard BETA-INMS.\n\nTerima kasih`;
+            if (menuText) {
+                // Text with asterisks for WhatsApp (and newlines for display in textarea)
+                const messageText = `*Fyi,*<br><br>Termonitor terjadi penurunan presentase *Jupiter ${menuText}* pada dashboard BETA-INMS, Saat ini sedang dalam pengecekan.<br><br>Terima kasih`;
+                const updateText = `*Update*<br><br>Termonitor presentase *Jupiter ${menuText}* sudah berangsur normal kembali pada dashboard BETA-INMS.<br><br>Terima kasih`;
 
-				// Set the text in the textarea (will show line breaks correctly)
-				textarea.textContent = messageText;
+                // Set the text in the textarea (will show line breaks correctly)
+                textarea.innerHTML = messageText;
 
-				// Optionally display this in another div or text area for copying
-				updateMessage.textContent = updateText;
-				
-			} else {
-				textarea.textContent = 'Pilih pada drop-down diatas';
-				updateMessage.textContent = 'Pilih pada drop-down diatas';
-			}
-		}
+                // Optionally display this in another div or text area for copying
+                updateMessage.innerHTML = updateText;
+                
+            } else {
+                textarea.innerHTML = 'Pilih pada drop-down diatas';
+                updateMessage.innerHTML = 'Pilih pada drop-down diatas';
+            }
+        }
 
         function clearForm() {
             document.getElementById('menuSelect').value = '';
             document.getElementById('beamSelect').value = '';
             document.getElementById('beamOptionsWrapper').classList.add('hidden');
-            document.getElementById('infoTextarea').textContent = '';
+            document.getElementById('infoTextarea').innerHTML = '';
         }
 
-        function clearUpdateMessage() {
-            document.getElementById('updateMessage').textContent = 'Pilih pada drop-down diatas';
-        }
+		function clearUpdateMessage() {
+			const defaultMessage = 'Pilih pada drop-down diatas';
 
-        function copyMessage(id) {
-            const message = document.getElementById(id).textContent;
-            navigator.clipboard.writeText(message).then(() => {
-                showNotification('Message copied to clipboard!');
-            }).catch(err => {
-                console.error('Failed to copy message: ', err);
-            });
-        }
+			// Setel teks default untuk kedua textarea menggunakan value
+			document.getElementById('updateMessage').value = defaultMessage;
+			document.getElementById('infoTextarea').value = defaultMessage;
+		}
+
+		function clearUpdateMessage() {
+			const defaultMessage = 'Pilih pada drop-down diatas';
+
+			// Setel teks default untuk semua textarea
+			document.getElementById('updateMessage').innerHTML = defaultMessage;
+			document.getElementById('infoTextarea').innerHTML = defaultMessage;
+		}
 
         function copyTextarea() {
             const textarea = document.getElementById('infoTextarea');
-            navigator.clipboard.writeText(textarea.textContent).then(() => {
+            navigator.clipboard.writeText(textarea.innerText).then(() => {
                 showNotification('Message copied to clipboard!');
             }).catch(err => {
                 console.error('Failed to copy message: ', err);
@@ -319,7 +320,7 @@
 
         function updateMessageText() {
             const updateMessage = document.getElementById('updateMessage');
-            navigator.clipboard.writeText(updateMessage.textContent).then(() => {
+            navigator.clipboard.writeText(updateMessage.innerText).then(() => {
                 showNotification('Update message copied to clipboard!');
             }).catch(err => {
                 console.error('Failed to copy update message: ', err);

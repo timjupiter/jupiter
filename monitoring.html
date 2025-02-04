@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -335,6 +336,17 @@
                 notification.classList.remove('show');
             }, 2000);
         }
+
+		function copyMessage(messageId) {
+			const messageElement = document.getElementById(messageId);
+			const messageText = messageElement.textContent || messageElement.innerText;
+
+			navigator.clipboard.writeText(messageText).then(() => {
+				showNotification('Message copied to clipboard!');
+			}).catch(err => {
+				console.error('Failed to copy message: ', err);
+			});
+		}
 
         setInterval(updateClock, 1000);
         updateClock();

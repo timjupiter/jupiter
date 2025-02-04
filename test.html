@@ -20,7 +20,7 @@
             margin: 50px auto;
             padding: 20px;
             background-color: white;
-            border-radius: 12px; /* Rounded corners for the container */
+            border-radius: 12px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
@@ -45,7 +45,7 @@
         #messages li {
             padding: 10px 15px;
             margin-bottom: 10px;
-            border-radius: 20px; /* Rounded corners for each message bubble */
+            border-radius: 20px;
             position: relative;
             max-width: 80%;
             display: flex;
@@ -53,27 +53,25 @@
             word-wrap: break-word;
         }
 
-        /* Your message styling (align to the right) */
         .user-message {
             background-color: #e6f7ff;
-            margin-left: auto; /* Align to the right */
+            margin-left: auto;
             margin-right: 0;
-            border-radius: 20px 20px 0 20px; /* Rounded corners for the right message bubble */
+            border-radius: 20px 20px 0 20px;
         }
 
-        /* Other user's message styling (align to the left) */
         .other-message {
             background-color: #f1f1f1;
             margin-left: 0;
-            margin-right: auto; /* Align to the left */
-            border-radius: 20px 20px 20px 0; /* Rounded corners for the left message bubble */
+            margin-right: auto;
+            border-radius: 20px 20px 20px 0;
         }
 
         .message-text {
             display: inline-block;
             padding: 8px 12px;
             max-width: 100%;
-            border-radius: 12px; /* Rounded corners for the message text */
+            border-radius: 12px;
         }
 
         .message-username {
@@ -96,7 +94,7 @@
 
         #username, #message-input {
             padding: 10px;
-            border-radius: 8px; /* Rounded input fields */
+            border-radius: 8px;
             border: 1px solid #ddd;
             font-size: 14px;
             width: 100%;
@@ -104,7 +102,7 @@
 
         button {
             padding: 10px;
-            border-radius: 8px; /* Rounded button */
+            border-radius: 8px;
             border: 1px solid #ddd;
             background-color: #007bff;
             color: white;
@@ -152,6 +150,37 @@
         const ably = new Ably.Realtime(API_KEY);
         const channel = ably.channels.get(CHANNEL_NAME);
 
+        // Check for browser notification support and request permission
+        if ('Notification' in window) {
+            // Request permission to show notifications
+            Notification.requestPermission().then(function(permission) {
+                if (permission === "granted") {
+                    console.log("Notification permission granted.");
+                } else {
+                    console.log("Notification permission denied.");
+                }
+            });
+        }
+
+        // Function to show notification
+		function showNotification(username, message) {
+			if (Notification.permission === "granted") {
+				const notification = new Notification("New message from " + username, {
+					body: message,
+					icon: 'https://iconarchive.com/download/i10726/google/noto-emoji-animals-nature/22215-bell.ico',  // Notification bell icon
+				});
+				notification.onclick = function() {
+					window.focus();  // Focus the window when the notification is clicked
+				};
+			}
+		}
+
+        // Optional sound notification
+		function playNotificationSound() {
+			const audio = new Audio('https://www.zapsplat.com/wp-content/uploads/2019/04/zapsplat_communication_phone_notification_ring_tone_1.mp3');
+			audio.play();
+		}
+
         // Display messages as they are received
         channel.subscribe('new-message', function(message) {
             const li = document.createElement('li');
@@ -181,6 +210,8 @@
                 li.classList.add('user-message'); // Align user message to the right
             } else {
                 li.classList.add('other-message'); // Align other users' message to the left
+                showNotification(username, messageText); // Show notification for other messages
+                playNotificationSound(); // Play sound for new messages
             }
 
             li.appendChild(messageElement);

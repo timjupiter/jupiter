@@ -315,16 +315,16 @@
             const updateResultText = document.getElementById('updateResult');
             if (deviceNames.length > 1) {
                 if (status === 'online') {
-                    updateResultText.value = `UPDATE,\n\nKami informasikan kembali saat ini remote berikut :\n${devicesList}\nsudah termonitor *ONLINE* kembali pada dashboard monica.\n\nTerimakasih.`;
+                    updateResultText.value = `UPDATE,\n\nKami informasikan kembali saat ini remote berikut :\n*${devicesList}*\nsudah termonitor *ONLINE* kembali pada dashboard monica.\n\nTerimakasih.`;
                 } else if (status === 'offline') {
-                    updateResultText.value = `UPDATE,\n\nKami informasikan kembali saat ini remote berikut :\n${devicesList}\nsudah termonitor *ONLINE* kembali pada dashboard monica.\n\nTerimakasih.`;
+                    updateResultText.value = `UPDATE,\n\nKami informasikan kembali saat ini remote berikut :\n*${devicesList}*\nsudah termonitor *ONLINE* kembali pada dashboard monica.\n\nTerimakasih.`;
                 }
             } else {
                 const deviceName = deviceNames[0].trim();
                 if (status === 'online') {
-                    updateResultText.value = `UPDATE,\n\nKami informasikan kembali remote ${deviceName} sudah termonitor *ONLINE* kembali pada dashboard monica.\n\nTerimakasih.`;
+                    updateResultText.value = `UPDATE,\n\nKami informasikan kembali remote *${deviceName}* sudah termonitor *ONLINE* kembali pada dashboard monica.\n\nTerimakasih.`;
                 } else if (status === 'offline') {
-                    updateResultText.value = `UPDATE,\n\nKami informasikan kembali remote ${deviceName} sudah termonitor *ONLINE* kembali pada dashboard monica.\n\nTerimakasih.`;
+                    updateResultText.value = `UPDATE,\n\nKami informasikan kembali remote *${deviceName}* sudah termonitor *ONLINE* kembali pada dashboard monica.\n\nTerimakasih.`;
                 }
             }
 

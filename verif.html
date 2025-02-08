@@ -109,6 +109,16 @@
         <div class="paste-text-container">
             <label for="inputText">Copas Req Dari Provider disini :</label>
             <textarea id="inputText" style="font-size: 18px;"></textarea>
+
+            <div class="input-group">
+                <label for="beam">Beam:</label>
+                <input type="text" id="beam" placeholder="Masukkan Beam">
+                <label for="sqf">SQF:</label>
+                <input type="text" id="sqf" placeholder="Masukkan SQF">
+                <label for="esno">ESNO:</label>
+                <input type="text" id="esno" placeholder="Masukkan ESNO">
+            </div>
+
             <div class="button-container">
                 <button class="clear-button" onclick="clearInput()" aria-label="Clear Text">Clear</button>
             </div>
@@ -135,12 +145,23 @@
     </div>
 
     <script>
-        // Update textareas with input
-        document.getElementById('inputText').addEventListener('input', function() {
-            const inputValue = this.value;
-            document.getElementById('verifikasi').value = `*Summary sudah sesuai standarisasi*\n\n${inputValue}\n\n*Note :  -*\n*Beam : *\n*SQF : *\n*ESNO : *`;
-            document.getElementById('temporary').value = `*Summary Temporary*\n\n${inputValue}\n\n*Note :   XPOLL Belum Lolos (RECHECK), SQF dan ESNO Sesuai Standarisasi*\n*Beam : *\n*SQF : *\n*ESNO : *`;
-        });
+        // Update textareas with input and live updates
+        function updateTextareas() {
+            const inputValue = document.getElementById('inputText').value;
+            const beamValue = document.getElementById('beam').value;
+            const sqfValue = document.getElementById('sqf').value;
+            const esnoValue = document.getElementById('esno').value;
+
+            // Update Verifikasi and Temporary textareas
+            document.getElementById('verifikasi').value = `*Summary sudah sesuai standarisasi*\n\n${inputValue}\n\n*Note :  -*\n*Beam : ${beamValue}*\n*SQF : ${sqfValue}*\n*ESNO : ${esnoValue}*`;
+            document.getElementById('temporary').value = `*Summary Temporary*\n\n${inputValue}\n\n*Note :   XPOLL Belum Lolos (RECHECK), SQF dan ESNO Sesuai Standarisasi*\n*Beam : ${beamValue}*\n*SQF : ${sqfValue}*\n*ESNO : ${esnoValue}*`;
+        }
+
+        // Event listener for input fields to update live
+        document.getElementById('inputText').addEventListener('input', updateTextareas);
+        document.getElementById('beam').addEventListener('input', updateTextareas);
+        document.getElementById('sqf').addEventListener('input', updateTextareas);
+        document.getElementById('esno').addEventListener('input', updateTextareas);
 
         // Copy text to clipboard function
         function copyToClipboard(textareaId) {
@@ -166,6 +187,10 @@
             document.getElementById('inputText').value = '';
             document.getElementById('verifikasi').value = '';
             document.getElementById('temporary').value = '';
+            document.getElementById('beam').value = '';
+            document.getElementById('sqf').value = '';
+            document.getElementById('esno').value = '';
+            updateTextareas(); // Recalculate the textareas after clearing
         }
     </script>
 

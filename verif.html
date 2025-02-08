@@ -55,7 +55,7 @@
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            gap: 15px;  /* Adjusts gap between button and textarea */
+            gap: 15px;
         }
         .copy-button, .clear-button {
             padding: 10px 15px;
@@ -66,9 +66,9 @@
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
             width: 100%; /* Button width matches the width of textarea */
-            margin-left: 10px; /* Horizontal space between buttons */
-            margin-top: 10px;  /* Vertical space between buttons and textareas */
-            font-size: 16px; /* Button font size consistency */
+            margin-left: 10px;
+            margin-top: 10px;
+            font-size: 16px;
         }
         .copy-button:hover, .clear-button:hover {
             background: linear-gradient(45deg, #0056b3, #007bff);
@@ -78,10 +78,10 @@
         .notification {
             display: none;
             position: absolute;
-            top: 10px;  /* Positioning notification at the top */
+            top: 10px;
             left: 50%;
             transform: translateX(-50%);
-            background-color: #28a745;  /* Green background for success message */
+            background-color: #28a745;
             color: white;
             padding: 10px;
             border-radius: 5px;
@@ -90,15 +90,40 @@
             opacity: 0;
             transition: opacity 0.5s ease;
         }
-
+    
+        /* Media Query for smaller screens (e.g., mobile) */
+        @media (max-width: 768px) {
+            .paste-text-container {
+                padding: 15px;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            .input-group {
+                display: flex;
+                flex-direction: column;
+                gap: 10px; /* Adds space between the inputs */
+            }
+            .input-group input {
+                width: 100%; /* Make inputs take up the full width */
+                padding: 10px;
+                font-size: 16px;
+                box-sizing: border-box; /* Ensures padding is inside the width */
+                max-width: 100%; /* Prevents the inputs from exceeding the container */
+            }
+            .button-container {
+                width: 100%;
+            }
+        }
+    
         /* Media Query for landscape orientation */
         @media (orientation: landscape) {
             .output-container {
-                flex-direction: row; /* Arrange rows side by side in landscape mode */
+                flex-direction: row;
             }
             .row {
-                flex-direction: column; /* Stack content within each row */
-                flex: 1; /* Ensure each row takes equal space */
+                flex-direction: column;
+                flex: 1;
             }
         }
     </style>

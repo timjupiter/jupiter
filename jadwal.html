@@ -115,84 +115,89 @@
 
     <div id="feedback" class="feedback">Copied to clipboard!</div>
 
-    <script>
-        function copyToClipboard(id) {
-            var copyText = document.getElementById(id);
-            copyText.select();
-            document.execCommand('copy');
+<script>
+    function copyToClipboard(id) {
+        var copyText = document.getElementById(id);
+        copyText.select();
+        document.execCommand('copy');
 
-            var feedback = document.getElementById('feedback');
-            feedback.style.display = 'block';
-            setTimeout(() => {
-                feedback.style.display = 'none';
-            }, 1000);
-        }
+        var feedback = document.getElementById('feedback');
+        feedback.style.display = 'block';
+        setTimeout(() => {
+            feedback.style.display = 'none';
+        }, 1000);
+    }
 
-        async function fetchData() {
-            const apiURL = 'https://script.google.com/macros/s/AKfycbzNXi5s8Sw1j-gged2aq8txtL6U1FcfzgY0r6trGFBIjUmHxgW465TPE4QQf-FIqOn3Wg/exec';
-            
-            try {
-                const response = await fetch(apiURL);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok.');
-                }
-                const json = await response.json();
-
-                const labels = {
-                    'E59': 'Shift 1', 'O59': 'Shift 2', 'Y59': 'Shift 3',
-                    'E60': 'Shift 1', 'O60': 'Shift 2', 'Y60': 'Shift 3',
-                    'E61': 'Shift 1', 'O61': 'Shift 2', 'Y61': 'Shift 3'
-                };
-
-                const fullPersonilContainer = document.querySelector('#full_personil .container');
-                const noFullPersonilContainer = document.querySelector('#no_full_personil .container');
-                const monitoringContainer = document.querySelector('#monitoring .container');
-
-                const fullPersonilCells = ['E59', 'O59', 'Y59'];
-                const noFullPersonilCells = ['E60', 'O60', 'Y60'];
-                const monitoringCells = ['E61', 'O61', 'Y61'];
-
-                function createBox(cellId, container) {
-                    const boxWrapper = document.createElement('div');
-                    boxWrapper.className = 'box-wrapper';
-
-                    const label = document.createElement('div');
-                    label.className = 'label';
-                    label.innerText = labels[cellId] || cellId;
-                    
-                    const box = document.createElement('div');
-                    box.className = 'box';
-
-                    const textarea = document.createElement('textarea');
-                    textarea.id = `${cellId}_textarea`;
-                    textarea.readOnly = true;
-                    textarea.textContent = json[cellId] || 'No Data';
-                    box.appendChild(textarea);
-
-                    const button = document.createElement('button');
-                    button.innerText = 'Copy';
-                    button.onclick = () => copyToClipboard(`${cellId}_textarea`);
-                    box.appendChild(button);
-
-                    boxWrapper.appendChild(label);
-                    boxWrapper.appendChild(box);
-                    container.appendChild(boxWrapper);
-                }
-
-                fullPersonilCells.forEach(cellId => createBox(cellId, fullPersonilContainer));
-                noFullPersonilCells.forEach(cellId => createBox(cellId, noFullPersonilContainer));
-                monitoringCells.forEach(cellId => createBox(cellId, monitoringContainer));
-
-            } catch (error) {
-                console.error('Error fetching data:', error);
-                document.getElementById('full_personil').querySelector('.container').innerHTML = 'Failed to load data.';
-                document.getElementById('no_full_personil').querySelector('.container').innerHTML = 'Failed to load data.';
-                document.getElementById('monitoring').querySelector('.container').innerHTML = 'Failed to load data.';
+    async function fetchData() {
+        const apiURL = 'https://script.google.com/macros/s/AKfycbzNXi5s8Sw1j-gged2aq8txtL6U1FcfzgY0r6trGFBIjUmHxgW465TPE4QQf-FIqOn3Wg/exec';
+        
+        try {
+            const response = await fetch(apiURL);
+            if (!response.ok) {
+                throw new Error('Network response was not ok.');
             }
-        }
+            const json = await response.json();
 
-        fetchData();
-        setInterval(fetchData, 3600000);  // Memanggil fetchData setiap 1 jam (3600000 ms)
-    </script>
+            const labels = {
+                'E59': 'Shift 1', 'O59': 'Shift 2', 'Y59': 'Shift 3',
+                'E60': 'Shift 1', 'O60': 'Shift 2', 'Y60': 'Shift 3',
+                'E61': 'Shift 1', 'O61': 'Shift 2', 'Y61': 'Shift 3'
+            };
+
+            const fullPersonilContainer = document.querySelector('#full_personil .container');
+            const noFullPersonilContainer = document.querySelector('#no_full_personil .container');
+            const monitoringContainer = document.querySelector('#monitoring .container');
+
+            // Clear existing content before appending new content
+            fullPersonilContainer.innerHTML = '';
+            noFullPersonilContainer.innerHTML = '';
+            monitoringContainer.innerHTML = '';
+
+            const fullPersonilCells = ['E59', 'O59', 'Y59'];
+            const noFullPersonilCells = ['E60', 'O60', 'Y60'];
+            const monitoringCells = ['E61', 'O61', 'Y61'];
+
+            function createBox(cellId, container) {
+                const boxWrapper = document.createElement('div');
+                boxWrapper.className = 'box-wrapper';
+
+                const label = document.createElement('div');
+                label.className = 'label';
+                label.innerText = labels[cellId] || cellId;
+                
+                const box = document.createElement('div');
+                box.className = 'box';
+
+                const textarea = document.createElement('textarea');
+                textarea.id = `${cellId}_textarea`;
+                textarea.readOnly = true;
+                textarea.textContent = json[cellId] || 'No Data';
+                box.appendChild(textarea);
+
+                const button = document.createElement('button');
+                button.innerText = 'Copy';
+                button.onclick = () => copyToClipboard(`${cellId}_textarea`);
+                box.appendChild(button);
+
+                boxWrapper.appendChild(label);
+                boxWrapper.appendChild(box);
+                container.appendChild(boxWrapper);
+            }
+
+            fullPersonilCells.forEach(cellId => createBox(cellId, fullPersonilContainer));
+            noFullPersonilCells.forEach(cellId => createBox(cellId, noFullPersonilContainer));
+            monitoringCells.forEach(cellId => createBox(cellId, monitoringContainer));
+
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            document.getElementById('full_personil').querySelector('.container').innerHTML = 'Failed to load data.';
+            document.getElementById('no_full_personil').querySelector('.container').innerHTML = 'Failed to load data.';
+            document.getElementById('monitoring').querySelector('.container').innerHTML = 'Failed to load data.';
+        }
+    }
+
+    fetchData();
+    setInterval(fetchData, 3600000);  // Memanggil fetchData setiap 1 jam (3600000 ms)
+</script>
 </body>
 </html>

@@ -4,21 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WNO Dashboard</title>
-    <!-- Impor Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-
     <style>
-        /* CSS Reset */
-        * {
-            margin: 0;
-            padding: 0;
+        @import url("https://fonts.googleapis.com/css?family=Roboto:700");
+        
+        :root {
+            --left-side: 0%;
+            --right-side: 0%;
+        }
+
+        *, *:before, *:after {
             box-sizing: border-box;
+            position: relative;
         }
 
         html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
             height: 100%;
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-color: #ebebeb;
+            font-family: "Roboto", sans-serif;
         }
 
         .dashboard-container {
@@ -34,32 +40,55 @@
         }
 
         .tabs {
+            width: 100%;
+            height: 40px;
             display: flex;
-            justify-content: space-between;
+            position: relative;
+            background: white;
+            padding: 0 10px;
             margin: 10px 0;
         }
 
         .tab-button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            flex: 1;
-            margin: 0 5px;
-            transition: background-color 0.3s;
+            padding: 0 15px;
+            height: 36px;
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .tab-button:hover, .tab-button.active {
-            background-color: #0056b3;
+            color: rgba(0, 0, 0, 0.3);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            user-select: none;
+            transition: 0.35s ease;
+            background: none;
+            border: none;
+            flex: 1;
         }
 
         .tab-button i {
-            margin-right: 8px; /* Jarak antara ikon dan teks */
+            margin-right: 8px;
+            font-size: 14px;
+        }
+
+        .tab-button:hover {
+            color: #333333;
+        }
+
+        .tab-button.active {
+            color: black;
+        }
+
+        .line {
+            width: 100%;
+            height: 3px;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            background: linear-gradient(to right, #b721ff, #21d4fd);
+            clip-path: polygon(var(--left-side) 0, var(--right-side) 0, var(--right-side) 100%, var(--left-side) 100%);
+            transition: 0.35s ease;
         }
 
         #content {
@@ -84,7 +113,7 @@
         }
 
         .logout-button {
-            background-color: #d9534f;
+            background: linear-gradient(to right, #ff7171, #ff4b4b);
             color: white;
             border: none;
             padding: 10px;
@@ -96,18 +125,24 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            font-family: "Roboto", sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            transition: 0.35s ease;
         }
 
         .logout-button:hover {
-            background-color: #c9302c;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
         .logout-button i {
-            margin-right: 8px; /* Jarak antara ikon dan teks */
+            margin-right: 8px;
         }
     </style>
     
     <script type="module">
+        // Firebase config code remains the same
         const _0x12d9=["\x61\x70\x69\x4B\x65\x79","AIzaSyAwF9zniA7CBfEk0-EBnC7qTIveB1AQmYM","\x61\x75\x74\x68\x44\x6F\x6D\x61\x69\x6E","jupiter-1b026.firebaseapp.com","\x70\x72\x6F\x6A\x65\x63\x74\x49\x64","jupiter-1b026","\x73\x74\x6F\x72\x61\x67\x65\x42\x75\x63\x6B\x65\x74","jupiter-1b026.appspot.com","\x6D\x65\x73\x73\x61\x67\x69\x6E\x67\x53\x65\x6E\x64\x65\x72\x49\x64","504918793683","\x61\x70\x70\x49\x64","1:504918793683:web:bcc77e0a2c8a8e27d0e326","\x6D\x65\x61\x73\x75\x72\x65\x6D\x65\x6E\x74\x49\x64","G-4SMG7QG8D0"];
         const _0x34b1={};
         _0x34b1[_0x12d9[0]]=_0x12d9[1];
@@ -126,27 +161,40 @@
 
         onAuthStateChanged(auth, (user) => {
             if (!user) {
-                window.location.href = 'index.html'; 
+                window.location.href = 'index.html';
             }
         });
 
         function showTab(tabName) {
             const tabs = document.querySelectorAll('.tab-content');
-            tabs.forEach(tab => tab.style.display = 'none'); // Sembunyikan semua tab
-
-            const activeTab = document.getElementById(tabName);
-            if (activeTab) {
-                activeTab.style.display = 'block'; // Tampilkan tab yang dipilih
-            }
-
-            // Perbarui status tombol aktif
             const buttons = document.querySelectorAll('.tab-button');
-            buttons.forEach(button => button.classList.remove('active')); // Hapus kelas 'active' dari semua tombol
-
-            const activeButton = Array.from(buttons).find(button => button.textContent.trim().toLowerCase() === tabName.toLowerCase());
-            if (activeButton) {
-                activeButton.classList.add('active'); // Tambahkan kelas 'active' pada tombol yang sesuai
+            
+            tabs.forEach(tab => tab.style.display = 'none');
+            buttons.forEach(button => button.classList.remove('active'));
+            
+            const activeTab = document.getElementById(tabName);
+            const activeButton = document.querySelector(`[data-tab="${tabName}"]`);
+            
+            if (activeTab) {
+                activeTab.style.display = 'block';
             }
+            if (activeButton) {
+                activeButton.classList.add('active');
+                moveSlider(activeButton);
+            }
+        }
+
+        function moveSlider(activeButton) {
+            const tabs = document.querySelector('.tabs');
+            const tabsWidth = tabs.getBoundingClientRect().width;
+            const currentTabWidth = activeButton.getBoundingClientRect().width;
+            const currentTabLeft = activeButton.offsetLeft;
+            
+            const leftPercentage = (currentTabLeft + 15) * 100 / tabsWidth;
+            const rightPercentage = (currentTabLeft - 15 + currentTabWidth) * 100 / tabsWidth;
+            
+            tabs.style.setProperty('--left-side', leftPercentage + '%');
+            tabs.style.setProperty('--right-side', rightPercentage + '%');
         }
 
         function updateClock() {
@@ -154,22 +202,20 @@
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const formattedTime = `${hours}:${minutes}`;
-
             document.title = `${formattedTime} | WNO Dashboard`;
         }
 
         document.addEventListener('DOMContentLoaded', () => {
             showTab('jadwal');
             updateClock();
-
             setInterval(updateClock, 60000);
-            
-            // Menambahkan event listener pada tombol tab
-            document.querySelector('.tab-button:nth-child(1)').addEventListener('click', () => showTab('jadwal'));
-            document.querySelector('.tab-button:nth-child(2)').addEventListener('click', () => showTab('verif'));
-            document.querySelector('.tab-button:nth-child(3)').addEventListener('click', () => showTab('monitoring'));
-            document.querySelector('.tab-button:nth-child(4)').addEventListener('click', () => showTab('h2h'));
-            document.querySelector('.tab-button:nth-child(5)').addEventListener('click', () => showTab('test')); // Event listener untuk tab "Test"
+
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const tabName = e.currentTarget.getAttribute('data-tab');
+                    showTab(tabName);
+                });
+            });
 
             document.querySelector('.logout-button').addEventListener('click', () => {
                 signOut(auth).then(() => {
@@ -193,17 +239,19 @@
                 }
             });
         });
+
+        window.showTab = showTab;
     </script>
 </head>
 <body>
     <div class="dashboard-container">
         <div class="tabs">
-            <button onclick="showTab('jadwal')" class="tab-button active"><i class="fas fa-calendar"></i>JADWAL</button>
-            <button onclick="showTab('verif')" class="tab-button"><i class="fas fa-check-circle"></i>VERIFIKASI</button>
-            <button onclick="showTab('monitoring')" class="tab-button"><i class="fas fa-tachometer-alt"></i>MONITORING</button>
-            <button onclick="showTab('h2h')" class="tab-button"><i class="fas fa-users"></i>H2H</button>
-            <!-- Tab Test -->
-            <button onclick="showTab('test')" class="tab-button"><i class="fas fa-flask"></i>TEST</button>
+            <button data-tab="jadwal" class="tab-button active"><i class="fas fa-calendar"></i>JADWAL</button>
+            <button data-tab="verif" class="tab-button"><i class="fas fa-check-circle"></i>VERIFIKASI</button>
+            <button data-tab="monitoring" class="tab-button"><i class="fas fa-tachometer-alt"></i>MONITORING</button>
+            <button data-tab="h2h" class="tab-button"><i class="fas fa-users"></i>H2H</button>
+            <button data-tab="test" class="tab-button"><i class="fas fa-flask"></i>TEST</button>
+            <div class="line"></div>
         </div>
 
         <div id="content">
@@ -219,7 +267,6 @@
             <div id="h2h" class="tab-content">
                 <iframe src="h2h.html"></iframe>
             </div>
-            <!-- Tab Test Content -->
             <div id="test" class="tab-content">
                 <iframe src="test.html"></iframe>
             </div>

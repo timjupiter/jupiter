@@ -5,17 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monitoring Dashboard</title>
     <style>
-        /* CSS Reset */
-        * {
-            margin: 0;
-            padding: 0;
+        @import url("https://fonts.googleapis.com/css?family=Roboto:700");
+        
+        :root {
+            --left-side: 0%;
+            --right-side: 0%;
+        }
+
+        *, *:before, *:after {
             box-sizing: border-box;
+            position: relative;
         }
 
         html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
             height: 100%;
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-color: #ebebeb;
+            font-family: "Roboto", sans-serif;
         }
 
         .dashboard-container {
@@ -31,25 +39,50 @@
         }
 
         .tabs {
+            width: 100%;
+            height: 40px;
             display: flex;
-            justify-content: space-between;
+            position: relative;
+            background: white;
+            padding: 0 10px;
             margin: 10px 0;
         }
 
         .tab-button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 10px;
-            border-radius: 5px;
+            padding: 0 15px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(0, 0, 0, 0.3);
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
             cursor: pointer;
+            user-select: none;
+            transition: 0.35s ease;
+            background: none;
+            border: none;
             flex: 1;
-            margin: 0 5px;
-            transition: background-color 0.3s;
         }
 
-        .tab-button:hover, .tab-button.active {
-            background-color: #0056b3;
+        .tab-button:hover {
+            color: #333333;
+        }
+
+        .tab-button.active {
+            color: black;
+        }
+
+        .line {
+            width: 100%;
+            height: 3px;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            background: linear-gradient(to right, #b721ff, #21d4fd);
+            clip-path: polygon(var(--left-side) 0, var(--right-side) 0, var(--right-side) 100%, var(--left-side) 100%);
+            transition: 0.35s ease;
         }
 
         #content {
@@ -73,26 +106,49 @@
             height: 100%;
         }
     </style>
+    
     <script>
         function showTab(tabName) {
             const tabs = document.querySelectorAll('.tab-content');
-            tabs.forEach(tab => tab.style.display = 'none');
-            document.getElementById(tabName).style.display = 'block';
-
             const buttons = document.querySelectorAll('.tab-button');
+            
+            tabs.forEach(tab => tab.style.display = 'none');
             buttons.forEach(button => button.classList.remove('active'));
-            buttons.forEach(button => {
-                if (button.textContent.toLowerCase() === tabName) {
-                    button.classList.add('active');
-                }
-            });
+            
+            const activeTab = document.getElementById(tabName);
+            const activeButton = document.querySelector(`[data-tab="${tabName}"]`);
+            
+            if (activeTab) {
+                activeTab.style.display = 'block';
+            }
+            if (activeButton) {
+                activeButton.classList.add('active');
+                moveSlider(activeButton);
+            }
+        }
+
+        function moveSlider(activeButton) {
+            const tabs = document.querySelector('.tabs');
+            const tabsWidth = tabs.getBoundingClientRect().width;
+            const currentTabWidth = activeButton.getBoundingClientRect().width;
+            const currentTabLeft = activeButton.offsetLeft;
+            
+            const leftPercentage = (currentTabLeft + 15) * 100 / tabsWidth;
+            const rightPercentage = (currentTabLeft - 15 + currentTabWidth) * 100 / tabsWidth;
+            
+            tabs.style.setProperty('--left-side', leftPercentage + '%');
+            tabs.style.setProperty('--right-side', rightPercentage + '%');
         }
 
         document.addEventListener('DOMContentLoaded', () => {
             showTab('monitoring');
 
-            document.querySelector('.tab-button.active').addEventListener('click', () => showTab('monitoring'));
-            document.querySelector('.tab-button:nth-child(2)').addEventListener('click', () => showTab('insiden'));
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const tabName = e.currentTarget.getAttribute('data-tab');
+                    showTab(tabName);
+                });
+            });
 
             document.addEventListener('keydown', (event) => {
                 const activeButton = document.querySelector('.tab-button.active');
@@ -108,13 +164,16 @@
                 }
             });
         });
+
+        window.showTab = showTab;
     </script>
 </head>
 <body>
     <div class="dashboard-container">
         <div class="tabs">
-            <button onclick="showTab('monitoring')" class="tab-button active">MONITORING</button>
-            <button onclick="showTab('insiden')" class="tab-button">INSIDEN IRIS</button>
+            <button data-tab="monitoring" class="tab-button active">MONITORING</button>
+            <button data-tab="insiden" class="tab-button">INSIDEN IRIS</button>
+            <div class="line"></div>
         </div>
 
         <div id="content">

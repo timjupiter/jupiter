@@ -129,18 +129,21 @@
             font-weight: 700;
             text-transform: uppercase;
             transition: 0.35s ease;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;  /* Prevent interaction when hidden */
         }
-
+        
         .logout-button:hover {
             transform: translateY(-1px);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
-
+        
         .logout-button i {
             margin-right: 8px;
         }
     </style>
-    
+        
     <script type="module">
         // Firebase config code remains the same
         const _0x12d9=["\x61\x70\x69\x4B\x65\x79","AIzaSyAwF9zniA7CBfEk0-EBnC7qTIveB1AQmYM","\x61\x75\x74\x68\x44\x6F\x6D\x61\x69\x6E","jupiter-1b026.firebaseapp.com","\x70\x72\x6F\x6A\x65\x63\x74\x49\x64","jupiter-1b026","\x73\x74\x6F\x72\x61\x67\x65\x42\x75\x63\x6B\x65\x74","jupiter-1b026.appspot.com","\x6D\x65\x73\x73\x61\x67\x69\x6E\x67\x53\x65\x6E\x64\x65\x72\x49\x64","504918793683","\x61\x70\x70\x49\x64","1:504918793683:web:bcc77e0a2c8a8e27d0e326","\x6D\x65\x61\x73\x75\x72\x65\x6D\x65\x6E\x74\x49\x64","G-4SMG7QG8D0"];
@@ -152,19 +155,19 @@
         _0x34b1[_0x12d9[8]]=_0x12d9[9];
         _0x34b1[_0x12d9[10]]=_0x12d9[11];
         _0x34b1[_0x12d9[12]]=_0x12d9[13];
-
+    
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-
+    
         const app = initializeApp(_0x34b1);
         const auth = getAuth(app);
-
+    
         onAuthStateChanged(auth, (user) => {
             if (!user) {
                 window.location.href = 'index.html';
             }
         });
-
+    
         function showTab(tabName) {
             const tabs = document.querySelectorAll('.tab-content');
             const buttons = document.querySelectorAll('.tab-button');
@@ -183,7 +186,7 @@
                 moveSlider(activeButton);
             }
         }
-
+    
         function moveSlider(activeButton) {
             const tabs = document.querySelector('.tabs');
             const tabsWidth = tabs.getBoundingClientRect().width;
@@ -196,7 +199,7 @@
             tabs.style.setProperty('--left-side', leftPercentage + '%');
             tabs.style.setProperty('--right-side', rightPercentage + '%');
         }
-
+    
         function updateClock() {
             const now = new Date();
             const hours = String(now.getHours()).padStart(2, '0');
@@ -204,19 +207,19 @@
             const formattedTime = `${hours}:${minutes}`;
             document.title = `${formattedTime} | WNO Dashboard`;
         }
-
+    
         document.addEventListener('DOMContentLoaded', () => {
             showTab('jadwal');
             updateClock();
             setInterval(updateClock, 60000);
-
+    
             document.querySelectorAll('.tab-button').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const tabName = e.currentTarget.getAttribute('data-tab');
                     showTab(tabName);
                 });
             });
-
+    
             document.querySelector('.logout-button').addEventListener('click', () => {
                 signOut(auth).then(() => {
                     window.location.href = 'index.html';
@@ -224,12 +227,29 @@
                     console.error('Logout error: ', error);
                 });
             });
-
+    
+            // Auto-hide logout button after 3 seconds without interaction
+            const logoutButton = document.querySelector('.logout-button');
+            let hideTimeout;
+    
+            // Show logout button when mouse enters the area
+            logoutButton.addEventListener('mouseenter', () => {
+                clearTimeout(hideTimeout);
+                logoutButton.classList.remove('hidden');
+            });
+    
+            // Hide logout button when mouse leaves the area
+            logoutButton.addEventListener('mouseleave', () => {
+                hideTimeout = setTimeout(() => {
+                    logoutButton.classList.add('hidden');
+                }, 3000); // Hide after 3 seconds
+            });
+    
             document.addEventListener('keydown', (event) => {
                 const activeButton = document.querySelector('.tab-button.active');
                 const buttons = Array.from(document.querySelectorAll('.tab-button'));
                 const currentIndex = buttons.indexOf(activeButton);
-
+    
                 if (event.key === 'ArrowRight') {
                     const nextIndex = (currentIndex + 1) % buttons.length;
                     buttons[nextIndex].click();
@@ -239,7 +259,7 @@
                 }
             });
         });
-
+    
         window.showTab = showTab;
     </script>
 </head>
@@ -271,7 +291,7 @@
                 <iframe src="test.html"></iframe>
             </div>
         </div>
-        <button class="logout-button"><i class="fas fa-sign-out-alt"></i>Logout</button>
+        <button class="logout-button hidden"><i class="fas fa-sign-out-alt"></i>Logout</button>
     </div>
 </body>
 </html>

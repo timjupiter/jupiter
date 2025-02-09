@@ -111,65 +111,73 @@
         </div>
     </div>
 
-    <script>
-        function showTab(tabName) {
-            const tabs = document.querySelectorAll('.tab-content');
-            const buttons = document.querySelectorAll('.tab-button');
-            
-            tabs.forEach(tab => tab.style.display = 'none');
-            buttons.forEach(button => button.classList.remove('active'));
-            
-            const activeTab = document.getElementById(tabName);
-            const activeButton = document.querySelector(`[data-tab="${tabName}"]`);
-            
-            if (activeTab) {
-                activeTab.style.display = 'block';
-            }
-            if (activeButton) {
-                activeButton.classList.add('active');
-                moveSlider(activeButton);
-            }
-        }
+	<script>
+		function showTab(tabName) {
+			const tabs = document.querySelectorAll('.tab-content'); // Mengambil semua konten tab
+			const buttons = document.querySelectorAll('.tab-button'); // Mengambil semua button tab
+			
+			// Sembunyikan semua konten tab
+			tabs.forEach(tab => tab.style.display = 'none');
+			// Hilangkan kelas active dari semua tombol
+			buttons.forEach(button => button.classList.remove('active'));
+			
+			// Tampilkan konten tab yang dipilih
+			const activeTab = document.getElementById(tabName);
+			const activeButton = document.querySelector(`[data-tab="${tabName}"]`);
+			
+			if (activeTab) {
+				activeTab.style.display = 'block';
+			}
+			if (activeButton) {
+				activeButton.classList.add('active'); // Menandai tombol tab sebagai aktif
+				moveSlider(activeButton); // Pindahkan garis bawah untuk tab aktif
+			}
+		}
 
-        function moveSlider(activeButton) {
-            const tabs = document.querySelector('.tabs');
-            const tabsWidth = tabs.getBoundingClientRect().width;
-            const currentTabWidth = activeButton.getBoundingClientRect().width;
-            const currentTabLeft = activeButton.offsetLeft;
-            
-            const leftPercentage = (currentTabLeft + 15) * 100 / tabsWidth;
-            const rightPercentage = (currentTabLeft - 15 + currentTabWidth) * 100 / tabsWidth;
-            
-            tabs.style.setProperty('--left-side', leftPercentage + '%');
-            tabs.style.setProperty('--right-side', rightPercentage + '%');
-        }
+		// Fungsi untuk memindahkan garis bawah pada tab
+		function moveSlider(activeButton) {
+			const tabs = document.querySelector('.tabs-wrapper'); // Ambil wrapper tab
+			const tabsWidth = tabs.getBoundingClientRect().width;
+			const currentTabWidth = activeButton.getBoundingClientRect().width;
+			const currentTabLeft = activeButton.offsetLeft;
+			
+			const leftPercentage = (currentTabLeft + 15) * 100 / tabsWidth;
+			const rightPercentage = (currentTabLeft - 15 + currentTabWidth) * 100 / tabsWidth;
+			
+			tabs.style.setProperty('--left-side', leftPercentage + '%');
+			tabs.style.setProperty('--right-side', rightPercentage + '%');
+		}
 
-        document.addEventListener('DOMContentLoaded', () => {
-            showTab('monitoring');
+		// Event listener saat halaman dimuat
+		document.addEventListener('DOMContentLoaded', () => {
+			showTab('monitoring'); // Menampilkan tab monitoring saat pertama kali dimuat
 
-            document.querySelectorAll('.tab-button').forEach(button => {
-                button.addEventListener('click', (e) => {
-                    const tabName = e.currentTarget.getAttribute('data-tab');
-                    showTab(tabName);
-                });
-            });
+			// Tambahkan event listener pada setiap tombol tab
+			document.querySelectorAll('.tab-button').forEach(button => {
+				button.addEventListener('click', (e) => {
+					const tabName = e.currentTarget.getAttribute('data-tab');
+					showTab(tabName); // Menampilkan tab yang dipilih
+				});
+			});
 
-            document.addEventListener('keydown', (event) => {
-                const activeButton = document.querySelector('.tab-button.active');
-                const buttons = Array.from(document.querySelectorAll('.tab-button'));
-                const currentIndex = buttons.indexOf(activeButton);
+			// Navigasi menggunakan keyboard (arrow keys)
+			document.addEventListener('keydown', (event) => {
+				const activeButton = document.querySelector('.tab-button.active');
+				const buttons = Array.from(document.querySelectorAll('.tab-button'));
+				const currentIndex = buttons.indexOf(activeButton);
 
-                if (event.key === 'ArrowRight') {
-                    const nextIndex = (currentIndex + 1) % buttons.length;
-                    buttons[nextIndex].click();
-                } else if (event.key === 'ArrowLeft') {
-                    const prevIndex = (currentIndex - 1 + buttons.length) % buttons.length;
-                    buttons[prevIndex].click();
-                }
-            });
-        });
+				if (event.key === 'ArrowRight') {
+					const nextIndex = (currentIndex + 1) % buttons.length;
+					buttons[nextIndex].click();
+				} else if (event.key === 'ArrowLeft') {
+					const prevIndex = (currentIndex - 1 + buttons.length) % buttons.length;
+					buttons[prevIndex].click();
+				}
+			});
+		});
 
-        window.showTab = showTab;
-    </script>
+		window.showTab = showTab; // Pastikan fungsi showTab dapat diakses dari luar
+	</script>
+
 </body>
 </html>

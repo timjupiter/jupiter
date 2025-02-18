@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -114,7 +115,7 @@
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 
     <script>
-        const apiKey = 'ae5de55040ab3a692a96f828cd4044ce'; // Ganti dengan API Key valid
+        const apiKey = 'ae5de55040ab3a692a96f828cd4044ce';
         const cities = [
             { name: 'ACEH', lat: 5.5471, lon: 95.3211 },
             { name: 'BANDAR LAMPUNG', lat: -5.3704, lon: 105.3200 },
@@ -134,8 +135,37 @@
             { name: 'SURABAYA', lat: -7.2504, lon: 112.7688 },
             { name: 'YOGYAKARTA', lat: -7.7956, lon: 110.3695 }
         ];
+        const cacheExpiryTime = 300000; // 5 minutes
 
-        // Fungsi untuk mendapatkan ikon cuaca berdasarkan kode OpenWeather
+        // Create in-memory storage as fallback
+        const memoryStorage = {
+            data: {},
+            setItem: function(key, value) {
+                this.data[key] = value;
+            },
+            getItem: function(key) {
+                return this.data[key] || null;
+            },
+            removeItem: function(key) {
+                delete this.data[key];
+            },
+            clear: function() {
+                this.data = {};
+            }
+        };
+
+        // Check if localStorage is available
+        let storage;
+        try {
+            localStorage.setItem('test', 'test');
+            localStorage.removeItem('test');
+            storage = localStorage;
+        } catch (e) {
+            console.log('localStorage not available, using in-memory storage');
+            storage = memoryStorage;
+        }
+
+        // Function to get weather icon based on OpenWeather code
         function getWeatherIcon(code) {
             const icons = {
                 'clear': 'fas fa-sun',
@@ -155,65 +185,120 @@
             return icons['clouds'];
         }
 
+        // Check if weather data in cache is still valid
+        function isCacheValid() {
+            const cachedWeatherData = storage.getItem('weatherData');
+            if (!cachedWeatherData) return false;
+            
+            try {
+                const parsedData = JSON.parse(cachedWeatherData);
+                const timestamp = parsedData.timestamp;
+                const currentTime = Date.now();
+                return currentTime - timestamp < cacheExpiryTime;
+            } catch (e) {
+                console.error("Error parsing cached data:", e);
+                return false;
+            }
+        }
+
+        // Function to capitalize all words in a string
+        function capitalizeWords(str) {
+            return str.replace(/\b\w/g, function(l) { return l.toUpperCase(); });
+        }
+
+        // Fetch weather for a single city
         async function fetchWeatherData(city) {
             const url = `https://api.openweathermap.org/data/2.5/weather?q=${city.name},ID&appid=${apiKey}&units=metric&lang=id`;
             try {
                 const response = await fetch(url);
-                if (!response.ok) throw new Error('API error');
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
                 const data = await response.json();
+                
+                const weatherDescription = data.weather[0].description;
+                const isRainy = weatherDescription.toLowerCase().includes('hujan') || 
+                                weatherDescription.toLowerCase().includes('badai') ||
+                                weatherDescription.toLowerCase().includes('storm') ||
+                                weatherDescription.toLowerCase().includes('rain') ||
+                                weatherDescription.toLowerCase().includes('thunderstorm');
+                
                 return {
                     city: city.name,
                     temp: data.main.temp,
                     tempFeelsLike: data.main.feels_like,
-                    weather: data.weather[0].description,
+                    weather: weatherDescription,
                     iconCode: data.weather[0].id,
                     lat: city.lat,
                     lon: city.lon,
-                    isRainy: data.weather[0].description.toLowerCase().includes('hujan') || data.weather[0].description.toLowerCase().includes('badai')
+                    isRainy: isRainy
                 };
             } catch (error) {
                 console.error(`Error fetching weather for ${city.name}:`, error);
                 return {
                     city: city.name,
                     weather: 'Data tidak tersedia',
-                    temp: null,
+                    temp: 0,
+                    iconCode: 800, // Default to clear sky
+                    lat: city.lat,
+                    lon: city.lon,
+                    isRainy: false,
                     error: true
                 };
             }
         }
 
+        // Get weather data for all cities
         async function getWeather() {
-            // Cek apakah data cuaca sudah ada di localStorage dan masih berlaku
-            let weatherData = JSON.parse(localStorage.getItem('weatherData'));
-            const currentTime = new Date().getTime();
+            let weatherData;
             
-            if (!weatherData || currentTime - weatherData.timestamp > 300000) { // 5 menit
+            // Check if valid cached data exists
+            if (isCacheValid()) {
+                const cachedData = JSON.parse(storage.getItem('weatherData'));
+                weatherData = cachedData.data;
+                console.log("Using cached weather data");
+            } else {
                 try {
-                    // Ambil data cuaca terbaru
+                    // Fetch fresh weather data
+                    console.log("Fetching new weather data");
                     const weatherPromises = cities.map(city => fetchWeatherData(city));
                     weatherData = await Promise.all(weatherPromises);
-
-                    // Simpan data cuaca ke localStorage dengan timestamp
-                    localStorage.setItem('weatherData', JSON.stringify({
+                    
+                    // Save to cache
+                    storage.setItem('weatherData', JSON.stringify({
                         data: weatherData,
-                        timestamp: currentTime
+                        timestamp: Date.now()
                     }));
                 } catch (error) {
-                    console.error('Error fetching or caching weather data:', error);
-                    return;
+                    console.error('Error fetching weather data:', error);
+                    
+                    // Try to use expired cache as fallback
+                    const expiredCache = storage.getItem('weatherData');
+                    if (expiredCache) {
+                        weatherData = JSON.parse(expiredCache).data;
+                        console.log("Using expired cached data as fallback");
+                    } else {
+                        console.error("No cached data available");
+                        return;
+                    }
                 }
-            } else {
-                // Gunakan data yang diambil dari localStorage
-                weatherData = weatherData.data;
             }
 
-            document.getElementById('weather-container').innerHTML = '';
-            // Urutkan data: kota hujan/badai di atas
+            // Clear previous markers
+            map.eachLayer(layer => {
+                if (layer instanceof L.Marker) {
+                    map.removeLayer(layer);
+                }
+            });
+
+            // Sort data: rainy cities on top, then alphabetically
             weatherData.sort((a, b) => {
                 if (a.isRainy && !b.isRainy) return -1;
                 if (!a.isRainy && b.isRainy) return 1;
-                return 0;
+                return a.city.localeCompare(b.city);
             });
+
+            // Clear container and display weather cards
+            const weatherContainer = document.getElementById('weather-container');
+            weatherContainer.innerHTML = '';
 
             weatherData.forEach(data => {
                 const card = document.createElement('div');
@@ -221,36 +306,36 @@
                 if (data.isRainy) {
                     card.classList.add('rainy');
                 }
+
+                // Capitalize all words in weather description
+                const capitalizedWeather = capitalizeWords(data.weather);
+
                 card.innerHTML = `
                     <h2>${data.city}</h2>
                     <i class="${getWeatherIcon(data.iconCode)} weather-icon"></i>
                     <div class="temperature">${data.temp.toFixed(1)}°C</div>
-                    <div class="description">${capitalizeFirstLetter(data.weather)}</div>
+                    <div class="description">${capitalizedWeather}</div>
                 `;
 
-                document.getElementById('weather-container').appendChild(card);
+                weatherContainer.appendChild(card);
 
-                // Menambahkan marker di peta
+                // Add marker to map
                 const marker = L.marker([data.lat, data.lon]).addTo(map);
-                marker.bindPopup(`<b>${data.city}</b><br>${data.weather}`);
+                marker.bindPopup(`<b>${data.city}</b><br>${capitalizedWeather}<br>Temperature: ${data.temp.toFixed(1)}°C`);
             });
         }
 
-        function capitalizeFirstLetter(string) {
-            return string.charAt(0).toUpperCase() + string.slice(1);
-        }
-
-        // Inisialisasi peta Leaflet
-        const map = L.map('map').setView([-0.7893, 113.9213], 5); // Pusat peta Indonesia
+        // Initialize Leaflet map
+        const map = L.map('map').setView([-0.7893, 113.9213], 5); // Center on Indonesia
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
-        window.onload = function() {
+        window.addEventListener('load', function() {
             getWeather();
-            setInterval(getWeather, 300000); // Update setiap 5 menit
-        };
+            setInterval(getWeather, cacheExpiryTime); // Update every 5 minutes
+        });
     </script>
 </body>
 </html>

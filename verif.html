@@ -126,6 +126,39 @@
                 flex: 1;
             }
         }
+
+        /* Style for the specific red text */
+        .red-text {
+            color: red;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label, .input-group input {
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        /* Add style for the Status Latitude and Longitude section */
+        .latitude-status {
+            margin-top: 10px;
+        }
+        .latitude-status div {
+            display: flex;
+            gap: 10px;
+        }
+        .latitude-status input {
+            transform: scale(1.2);
+        }
+
+        .input-group-inline {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
     </style>
 </head>
 <body>
@@ -135,13 +168,32 @@
             <label for="inputText">Copas Req Dari Provider disini :</label>
             <textarea id="inputText" style="font-size: 18px;"></textarea>
 
-            <div class="input-group">
-                <label for="beam">Beam:</label>
-                <input type="text" id="beam" placeholder="Masukkan Beam">
-                <label for="sqf">SQF:</label>
-                <input type="text" id="sqf" placeholder="Masukkan SQF">
-                <label for="esno">ESNO:</label>
-                <input type="text" id="esno" placeholder="Masukkan ESNO">
+            <div class="input-group-inline">
+                <div class="input-group">
+                    <label for="beam">Beam:</label>
+                    <input type="text" id="beam" placeholder="Masukkan Beam">
+                </div>
+                <div class="input-group">
+                    <label for="sqf">SQF:</label>
+                    <input type="text" id="sqf" placeholder="Masukkan SQF">
+                </div>
+                <div class="input-group">
+                    <label for="esno">ESNO:</label>
+                    <input type="text" id="esno" placeholder="Masukkan ESNO">
+                </div>
+            </div>
+
+            <!-- Add Latitude and Longitude Status section -->
+            <div class="latitude-status">
+                <label class="red-text">Status Latitude dan Longitude:</label>
+                <div>
+                    <label>
+                        <input type="radio" name="latitudeStatus" value="Sesuai"> Sesuai
+                    </label>
+                    <label>
+                        <input type="radio" name="latitudeStatus" value="Belum Sesuai"> Belum Sesuai
+                    </label>
+                </div>
             </div>
 
             <div class="button-container">
@@ -176,10 +228,18 @@
             const beamValue = document.getElementById('beam').value;
             const sqfValue = document.getElementById('sqf').value;
             const esnoValue = document.getElementById('esno').value;
+            const latitudeStatus = document.querySelector('input[name="latitudeStatus"]:checked')?.value || '';
+
+            // Create a common string for the Latitude and Longitude status
+            const latitudeStatusText = latitudeStatus === 'Sesuai'
+                ? 'Latitude dan Longtitude Sudah Sesuai'
+                : latitudeStatus === 'Belum Sesuai'
+                ? 'Latitude dan Longtitude Belum Sesuai'
+                : '';
 
             // Update Verifikasi and Temporary textareas
-            document.getElementById('verifikasi').value = `*Summary sudah sesuai standarisasi*\n\n${inputValue}\n\n*Note :  -*\n*Beam : ${beamValue}*\n*SQF : ${sqfValue}*\n*ESNO : ${esnoValue}*`;
-            document.getElementById('temporary').value = `*Summary Temporary*\n\n${inputValue}\n\n*Note :   XPOLL Belum Lolos (RECHECK), SQF dan ESNO Sesuai Standarisasi*\n*Beam : ${beamValue}*\n*SQF : ${sqfValue}*\n*ESNO : ${esnoValue}*`;
+            document.getElementById('verifikasi').value = `*Summary sudah sesuai standarisasi*\n\n${inputValue}\n\n*Note :  -*\n*Beam : ${beamValue}*\n*SQF : ${sqfValue}*\n*ESNO : ${esnoValue}*\n*${latitudeStatusText}*`;
+            document.getElementById('temporary').value = `*Summary Temporary*\n\n${inputValue}\n\n*Note :   XPOLL Belum Lolos (RECHECK), SQF dan ESNO Sesuai Standarisasi*\n*Beam : ${beamValue}*\n*SQF : ${sqfValue}*\n*ESNO : ${esnoValue}*\n*${latitudeStatusText}*`;
         }
 
         // Event listener for input fields to update live
@@ -187,6 +247,11 @@
         document.getElementById('beam').addEventListener('input', updateTextareas);
         document.getElementById('sqf').addEventListener('input', updateTextareas);
         document.getElementById('esno').addEventListener('input', updateTextareas);
+
+        // Add event listeners for radio buttons
+        document.querySelectorAll('input[name="latitudeStatus"]').forEach(radio => {
+            radio.addEventListener('change', updateTextareas); // Ensure it triggers update when the radio button changes
+        });
 
         // Copy text to clipboard function
         function copyToClipboard(textareaId) {
@@ -215,6 +280,7 @@
             document.getElementById('beam').value = '';
             document.getElementById('sqf').value = '';
             document.getElementById('esno').value = '';
+            document.querySelectorAll('input[name="latitudeStatus"]').forEach(radio => radio.checked = false);
             updateTextareas(); // Recalculate the textareas after clearing
         }
     </script>

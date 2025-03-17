@@ -4,221 +4,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verifikasi</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .container {
-            width: 100%;
-            max-width: 800px;
-            padding: 10px;
-        }
-        .paste-text-container {
-            padding: 15px;
-            border: 2px solid #007bff;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .output-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-        .row {
-            display: flex;
-            flex-direction: column;
-        }
-        label {
-            margin-bottom: 10px;
-            font-weight: bold;
-            font-size: 18px;
-        }
-        textarea {
-            width: 100%;
-            height: 200px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 18px;
-        }
-        .button-container {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 15px;
-        }
-        .copy-button, .clear-button {
-            padding: 10px 15px;
-            border: none;
-            background: linear-gradient(45deg, #007bff, #0056b3);
-            color: white;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-            width: 100%; /* Button width matches the width of textarea */
-            margin-left: 10px;
-            margin-top: 10px;
-            font-size: 16px;
-        }
-        .copy-button:hover, .clear-button:hover {
-            background: linear-gradient(45deg, #0056b3, #007bff);
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-        .notification {
-            display: none;
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #28a745;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            font-weight: bold;
-            text-align: center;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-    
-        /* Media Query for smaller screens (e.g., mobile) */
-        @media (max-width: 768px) {
-            .paste-text-container {
-                padding: 15px;
-                display: flex;
-                flex-direction: column;
-                gap: 10px;
-            }
-            .input-group {
-                display: flex;
-                flex-direction: column;
-                gap: 10px; /* Adds space between the inputs */
-            }
-            .input-group input {
-                width: 100%; /* Make inputs take up the full width */
-                padding: 10px;
-                font-size: 16px;
-                box-sizing: border-box; /* Ensures padding is inside the width */
-                max-width: 100%; /* Prevents the inputs from exceeding the container */
-            }
-            .button-container {
-                width: 100%;
-            }
-        }
-    
-        /* Media Query for landscape orientation */
-        @media (orientation: landscape) {
-            .output-container {
-                flex-direction: row;
-            }
-            .row {
-                flex-direction: column;
-                flex: 1;
-            }
-        }
-
-        /* Style for the specific red text */
-        .red-text {
-            color: red;
-        }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .input-group label, .input-group input {
-            margin-bottom: 10px;
-            width: 100%;
-        }
-
-        /* Add style for the Status Latitude and Longitude section */
-        .latitude-status {
-            margin-top: 10px;
-        }
-        .latitude-status div {
-            display: flex;
-            gap: 10px;
-        }
-        .latitude-status input {
-            transform: scale(1.2);
-        }
-
-        .input-group-inline {
-            display: flex;
-            justify-content: space-between;
-            gap: 15px;
-        }
-    </style>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="font-sans bg-gray-100 p-8">
 
-    <div class="container">
-        <div class="paste-text-container">
-            <label for="inputText">Copas Req Dari Provider disini :</label>
-            <textarea id="inputText" style="font-size: 18px;"></textarea>
+    <div class="container mx-auto max-w-3xl bg-white p-6 rounded-lg shadow-md">
+        <div class="mb-6 p-4 border-2 border-blue-500 rounded-lg bg-gray-50 shadow-sm">
+            <label for="inputText" class="block text-xl font-bold mb-2">Copas Req Dari Provider disini:</label>
+            <textarea id="inputText" class="w-full h-48 p-4 text-lg border border-gray-300 rounded-lg mb-4" placeholder="Masukkan teks..."></textarea>
 
-            <div class="input-group-inline">
-                <div class="input-group">
-                    <label for="beam">Beam:</label>
-                    <input type="text" id="beam" placeholder="Masukkan Beam">
+            <!-- Beam, SQF, and ESNO Inputs in a single row -->
+            <div class="flex gap-4 mb-6">
+                <div class="flex-1">
+                    <label for="beam" class="block text-lg font-semibold mb-2">Beam:</label>
+                    <input type="text" id="beam" class="w-full p-4 text-lg border border-gray-300 rounded-lg" placeholder="Masukkan Beam">
                 </div>
-                <div class="input-group">
-                    <label for="sqf">SQF:</label>
-                    <input type="text" id="sqf" placeholder="Masukkan SQF">
+                <div class="flex-1">
+                    <label for="sqf" class="block text-lg font-semibold mb-2">SQF:</label>
+                    <input type="text" id="sqf" class="w-full p-4 text-lg border border-gray-300 rounded-lg" placeholder="Masukkan SQF">
                 </div>
-                <div class="input-group">
-                    <label for="esno">ESNO:</label>
-                    <input type="text" id="esno" placeholder="Masukkan ESNO">
-                </div>
-            </div>
-
-            <!-- Add Latitude and Longitude Status section -->
-            <div class="latitude-status">
-                <label class="red-text">Status Latitude dan Longitude:</label>
-                <div>
-                    <label>
-                        <input type="radio" name="latitudeStatus" value="Sesuai"> Sesuai
-                    </label>
-                    <label>
-                        <input type="radio" name="latitudeStatus" value="Belum Sesuai"> Belum Sesuai
-                    </label>
+                <div class="flex-1">
+                    <label for="esno" class="block text-lg font-semibold mb-2">ESNO:</label>
+                    <input type="text" id="esno" class="w-full p-4 text-lg border border-gray-300 rounded-lg" placeholder="Masukkan ESNO">
                 </div>
             </div>
 
-            <div class="button-container">
-                <button class="clear-button" onclick="clearInput()" aria-label="Clear Text">Clear</button>
+            <!-- Status Latitude and Longitude -->
+            <div class="mb-6">
+                <label class="block text-lg font-semibold text-red-500 mb-2">Status Latitude dan Longitude:</label>
+                <div class="flex flex-col gap-2">
+                    <label class="inline-flex items-center text-lg">
+                        <input type="radio" name="latitudeStatus" value="Sesuai" class="mr-2"> Sesuai
+                    </label>
+                    <label class="inline-flex items-center text-lg">
+                        <input type="radio" name="latitudeStatus" value="Belum Sesuai" class="mr-2"> Belum Sesuai
+                    </label>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-4">
+                <button class="px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-lg text-lg hover:bg-gradient-to-l transition ease-in-out" onclick="clearInput()">Clear</button>
             </div>
         </div>
 
-        <div class="output-container">
-            <div class="row">
-                <label for="verifikasi">Verifikasi:</label>
-                <textarea id="verifikasi"></textarea>
-                <div class="button-container">
-                    <button class="copy-button" onclick="copyToClipboard('verifikasi')" aria-label="Copy Verifikasi">Copy</button>
+        <div class="flex flex-col gap-8">
+            <div class="flex flex-col gap-2">
+                <label for="verifikasi" class="text-xl font-bold">Verifikasi:</label>
+                <textarea id="verifikasi" class="w-full h-48 p-4 text-lg border border-gray-300 rounded-lg"></textarea>
+                <div class="flex justify-end">
+                    <button class="px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-lg text-lg hover:bg-gradient-to-l transition ease-in-out" onclick="copyToClipboard('verifikasi')">Copy</button>
                 </div>
             </div>
-            <div class="row">
-                <label for="temporary">Temporary:</label>
-                <textarea id="temporary"></textarea>
-                <div class="button-container">
-                    <button class="copy-button" onclick="copyToClipboard('temporary')" aria-label="Copy Temporary">Copy</button>
+
+            <div class="flex flex-col gap-2">
+                <label for="temporary" class="text-xl font-bold">Temporary:</label>
+                <textarea id="temporary" class="w-full h-48 p-4 text-lg border border-gray-300 rounded-lg"></textarea>
+                <div class="flex justify-end">
+                    <button class="px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-lg text-lg hover:bg-gradient-to-l transition ease-in-out" onclick="copyToClipboard('temporary')">Copy</button>
                 </div>
             </div>
         </div>
 
-        <div class="notification" id="notification">Teks telah disalin!</div>
+        <div id="notification" class="absolute top-10 left-1/2 transform -translate-x-1/2 bg-green-500 text-white p-2 rounded-lg font-semibold opacity-0 transition-opacity duration-500">Teks telah disalin!</div>
     </div>
 
     <script>

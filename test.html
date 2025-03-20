@@ -1,242 +1,103 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Realtime Chat with Ably</title>
-    <script src="https://cdn.ably.io/lib/ably.min-1.js"></script>
-    <!-- Include W3.CSS for styling -->
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background: #f4f4f9;
-            margin: 0;
-            padding: 0;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Konversi Lat/Long ke DMM dan Alamat</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    // Fungsi untuk mengonversi Decimal Degrees (DD) ke Degrees, Decimal Minutes (DMM)
+    function decimalToDMM(deg, isLongitude = false) {
+      var degrees = Math.floor(Math.abs(deg));  // Ambil nilai absolut derajat
+      var minutes = (Math.abs(deg) - degrees) * 60;  // Ambil bagian desimal dan konversikan ke menit
+      var direction = '';
 
-        #chat-container {
-            max-width: 600px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            height: 80vh;
-            max-height: 700px;
-        }
+      // Menentukan arah (N/S atau E/W)
+      if (isLongitude) {
+        direction = deg < 0 ? 'W' : 'E';  // Longitude: W untuk Barat, E untuk Timur
+      } else {
+        direction = deg < 0 ? 'S' : 'N';  // Latitude: S untuk Selatan, N untuk Utara
+      }
 
-        #chat-header {
-            text-align: center;
-            margin-bottom: 20px;
-            border-radius: 12px;
-        }
+      // Format hasil sebagai DMM: derajat dan menit desimal
+      return degrees + "° " + minutes.toFixed(6) + "' " + direction; // DMM (Degrees, Decimal Minutes)
+    }
 
-        #messages {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-            flex-grow: 1;
-            overflow-y: auto;
-        }
+    // Fungsi untuk mengambil alamat menggunakan OpenStreetMap Nominatim API
+    function getAddress(lat, lon) {
+      const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
 
-        #messages li {
-            padding: 10px 15px;
-            margin-bottom: 10px;
-            border-radius: 20px;
-            position: relative;
-            max-width: 80%;
-            display: flex;
-            align-items: center;
-            word-wrap: break-word;
-        }
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          const address = data.address;
+          const readableAddress = `${address.road}, ${address.city}, ${address.country}`;
+          document.getElementById("address").innerText = `Alamat: ${readableAddress}`;
+        })
+        .catch(error => {
+          console.error('Error fetching address:', error);
+          document.getElementById("address").innerText = 'Alamat tidak ditemukan';
+        });
+    }
 
-        .user-message {
-            background-color: #e6f7ff;
-            margin-left: auto;
-            margin-right: 0;
-            border-radius: 20px 20px 0 20px;
-        }
+    // Fungsi untuk menangani konversi dan menampilkan hasil
+    function convertCoordinates() {
+      const lat = parseFloat(document.getElementById('latitude').value);
+      const lon = parseFloat(document.getElementById('longitude').value);
 
-        .other-message {
-            background-color: #f1f1f1;
-            margin-left: 0;
-            margin-right: auto;
-            border-radius: 20px 20px 20px 0;
-        }
+      if (isNaN(lat) || isNaN(lon)) {
+        alert("Harap masukkan nilai Latitude dan Longitude yang valid.");
+        return;
+      }
 
-        .message-text {
-            display: inline-block;
-            padding: 8px 12px;
-            max-width: 100%;
-            border-radius: 12px;
-        }
+      // Konversi Latitude dan Longitude ke format DMM
+      const latDMM = decimalToDMM(lat);
+      const lonDMM = decimalToDMM(lon, true);
 
-        .message-username {
-            font-weight: bold;
-            font-size: 14px;
-            display: block;
-        }
+      // Tampilkan hasil konversi DMM
+      document.getElementById('latDMM').innerText = `Latitude (DMM): ${latDMM}`;
+      document.getElementById('lonDMM').innerText = `Longitude (DMM): ${lonDMM}`;
 
-        .message-content {
-            font-size: 16px;
-            word-wrap: break-word;
-        }
-
-        .input-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        #username, #message-input {
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            font-size: 14px;
-            width: 100%;
-        }
-
-        button {
-            padding: 10px;
-            border-radius: 8px;
-            border: 1px solid #ddd;
-            background-color: #007bff;
-            color: white;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        label {
-            font-size: 14px;
-            margin-bottom: 5px;
-            display: inline-block;
-        }
-
-    </style>
+      // Ambil dan tampilkan alamat
+      getAddress(lat, lon);
+    }
+  </script>
 </head>
-<body>
+<body class="bg-gray-50 font-sans text-gray-800">
+  <div class="min-h-screen flex items-center justify-center py-8">
+    <div class="bg-white shadow-xl rounded-lg p-8 w-full max-w-lg">
+      <h1 class="text-4xl font-semibold text-center text-indigo-600 mb-6">Konversi Latitude dan Longitude</h1>
+      <p class="text-center mb-6 text-lg text-gray-600">Masukkan Latitude dan Longitude dalam format Decimal Degrees (DD):</p>
 
-    <div id="chat-container" class="w3-card-4 w3-white">
-        <div id="chat-header" class="w3-center w3-blue w3-padding-16">
-            <h2>Jupi Chat</h2>
+      <div class="space-y-6">
+        <div>
+          <label for="latitude" class="block text-lg font-medium text-gray-700">Latitude:</label>
+          <input type="text" id="latitude" placeholder="e.g., -6.196750468199231" class="w-full p-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
         </div>
 
-        <div class="w3-margin-bottom">
-            <label for="username" class="w3-label">Username:</label>
-            <input type="text" id="username" placeholder="Enter your username" required class="w3-input w3-border">
+        <div>
+          <label for="longitude" class="block text-lg font-medium text-gray-700">Longitude:</label>
+          <input type="text" id="longitude" placeholder="e.g., -6.196750468199231" class="w-full p-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
         </div>
 
-        <ul id="messages" class="w3-ul w3-card-2 w3-padding-16"></ul>
+        <div class="flex justify-center mt-4">
+          <button onclick="convertCoordinates()" class="bg-indigo-600 text-white px-6 py-3 rounded-md text-xl hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+            Konversi
+          </button>
+        </div>
 
-        <form id="chat-form" class="input-container">
-            <input type="text" id="message-input" placeholder="Enter your message" required class="w3-input w3-border">
-            <button type="submit" class="w3-btn w3-blue w3-margin-left">Send</button>
-        </form>
+        <div class="mt-6 space-y-4">
+          <h2 class="text-2xl font-semibold text-gray-700">Hasil Konversi:</h2>
+          <p id="latDMM" class="text-lg text-gray-800"></p>
+          <p id="lonDMM" class="text-lg text-gray-800"></p>
+        </div>
+
+        <div class="mt-6">
+          <h2 class="text-2xl font-semibold text-gray-700">Alamat:</h2>
+          <p id="address" class="text-lg text-gray-800">Alamat akan muncul di sini setelah konversi.</p>
+        </div>
+      </div>
     </div>
-
-    <script>
-        const API_KEY = 'akwaMQ.OO9vAw:KFEExZHoAv3r0HoMjcqK8c7kmpTHQ1U8ORlpou1p5RQ';
-        const CHANNEL_NAME = 'chat-channel';  // The name of your channel
-
-        // Initialize Ably
-        const ably = new Ably.Realtime(API_KEY);
-        const channel = ably.channels.get(CHANNEL_NAME);
-
-        // Check for browser notification support and request permission
-        if ('Notification' in window) {
-            // Request permission to show notifications
-            Notification.requestPermission().then(function(permission) {
-                if (permission === "granted") {
-                    console.log("Notification permission granted.");
-                } else {
-                    console.log("Notification permission denied.");
-                }
-            });
-        }
-
-        // Function to show notification
-		function showNotification(username, message) {
-			if (Notification.permission === "granted") {
-				const notification = new Notification("New message from " + username, {
-					body: message,
-					icon: 'https://iconarchive.com/download/i10726/google/noto-emoji-animals-nature/22215-bell.ico',  // Notification bell icon
-				});
-				notification.onclick = function() {
-					window.focus();  // Focus the window when the notification is clicked
-				};
-			}
-		}
-
-        // Optional sound notification
-		function playNotificationSound() {
-			const audio = new Audio('https://www.zapsplat.com/wp-content/uploads/2019/04/zapsplat_communication_phone_notification_ring_tone_1.mp3');
-			audio.play();
-		}
-
-        // Display messages as they are received
-        channel.subscribe('new-message', function(message) {
-            const li = document.createElement('li');
-            const username = message.data.username;
-            const messageText = message.data.message;
-            
-            // Create message element
-            const messageElement = document.createElement('div');
-            messageElement.classList.add('message-text');
-            
-            // Create username span
-            const usernameElement = document.createElement('span');
-            usernameElement.classList.add('message-username');
-            usernameElement.textContent = `${username}: `;
-            
-            // Create message content span
-            const messageContentElement = document.createElement('span');
-            messageContentElement.classList.add('message-content');
-            messageContentElement.textContent = messageText;
-            
-            // Append username and message content to the message element
-            messageElement.appendChild(usernameElement);
-            messageElement.appendChild(messageContentElement);
-
-            // Add styles for user vs other users' messages
-            if (username === document.getElementById('username').value) {
-                li.classList.add('user-message'); // Align user message to the right
-            } else {
-                li.classList.add('other-message'); // Align other users' message to the left
-                showNotification(username, messageText); // Show notification for other messages
-                playNotificationSound(); // Play sound for new messages
-            }
-
-            li.appendChild(messageElement);
-            document.getElementById('messages').appendChild(li);
-            li.scrollIntoView({ behavior: 'smooth' });
-        });
-
-        // Handle sending messages
-        const form = document.getElementById('chat-form');
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const username = document.getElementById('username').value.trim();
-            const message = document.getElementById('message-input').value.trim();
-
-            if (username && message) {
-                // Publish the message to the channel
-                channel.publish('new-message', { username: username, message: message });
-
-                // Clear the input fields after sending the message
-                document.getElementById('message-input').value = '';
-            } else {
-                alert("Please enter a username and a message.");
-            }
-        });
-    </script>
-
+  </div>
 </body>
 </html>

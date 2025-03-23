@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -50,7 +51,7 @@
         </div>
 
         <!-- Verifikasi and Temporary Side by Side -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Verifikasi Section -->
             <div class="flex flex-col gap-2">
                 <label for="verifikasi" class="text-xl font-bold">Verifikasi:</label>
@@ -70,75 +71,42 @@
             </div>
         </div>
 
-        <!-- Standar CPI dan C/N Section at the Bottom (using table) -->
-        <div class="mt-6">
-            <h2 class="text-xl font-bold mb-4">Standar CPI dan C/N Setiap Provider BRISAT</h2>
-            
-            <!-- Table for BRISAT -->
-            <table class="table-auto w-full border-collapse mb-6">
-                <thead>
-                    <tr>
-                        <th class="px-4 py-2 border-b text-left font-semibold"><strong>Diameter Antena</strong></th>
-                        <th class="px-4 py-2 border-b text-left font-semibold"><strong>CPI Minimum</strong></th>
-                        <th class="px-4 py-2 border-b text-left font-semibold"><strong>C/N Minimum</strong></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="px-4 py-2 border-b"><strong>Antenna 1.8M (Satkom, Telkom & Tangara)</strong></td>
-                        <td class="px-4 py-2 border-b"><strong>32 dB</strong></td>
-                        <td class="px-4 py-2 border-b"><strong>42 dB</strong></td>
-                    </tr>
-                    <tr>
-                        <td class="px-4 py-2 border-b"><strong>Antenna 1.8M INTI</strong></td>
-                        <td class="px-4 py-2 border-b"><strong>33 dB</strong></td>
-                        <td class="px-4 py-2 border-b"><strong>45 dB</strong></td>
-                    </tr>
-                    <tr>
-                        <td class="px-4 py-2 border-b"><strong>Antenna 2.4M</strong></td>
-                        <td class="px-4 py-2 border-b"><strong>35 dB</strong></td>
-                        <td class="px-4 py-2 border-b"><strong>50 dB</strong></td>
-                    </tr>
-                    <tr>
-                        <td class="px-4 py-2 border-b"><strong>Antenna 3.8M</strong></td>
-                        <td class="px-4 py-2 border-b"><strong>35 dB</strong></td>
-                        <td class="px-4 py-2 border-b"><strong>51 dB</strong></td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <h2 class="text-xl font-bold mb-4">Standarisasi XPOLL SATDIV</h2>
-
-            <!-- Table for xpoll satdiv -->
-            <table class="table-auto w-full border-collapse">
-                <thead>
-                    <tr>
-                        <th class="px-4 py-2 border-b text-left font-semibold"><strong>Keterangan</strong></th>
-                        <th class="px-4 py-2 border-b text-left font-semibold"><strong>Nilai Minimum</strong></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="px-4 py-2 border-b"><strong>CPI</strong></td>
-                        <td class="px-4 py-2 border-b"><strong>30 dB</strong></td>
-                    </tr>
-                    <tr>
-                        <td class="px-4 py-2 border-b"><strong>C/N</strong></td>
-                        <td class="px-4 py-2 border-b"><strong>35 dB</strong></td>
-                    </tr>
-                    <tr>
-                        <td class="px-4 py-2 border-b"><strong>ASI Thaicom & Chinasat</strong></td>
-                        <td class="px-4 py-2 border-b"><strong>28 dB</strong></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
         <!-- Notification -->
         <div id="notification" class="absolute top-10 left-1/2 transform -translate-x-1/2 bg-green-500 text-white p-2 rounded-lg font-semibold opacity-0 transition-opacity duration-500">Teks telah disalin!</div>
     </div>
 
     <script>
+        // Update textareas with input and live updates
+        function updateTextareas() {
+            const inputValue = document.getElementById('inputText').value;
+            const beamValue = document.getElementById('beam').value;
+            const sqfValue = document.getElementById('sqf').value;
+            const esnoValue = document.getElementById('esno').value;
+            const latitudeStatus = document.querySelector('input[name="latitudeStatus"]:checked')?.value || '';
+
+            // Create a common string for the Latitude and Longitude status
+            const latitudeStatusText = latitudeStatus === 'Sesuai'
+                ? 'Latitude dan Longtitude Sudah Sesuai'
+                : latitudeStatus === 'Belum Sesuai'
+                ? 'Latitude dan Longtitude Belum Sesuai'
+                : '';
+
+            // Update Verifikasi and Temporary textareas
+            document.getElementById('verifikasi').value = `*Summary sudah sesuai standarisasi*\n\n${inputValue}\n\n*Note :  -*\n*Beam : ${beamValue}*\n*SQF : ${sqfValue}*\n*ESNO : ${esnoValue}*\n*${latitudeStatusText}*`;
+            document.getElementById('temporary').value = `*Summary Temporary*\n\n${inputValue}\n\n*Note :   XPOLL Belum Lolos (RECHECK), SQF dan ESNO Sesuai Standarisasi*\n*Beam : ${beamValue}*\n*SQF : ${sqfValue}*\n*ESNO : ${esnoValue}*\n*${latitudeStatusText}*`;
+        }
+
+        // Event listener for input fields to update live
+        document.getElementById('inputText').addEventListener('input', updateTextareas);
+        document.getElementById('beam').addEventListener('input', updateTextareas);
+        document.getElementById('sqf').addEventListener('input', updateTextareas);
+        document.getElementById('esno').addEventListener('input', updateTextareas);
+
+        // Add event listeners for radio buttons
+        document.querySelectorAll('input[name="latitudeStatus"]').forEach(radio => {
+            radio.addEventListener('change', updateTextareas); // Ensure it triggers update when the radio button changes
+        });
+
         // Copy text to clipboard function
         function copyToClipboard(textareaId) {
             const textarea = document.getElementById(textareaId);
@@ -167,6 +135,7 @@
             document.getElementById('sqf').value = '';
             document.getElementById('esno').value = '';
             document.querySelectorAll('input[name="latitudeStatus"]').forEach(radio => radio.checked = false);
+            updateTextareas(); // Recalculate the textareas after clearing
         }
     </script>
 </body>

@@ -6,24 +6,13 @@
   <title>Konversi Lat/Long ke DMM dan Alamat</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    // Fungsi untuk mengonversi Decimal Degrees (DD) ke Degrees, Decimal Minutes (DMM)
     function decimalToDMM(deg, isLongitude = false) {
-      var degrees = Math.floor(Math.abs(deg));  // Ambil nilai absolut derajat
-      var minutes = (Math.abs(deg) - degrees) * 60;  // Ambil bagian desimal dan konversikan ke menit
-      var direction = '';
-
-      // Menentukan arah (N/S atau E/W)
-      if (isLongitude) {
-        direction = deg < 0 ? 'W' : 'E';  // Longitude: W untuk Barat, E untuk Timur
-      } else {
-        direction = deg < 0 ? 'S' : 'N';  // Latitude: S untuk Selatan, N untuk Utara
-      }
-
-      // Format hasil sebagai DMM: derajat dan menit desimal
-      return degrees + "° " + minutes.toFixed(6) + "' " + direction; // DMM (Degrees, Decimal Minutes)
+      var degrees = Math.floor(Math.abs(deg));
+      var minutes = (Math.abs(deg) - degrees) * 60;
+      var direction = isLongitude ? (deg < 0 ? 'W' : 'E') : (deg < 0 ? 'S' : 'N');
+      return degrees + "° " + minutes.toFixed(6) + "' " + direction;
     }
 
-    // Fungsi untuk mengambil alamat menggunakan OpenStreetMap Nominatim API
     function getAddress(lat, lon) {
       const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
 
@@ -31,7 +20,7 @@
         .then(response => response.json())
         .then(data => {
           const address = data.address;
-          const readableAddress = `${address.road}, ${address.city}, ${address.country}`;
+          const readableAddress = `${address.road || ''}, ${address.city || address.town || address.village || ''}, ${address.country || ''}`;
           document.getElementById("address").innerText = `Alamat: ${readableAddress}`;
         })
         .catch(error => {
@@ -40,7 +29,6 @@
         });
     }
 
-    // Fungsi untuk menangani konversi dan menampilkan hasil
     function convertCoordinates() {
       const lat = parseFloat(document.getElementById('latitude').value);
       const lon = parseFloat(document.getElementById('longitude').value);
@@ -50,16 +38,29 @@
         return;
       }
 
-      // Konversi Latitude dan Longitude ke format DMM
       const latDMM = decimalToDMM(lat);
       const lonDMM = decimalToDMM(lon, true);
 
-      // Tampilkan hasil konversi DMM
-      document.getElementById('latDMM').innerText = `Latitude (DMM): ${latDMM}`;
-      document.getElementById('lonDMM').innerText = `Longitude (DMM): ${lonDMM}`;
+      document.getElementById('latDMM').innerText = `Latitude : ${latDMM}`;
+      document.getElementById('lonDMM').innerText = `Longitude : ${lonDMM}`;
+      document.getElementById('copyButton').classList.remove('hidden');
+      document.getElementById('copyStatus').innerText = ''; // reset notifikasi
 
-      // Ambil dan tampilkan alamat
       getAddress(lat, lon);
+    }
+
+    function copyAllDMM() {
+      const latText = document.getElementById('latDMM').innerText;
+      const lonText = document.getElementById('lonDMM').innerText;
+      const fullText = `${latText}\n${lonText}`;
+
+      navigator.clipboard.writeText(fullText)
+        .then(() => {
+          document.getElementById('copyStatus').innerText = '✅ Hasil berhasil disalin ke clipboard.';
+        })
+        .catch(err => {
+          console.error('Gagal menyalin:', err);
+        });
     }
   </script>
 </head>
@@ -72,24 +73,33 @@
       <div class="space-y-6">
         <div>
           <label for="latitude" class="block text-lg font-medium text-gray-700">Latitude:</label>
-          <input type="text" id="latitude" placeholder="e.g., -6.196750468199231" class="w-full p-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+          <input type="text" id="latitude" placeholder="Contoh., -6.196750468199231" class="w-full p-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
         </div>
 
         <div>
           <label for="longitude" class="block text-lg font-medium text-gray-700">Longitude:</label>
-          <input type="text" id="longitude" placeholder="e.g., -6.196750468199231" class="w-full p-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+          <input type="text" id="longitude" placeholder="Contoh., 106.817001" class="w-full p-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
         </div>
 
         <div class="flex justify-center mt-4">
           <button onclick="convertCoordinates()" class="bg-indigo-600 text-white px-6 py-3 rounded-md text-xl hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-            Konversi
+            Konversi Ke DMM
           </button>
         </div>
 
         <div class="mt-6 space-y-4">
-          <h2 class="text-2xl font-semibold text-gray-700">Hasil Konversi:</h2>
+          <h2 class="text-2xl font-semibold text-gray-700">Hasil Konversi DMM (Degrees, Decimal Minutes):</h2>
+
           <p id="latDMM" class="text-lg text-gray-800"></p>
           <p id="lonDMM" class="text-lg text-gray-800"></p>
+
+          <!-- Tombol Copy awalnya tersembunyi -->
+          <button id="copyButton" onclick="copyAllDMM()" class="hidden bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600 text-sm">
+            Salin Hasil Konversi
+          </button>
+
+          <!-- Status copy -->
+          <p id="copyStatus" class="text-green-600 text-sm font-medium"></p>
         </div>
 
         <div class="mt-6">

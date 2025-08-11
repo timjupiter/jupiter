@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>ABSENSI SHIFT (REFRESH UNTUK UPDATE DATA)</title>
     <style>
         body {
@@ -108,6 +108,12 @@
         <div class="container"></div>
     </div>
 
+    <!-- Section Onduty baru -->
+    <div class="section" id="onduty">
+        <h2>Onduty</h2>
+        <div class="container"></div>
+    </div>
+
     <div class="section" id="monitoring">
         <h2>Monitoring</h2>
         <div class="container"></div>
@@ -119,17 +125,26 @@
     function copyToClipboard(id) {
         var copyText = document.getElementById(id);
         copyText.select();
-        document.execCommand('copy');
+        copyText.setSelectionRange(0, 99999); // For mobile devices
 
-        var feedback = document.getElementById('feedback');
-        feedback.style.display = 'block';
-        setTimeout(() => {
-            feedback.style.display = 'none';
-        }, 1000);
+        try {
+            var successful = document.execCommand('copy');
+            if (successful) {
+                var feedback = document.getElementById('feedback');
+                feedback.style.display = 'block';
+                setTimeout(() => {
+                    feedback.style.display = 'none';
+                }, 1000);
+            } else {
+                alert('Copy failed. Please copy manually.');
+            }
+        } catch (err) {
+            alert('Copy not supported.');
+        }
     }
 
     async function fetchData() {
-        const apiURL = 'https://script.google.com/macros/s/AKfycbzNXi5s8Sw1j-gged2aq8txtL6U1FcfzgY0r6trGFBIjUmHxgW465TPE4QQf-FIqOn3Wg/exec';
+        const apiURL = 'https://script.google.com/macros/s/AKfycbzUIY4TWs4QxZQlfWcwWjbIkZ_vB-gvuCQ5dicqVEDfbWkNl7KohQXHRLk-gaQS2dfI2A/exec';
         
         try {
             const response = await fetch(apiURL);
@@ -141,20 +156,24 @@
             const labels = {
                 'E59': 'Shift 1', 'O59': 'Shift 2', 'Y59': 'Shift 3',
                 'E60': 'Shift 1', 'O60': 'Shift 2', 'Y60': 'Shift 3',
-                'E61': 'Shift 1', 'O61': 'Shift 2', 'Y61': 'Shift 3'
+                'E61': 'Shift 1', 'O61': 'Shift 2', 'Y61': 'Shift 3',
+                'E62': 'Shift 1', 'O62': 'Shift 2', 'Y62': 'Shift 3'
             };
 
             const fullPersonilContainer = document.querySelector('#full_personil .container');
             const noFullPersonilContainer = document.querySelector('#no_full_personil .container');
+            const ondutyContainer = document.querySelector('#onduty .container');
             const monitoringContainer = document.querySelector('#monitoring .container');
 
             // Clear existing content before appending new content
             fullPersonilContainer.innerHTML = '';
             noFullPersonilContainer.innerHTML = '';
+            ondutyContainer.innerHTML = '';
             monitoringContainer.innerHTML = '';
 
             const fullPersonilCells = ['E59', 'O59', 'Y59'];
             const noFullPersonilCells = ['E60', 'O60', 'Y60'];
+            const ondutyCells = ['E62', 'O62', 'Y62'];
             const monitoringCells = ['E61', 'O61', 'Y61'];
 
             function createBox(cellId, container) {
@@ -186,12 +205,14 @@
 
             fullPersonilCells.forEach(cellId => createBox(cellId, fullPersonilContainer));
             noFullPersonilCells.forEach(cellId => createBox(cellId, noFullPersonilContainer));
+            ondutyCells.forEach(cellId => createBox(cellId, ondutyContainer));
             monitoringCells.forEach(cellId => createBox(cellId, monitoringContainer));
 
         } catch (error) {
             console.error('Error fetching data:', error);
             document.getElementById('full_personil').querySelector('.container').innerHTML = 'Failed to load data.';
             document.getElementById('no_full_personil').querySelector('.container').innerHTML = 'Failed to load data.';
+            document.getElementById('onduty').querySelector('.container').innerHTML = 'Failed to load data.';
             document.getElementById('monitoring').querySelector('.container').innerHTML = 'Failed to load data.';
         }
     }

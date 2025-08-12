@@ -1,40 +1,44 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Konversi Lat/Long ke DMM dan Alamat</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     function decimalToDMM(deg, isLongitude = false) {
-      var degrees = Math.floor(Math.abs(deg));
-      var minutes = (Math.abs(deg) - degrees) * 60;
-      var direction = isLongitude ? (deg < 0 ? 'W' : 'E') : (deg < 0 ? 'S' : 'N');
-      return degrees + "° " + minutes.toFixed(6) + "' " + direction;
+      const degrees = Math.floor(Math.abs(deg));
+      const minutes = (Math.abs(deg) - degrees) * 60;
+      const direction = isLongitude
+        ? deg < 0 ? 'W' : 'E'
+        : deg < 0 ? 'S' : 'N';
+      return `${degrees}° ${minutes.toFixed(6)}' ${direction}`;
     }
 
     function getAddress(lat, lon) {
       const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`;
 
       fetch(url)
-        .then(response => response.json())
+        .then(res => res.json())
         .then(data => {
           const address = data.address;
-          const readableAddress = `${address.road || ''}, ${address.city || address.town || address.village || ''}, ${address.country || ''}`;
-          document.getElementById("address").innerText = `Alamat: ${readableAddress}`;
+          const readable = `${address.road || ''}, ${address.city || address.town || address.village || ''}, ${address.country || ''}`;
+          document.getElementById("address").innerText = `Alamat: ${readable}`;
         })
-        .catch(error => {
-          console.error('Error fetching address:', error);
-          document.getElementById("address").innerText = 'Alamat tidak ditemukan';
+        .catch(err => {
+          console.error("Error:", err);
+          document.getElementById("address").innerText = "Alamat tidak ditemukan.";
         });
     }
 
     function convertCoordinates() {
-      const lat = parseFloat(document.getElementById('latitude').value);
-      const lon = parseFloat(document.getElementById('longitude').value);
+      const input = document.getElementById('latlon').value;
+      const [latStr, lonStr] = input.split(',').map(val => val.trim());
+      const lat = parseFloat(latStr);
+      const lon = parseFloat(lonStr);
 
       if (isNaN(lat) || isNaN(lon)) {
-        alert("Harap masukkan nilai Latitude dan Longitude yang valid.");
+        alert("Masukkan koordinat dalam format yang benar, misalnya: -6.23, 106.78");
         return;
       }
 
@@ -44,7 +48,7 @@
       document.getElementById('latDMM').innerText = `Latitude : ${latDMM}`;
       document.getElementById('lonDMM').innerText = `Longitude : ${lonDMM}`;
       document.getElementById('copyButton').classList.remove('hidden');
-      document.getElementById('copyStatus').innerText = ''; // reset notifikasi
+      document.getElementById('copyStatus').innerText = '';
 
       getAddress(lat, lon);
     }
@@ -52,14 +56,14 @@
     function copyAllDMM() {
       const latText = document.getElementById('latDMM').innerText;
       const lonText = document.getElementById('lonDMM').innerText;
-      const fullText = `${latText}\n${lonText}`;
+      const full = `${latText}\n${lonText}`;
 
-      navigator.clipboard.writeText(fullText)
+      navigator.clipboard.writeText(full)
         .then(() => {
           document.getElementById('copyStatus').innerText = '✅ Hasil berhasil disalin ke clipboard.';
         })
         .catch(err => {
-          console.error('Gagal menyalin:', err);
+          console.error("Copy error:", err);
         });
     }
   </script>
@@ -67,18 +71,13 @@
 <body class="bg-gray-50 font-sans text-gray-800">
   <div class="min-h-screen flex items-center justify-center py-8">
     <div class="bg-white shadow-xl rounded-lg p-8 w-full max-w-lg">
-      <h1 class="text-4xl font-semibold text-center text-indigo-600 mb-6">Konversi Latitude dan Longitude</h1>
-      <p class="text-center mb-6 text-lg text-gray-600">Masukkan Latitude dan Longitude dalam format Decimal Degrees (DD):</p>
+      <h1 class="text-4xl font-semibold text-center text-indigo-600 mb-6">Konversi Koordinat</h1>
+      <p class="text-center mb-6 text-lg text-gray-600">Masukkan koordinat Latitude dan Longitude (pisahkan dengan koma):</p>
 
       <div class="space-y-6">
         <div>
-          <label for="latitude" class="block text-lg font-medium text-gray-700">Latitude:</label>
-          <input type="text" id="latitude" placeholder="Contoh., -6.196750468199231" class="w-full p-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
-        </div>
-
-        <div>
-          <label for="longitude" class="block text-lg font-medium text-gray-700">Longitude:</label>
-          <input type="text" id="longitude" placeholder="Contoh., 106.817001" class="w-full p-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
+          <label for="latlon" class="block text-lg font-medium text-gray-700">Latitude, Longitude:</label>
+          <input type="text" id="latlon" placeholder="Contoh: -6.237925, 106.783441" class="w-full p-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" />
         </div>
 
         <div class="flex justify-center mt-4">
@@ -88,17 +87,14 @@
         </div>
 
         <div class="mt-6 space-y-4">
-          <h2 class="text-2xl font-semibold text-gray-700">Hasil Konversi DMM (Degrees, Decimal Minutes):</h2>
-
+          <h2 class="text-2xl font-semibold text-gray-700">Hasil Konversi DMM:</h2>
           <p id="latDMM" class="text-lg text-gray-800"></p>
           <p id="lonDMM" class="text-lg text-gray-800"></p>
 
-          <!-- Tombol Copy awalnya tersembunyi -->
           <button id="copyButton" onclick="copyAllDMM()" class="hidden bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600 text-sm">
             Salin Hasil Konversi
           </button>
 
-          <!-- Status copy -->
           <p id="copyStatus" class="text-green-600 text-sm font-medium"></p>
         </div>
 

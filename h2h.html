@@ -250,12 +250,14 @@
                     <div id="message4" class="message"></div>
                     <button class="copy-button" onclick="copyMessage('message4')">Copy</button>
                 </div>
-                <!--
                 <div class="message-wrapper">
                     <div id="message5" class="message"></div>
                     <button class="copy-button" onclick="copyMessage('message5')">Copy</button>
                 </div>
-                -->
+                <div class="message-wrapper">
+                    <div id="message6" class="message"></div>
+                    <button class="copy-button" onclick="copyMessage('message6')">Copy</button>
+                </div>
             </div>
 
             <!-- Panel 5-7 tanpa update jam (pesan statis) -->
@@ -393,7 +395,8 @@
             document.getElementById('message2').textContent = `Berikut MRTG Link H2H SDWAN BI-FAST & RTGS PSCF via Telkom pada pukul ${messageTime}`;
             document.getElementById('message3').textContent = `Berikut MRTG Link H2H SDWAN BI-FAST ODC via Lintas pada pukul ${messageTime}`;
             document.getElementById('message4').textContent = `Berikut MRTG Link H2H SDWAN BI-FAST ODC via Telkom pada pukul ${messageTime}`;
-         // document.getElementById('message5').textContent = `Berikut MRTG Link H2H BI SDWAN-SSSS BSCF via Lintas pada pukul ${messageTime}`;
+            document.getElementById('message5').textContent = `Berikut MRTG Link H2H SDWAN BI-FAST BSCF via Lintas pada pukul ${messageTime}`;
+            document.getElementById('message6').textContent = `Berikut MRTG Link H2H SDWAN BI-FAST BSCF via Telkom pada pukul ${messageTime}`;
         }
 
         // Initial call to set messages immediately

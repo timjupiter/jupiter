@@ -1,225 +1,232 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>ABSENSI SHIFT (REFRESH UNTUK UPDATE DATA)</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
-        .section {
-            border: 1px solid #ddd;
-            background-color: #f9f9f9;
-            padding: 20px;
-            box-sizing: border-box;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-        .section h2 {
-            text-align: center;
-            margin-top: 0;
-        }
-        .container {
-            display: grid;
-            gap: 20px;
-        }
-        .box-wrapper {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 10px;
-        }
-        .label {
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 5px;
-        }
-        .box {
-            border: 1px solid #ddd;
-            background-color: #f9f9f9;
-            height: 250px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 10px;
-        }
-        textarea {
-            width: 100%;
-            height: 100%;
-            border: none;
-            background: none;
-            resize: none;
-            overflow: auto;
-            font-family: Arial, sans-serif;
-            text-align: left;
-            white-space: pre-wrap;
-        }
-        button {
-            width: 100%;
-            padding: 8px;
-            border: none;
-            background: linear-gradient(45deg, #007bff, #0056b3);
-            color: white;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: 0.3s ease;
-        }
-        button:hover {
-            background: linear-gradient(45deg, #0056b3, #007bff);
-            transform: scale(1.05);
-        }
-        .feedback {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #4CAF50;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            display: none;
-            transition: opacity 0.5s ease-out;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ABSENSI SHIFT (REFRESH UNTUK UPDATE DATA)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .section {
+      border: 1px solid #ddd;
+      background-color: #f9f9f9;
+      padding: 20px;
+      box-sizing: border-box;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+    .section h2 {
+      text-align: center;
+      margin-top: 0;
+    }
+    .desc {
+      text-align: center;
+      color: #666;
+      font-size: 14px;
+      margin-top: -5px;
+      margin-bottom: 15px;
+      font-style: italic;
+    }
+    .container {
+      display: grid;
+      gap: 20px;
+    }
+    .box-wrapper {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 10px;
+    }
+    .label {
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 5px;
+    }
+    .box {
+      border: 1px solid #ddd;
+      background-color: #f9f9f9;
+      height: 250px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 10px;
+    }
+    textarea {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: none;
+      resize: none;
+      overflow: auto;
+      font-family: Arial, sans-serif;
+      text-align: left;
+      white-space: pre-wrap;
+    }
+    button {
+      width: 100%;
+      padding: 8px;
+      border: none;
+      background: linear-gradient(45deg, #007bff, #0056b3);
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: 0.3s ease;
+    }
+    button:hover {
+      background: linear-gradient(45deg, #0056b3, #007bff);
+      transform: scale(1.05);
+    }
+    .refresh-btn {
+      display: block;
+      width: 200px;
+      margin: 0 auto 20px auto;
+      background: linear-gradient(45deg, #28a745, #218838);
+    }
+    .feedback {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #4CAF50;
+      color: white;
+      padding: 10px;
+      border-radius: 5px;
+      display: none;
+      transition: opacity 0.5s ease-out;
+    }
 
-        /* Responsif */
-        @media (min-width: 768px) {
-            .container {
-                grid-template-columns: repeat(3, 1fr);
-            }
-        }
-        @media (max-width: 767px) {
-            .container {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    /* Responsif */
+    @media (min-width: 768px) {
+      .container {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    @media (max-width: 767px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="section" id="full_personil">
-        <h2>WNO (H2H - JUPITER), Jupiter OPS, NOC All Operator</h2>
-        <div class="container"></div>
-    </div>
 
-    <div class="section" id="no_full_personil">
-        <h2>CAN-WAN-SHD-OST-NOC, Telegram Grup Berkah</h2>
-        <div class="container"></div>
-    </div>
+  <button class="refresh-btn" onclick="fetchData()">🔄 Refresh Data</button>
 
-    <!-- Section Onduty baru -->
-    <div class="section" id="onduty">
-        <h2>OPS GCS (PSCF-BSCF)</h2>
-        <div class="container"></div>
-    </div>
+  <div class="section" id="full_personil">
+    <h2>Team EVO</h2>
+    <p class="desc">Kirim ke grup WNO (H2H - JUPITER), Jupiter OPS, NOC All Operator & OPS GCS (PSCF-BSCF)</p>
+    <div class="container"></div>
+  </div>
 
-    <div class="section" id="monitoring">
-        <h2>Monitoring</h2>
-        <div class="container"></div>
-    </div>
+  <div class="section" id="no_full_personil">
+    <h2>Team EVO</h2>
+    <p class="desc">Kirim ke CAN-WAN-SHD-OST-NOC & Telegram grup Berkah</p>
+    <div class="container"></div>
+  </div>
 
-    <div id="feedback" class="feedback">Copied to clipboard!</div>
+  <div class="section" id="team_exo">
+    <h2>Team EXO</h2>
+    <p class="desc">Team Edge Network - Extranet (ex.WNO)</p>
+    <div class="container"></div>
+  </div>
 
-<script>
+  <div class="section" id="monitoring">
+    <h2>Team Monitoring</h2>
+    <p class="desc">Jupiter & H2H</p>
+    <div class="container"></div>
+  </div>
+
+  <div id="feedback" class="feedback">Copied to clipboard!</div>
+
+  <script>
     function copyToClipboard(id) {
-        var copyText = document.getElementById(id);
-        copyText.select();
-        copyText.setSelectionRange(0, 99999); // For mobile devices
-
-        try {
-            var successful = document.execCommand('copy');
-            if (successful) {
-                var feedback = document.getElementById('feedback');
-                feedback.style.display = 'block';
-                setTimeout(() => {
-                    feedback.style.display = 'none';
-                }, 1000);
-            } else {
-                alert('Copy failed. Please copy manually.');
-            }
-        } catch (err) {
-            alert('Copy not supported.');
-        }
+      const copyText = document.getElementById(id);
+      copyText.select();
+      copyText.setSelectionRange(0, 99999);
+      try {
+        document.execCommand('copy');
+        const feedback = document.getElementById('feedback');
+        feedback.style.display = 'block';
+        setTimeout(() => feedback.style.display = 'none', 1000);
+      } catch {
+        alert('Copy failed. Please copy manually.');
+      }
     }
 
     async function fetchData() {
-        const apiURL = 'https://script.google.com/macros/s/AKfycbzUIY4TWs4QxZQlfWcwWjbIkZ_vB-gvuCQ5dicqVEDfbWkNl7KohQXHRLk-gaQS2dfI2A/exec';
-        
-        try {
-            const response = await fetch(apiURL);
-            if (!response.ok) {
-                throw new Error('Network response was not ok.');
-            }
-            const json = await response.json();
+      const apiURL = 'https://script.google.com/macros/s/AKfycbyDiILOpK7bx0WUktE4_D5zuJp_VyUEexw_WMZhVCO5LIj3HDE-1V1lrWl2OUg5ZeWn/exec';
+      
+      document.querySelectorAll('.container').forEach(c => c.innerHTML = 'Loading...');
+      try {
+        const response = await fetch(apiURL);
+        if (!response.ok) throw new Error('Network response was not ok.');
+        const json = await response.json();
 
-            const labels = {
-                'E59': 'Shift 1', 'O59': 'Shift 2', 'Y59': 'Shift 3',
-                'E60': 'Shift 1', 'O60': 'Shift 2', 'Y60': 'Shift 3',
-                'E61': 'Shift 1', 'O61': 'Shift 2', 'Y61': 'Shift 3',
-                'E62': 'Shift 1', 'O62': 'Shift 2', 'Y62': 'Shift 3'
-            };
+        const labels = {
+          'E59': 'Shift 1', 'O59': 'Shift 2', 'Y59': 'Shift 3',
+          'E60': 'Shift 1', 'O60': 'Shift 2', 'Y60': 'Shift 3',
+          'E61': 'Shift 1', 'O61': 'Shift 2', 'Y61': 'Shift 3',
+          'E62': 'Shift 1', 'O62': 'Shift 2', 'Y62': 'Shift 3'
+        };
 
-            const fullPersonilContainer = document.querySelector('#full_personil .container');
-            const noFullPersonilContainer = document.querySelector('#no_full_personil .container');
-            const ondutyContainer = document.querySelector('#onduty .container');
-            const monitoringContainer = document.querySelector('#monitoring .container');
+        const fullPersonilContainer = document.querySelector('#full_personil .container');
+        const noFullPersonilContainer = document.querySelector('#no_full_personil .container');
+        const exoContainer = document.querySelector('#team_exo .container');
+        const monitoringContainer = document.querySelector('#monitoring .container');
 
-            // Clear existing content before appending new content
-            fullPersonilContainer.innerHTML = '';
-            noFullPersonilContainer.innerHTML = '';
-            ondutyContainer.innerHTML = '';
-            monitoringContainer.innerHTML = '';
+        fullPersonilContainer.innerHTML = '';
+        noFullPersonilContainer.innerHTML = '';
+        exoContainer.innerHTML = '';
+        monitoringContainer.innerHTML = '';
 
-            const fullPersonilCells = ['E59', 'O59', 'Y59'];
-            const noFullPersonilCells = ['E60', 'O60', 'Y60'];
-            const ondutyCells = ['E62', 'O62', 'Y62'];
-            const monitoringCells = ['E61', 'O61', 'Y61'];
+        const fullPersonilCells = ['E59', 'O59', 'Y59'];
+        const noFullPersonilCells = ['E60', 'O60', 'Y60'];
+        const monitoringCells = ['E61', 'O61', 'Y61'];
+        const exoCells = ['E62', 'O62', 'Y62'];
 
-            function createBox(cellId, container) {
-                const boxWrapper = document.createElement('div');
-                boxWrapper.className = 'box-wrapper';
+        function createBox(cellId, container) {
+          const boxWrapper = document.createElement('div');
+          boxWrapper.className = 'box-wrapper';
 
-                const label = document.createElement('div');
-                label.className = 'label';
-                label.innerText = labels[cellId] || cellId;
-                
-                const box = document.createElement('div');
-                box.className = 'box';
+          const label = document.createElement('div');
+          label.className = 'label';
+          label.innerText = labels[cellId] || cellId;
 
-                const textarea = document.createElement('textarea');
-                textarea.id = `${cellId}_textarea`;
-                textarea.readOnly = true;
-                textarea.textContent = json[cellId] || 'No Data';
-                box.appendChild(textarea);
+          const box = document.createElement('div');
+          box.className = 'box';
 
-                const button = document.createElement('button');
-                button.innerText = 'Copy';
-                button.onclick = () => copyToClipboard(`${cellId}_textarea`);
-                box.appendChild(button);
+          const textarea = document.createElement('textarea');
+          textarea.id = `${cellId}_textarea`;
+          textarea.readOnly = true;
+          textarea.textContent = json[cellId] || 'No Data';
+          box.appendChild(textarea);
 
-                boxWrapper.appendChild(label);
-                boxWrapper.appendChild(box);
-                container.appendChild(boxWrapper);
-            }
+          const button = document.createElement('button');
+          button.innerText = 'Copy';
+          button.onclick = () => copyToClipboard(`${cellId}_textarea`);
+          box.appendChild(button);
 
-            fullPersonilCells.forEach(cellId => createBox(cellId, fullPersonilContainer));
-            noFullPersonilCells.forEach(cellId => createBox(cellId, noFullPersonilContainer));
-            ondutyCells.forEach(cellId => createBox(cellId, ondutyContainer));
-            monitoringCells.forEach(cellId => createBox(cellId, monitoringContainer));
-
-        } catch (error) {
-            console.error('Error fetching data:', error);
-            document.getElementById('full_personil').querySelector('.container').innerHTML = 'Failed to load data.';
-            document.getElementById('no_full_personil').querySelector('.container').innerHTML = 'Failed to load data.';
-            document.getElementById('onduty').querySelector('.container').innerHTML = 'Failed to load data.';
-            document.getElementById('monitoring').querySelector('.container').innerHTML = 'Failed to load data.';
+          boxWrapper.appendChild(label);
+          boxWrapper.appendChild(box);
+          container.appendChild(boxWrapper);
         }
+
+        fullPersonilCells.forEach(id => createBox(id, fullPersonilContainer));
+        noFullPersonilCells.forEach(id => createBox(id, noFullPersonilContainer));
+        monitoringCells.forEach(id => createBox(id, monitoringContainer));
+        exoCells.forEach(id => createBox(id, exoContainer));
+
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        document.querySelectorAll('.container').forEach(c => c.innerHTML = 'Failed to load data.');
+      }
     }
 
     fetchData();
-    setInterval(fetchData, 3600000);  // Memanggil fetchData setiap 1 jam (3600000 ms)
-</script>
+    setInterval(fetchData, 3600000); // refresh tiap 1 jam
+  </script>
 </body>
 </html>
-

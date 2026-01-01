@@ -6,29 +6,56 @@
 <title>Template H2H</title>
 
 <style>
-body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-    display: flex;
-    gap: 20px;
+body{
+    font-family:Arial,sans-serif;
+    margin:20px;
+    display:flex;
+    gap:20px;
 }
 #html1,#html2{
     width:48%;
-    padding:20px;
     background:#fff;
+    padding:20px;
     border-radius:10px;
     box-shadow:0 2px 10px rgba(0,0,0,.1);
 }
-#html2{display:flex;flex-direction:column;align-items:center}
+#html2{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
 #clock{
     font-size:40px;
     background:#343a40;
     color:#fff;
     padding:15px;
     border-radius:10px;
-    margin-bottom:15px;
     width:100%;
     text-align:center;
+    margin-bottom:15px;
+}
+label{font-weight:bold}
+input,select,textarea{
+    width:100%;
+    padding:10px;
+    margin:8px 0;
+    border-radius:5px;
+    border:1px solid #ccc;
+}
+button{
+    padding:10px;
+    border:none;
+    border-radius:5px;
+    background:#4CAF50;
+    color:#fff;
+    cursor:pointer;
+}
+button:hover{background:#45a049}
+pre,textarea{
+    background:#f8f9fa;
+    border-radius:5px;
+    padding:10px;
+    white-space:pre-wrap;
 }
 .message-container{
     width:100%;
@@ -46,14 +73,14 @@ body {
 }
 .message-wrapper:last-child{border-bottom:none}
 .copy-button{
-    padding:8px;
     width:30%;
+    padding:8px;
     background:linear-gradient(45deg,#007bff,#0056b3);
     color:#fff;
     border:none;
     border-radius:10px;
-    cursor:pointer;
     font-size:13px;
+    cursor:pointer;
 }
 .copy-button:hover{transform:scale(1.05)}
 .notification{
@@ -79,27 +106,33 @@ body {
 
 <body>
 
-<!-- KIRI -->
+<!-- ================= KIRI ================= -->
 <div id="html1">
-    <h2 style="text-align:center">Kata-kata Hari Ini</h2>
-    <form id="statusForm">
-        <label>Nama Perangkat</label>
-        <input id="deviceName" required>
-        <label>Status</label>
-        <select id="status">
-            <option value="online">Online</option>
-            <option value="offline">Offline</option>
-        </select>
-        <button id="submitButton" disabled>Tampilkan</button>
-    </form>
-    <pre id="result" style="display:none"></pre>
-    <button id="copyButton" style="display:none">Copy Hasil</button>
-    <textarea id="updateResult" rows="5" readonly style="display:none"></textarea>
-    <button id="copyUpdateButton" style="display:none">Copy Update</button>
+<h2 style="text-align:center">Kata-kata Hari Ini</h2>
+
+<form id="statusForm">
+    <label>Nama Perangkat</label>
+    <input id="deviceName" required>
+
+    <label>Status Ping & Traceroute</label>
+    <select id="status">
+        <option value="online">Online</option>
+        <option value="offline">Offline</option>
+    </select>
+
+    <button id="submitButton" disabled>Tampilkan Hasil</button>
+</form>
+
+<pre id="result" style="display:none"></pre>
+<button id="copyButton" style="display:none">Copy Hasil</button>
+
+<textarea id="updateResult" rows="5" readonly style="display:none"></textarea>
+<button id="copyUpdateButton" style="display:none">Copy Update</button>
 </div>
 
-<!-- KANAN -->
+<!-- ================= KANAN ================= -->
 <div id="html2">
+
 <div id="clock"></div>
 
 <!-- 1️⃣ MRTG -->
@@ -119,7 +152,7 @@ body {
     <div class="message-wrapper"><div>DASHBOARD BACKHAUL UKER TRAFFIC UTILIZATION PSCF & BSCF</div><button class="copy-button" onclick="copyText(this)">Copy</button></div>
 </div>
 
-<!-- 3️⃣ WLC / LAN / DLL -->
+<!-- 3️⃣ WLC DLL -->
 <div class="message-container">
     <div class="message-wrapper"><div id="m7"></div><button class="copy-button" onclick="copy('m7')">Copy</button></div>
     <div class="message-wrapper"><div id="m8"></div><button class="copy-button" onclick="copy('m8')">Copy</button></div>
@@ -132,6 +165,32 @@ body {
 <div id="notif" class="notification">Copied!</div>
 
 <script>
+statusForm.addEventListener('input',()=>{
+    submitButton.disabled=!deviceName.value.trim();
+});
+
+statusForm.addEventListener('submit',e=>{
+    e.preventDefault();
+    const d=deviceName.value.trim();
+    const s=status.value;
+
+    result.textContent=
+        s==='online'
+        ?`FYI,\n\nKami informasikan bahwa status koneksi *${d}* termonitor DOWN pada dashboard monica, namun hasil pengecekan trace dan ping ONLINE.\n\nTerimakasih.`
+        :`FYI,\n\nKami informasikan bahwa status koneksi *${d}* termonitor DOWN pada dashboard monica, hasil pengecekan traceroute dan ping OFFLINE dan saat ini dalam pengecekan.\n\nTerimakasih.`;
+
+    result.style.display='block';
+    copyButton.style.display='block';
+
+    updateResult.value=
+        `UPDATE,\n\nKami informasikan kembali remote *${d}* sudah termonitor ONLINE kembali pada dashboard monica.\n\nTerimakasih.`;
+    updateResult.style.display='block';
+    copyUpdateButton.style.display='block';
+});
+
+copyButton.onclick=()=>navigator.clipboard.writeText(result.textContent);
+copyUpdateButton.onclick=()=>navigator.clipboard.writeText(updateResult.value);
+
 function copy(id){
     navigator.clipboard.writeText(document.getElementById(id).innerText);
     show();

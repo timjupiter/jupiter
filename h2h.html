@@ -1,282 +1,172 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Template H2H</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Template H2H</title>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            display: flex;
-            justify-content: space-between;
-            gap: 20px;
-        }
-
-        #html1,
-        #html2 {
-            width: 48%;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        #html1 label {
-            font-weight: bold;
-            display: block;
-            margin-top: 10px;
-        }
-
-        #html1 input,
-        #html1 select,
-        #html1 textarea {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-
-        #result,
-        #updateResult {
-            margin-top: 10px;
-            padding: 10px;
-            border-radius: 5px;
-            background: #f8f9fa;
-            display: none;
-            white-space: pre-wrap;
-        }
-
-        button {
-            margin-top: 10px;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            background: #4CAF50;
-            color: white;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: #45a049;
-        }
-
-        #html2 {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        #clock {
-            font-size: 40px;
-            background: #343a40;
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            width: 100%;
-            text-align: center;
-        }
-
-        .container {
-            width: 100%;
-        }
-
-        .message-container {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-        }
-
-        .message-wrapper {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #ddd;
-            padding: 8px 0;
-        }
-
-        .message-wrapper:last-child {
-            border-bottom: none;
-        }
-
-        .copy-button {
-            background: linear-gradient(45deg, #007bff, #0056b3);
-            border-radius: 10px;
-            font-size: 13px;
-            padding: 8px;
-            width: 30%;
-        }
-
-        .copy-button:hover {
-            transform: scale(1.05);
-        }
-
-        .notification {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #28a745;
-            color: white;
-            padding: 12px;
-            border-radius: 5px;
-            opacity: 0;
-            visibility: hidden;
-            transition: 0.3s;
-        }
-
-        .notification.show {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        @media (max-width: 600px) {
-            body {
-                flex-direction: column;
-            }
-
-            #html1,
-            #html2 {
-                width: 100%;
-            }
-        }
-    </style>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    display: flex;
+    gap: 20px;
+}
+#html1,#html2{
+    width:48%;
+    padding:20px;
+    background:#fff;
+    border-radius:10px;
+    box-shadow:0 2px 10px rgba(0,0,0,.1);
+}
+#html2{display:flex;flex-direction:column;align-items:center}
+#clock{
+    font-size:40px;
+    background:#343a40;
+    color:#fff;
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:15px;
+    width:100%;
+    text-align:center;
+}
+.message-container{
+    width:100%;
+    background:#f8f9fa;
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:15px;
+}
+.message-wrapper{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:1px solid #ddd;
+    padding:8px 0;
+}
+.message-wrapper:last-child{border-bottom:none}
+.copy-button{
+    padding:8px;
+    width:30%;
+    background:linear-gradient(45deg,#007bff,#0056b3);
+    color:#fff;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:13px;
+}
+.copy-button:hover{transform:scale(1.05)}
+.notification{
+    position:fixed;
+    bottom:20px;
+    left:50%;
+    transform:translateX(-50%);
+    background:#28a745;
+    color:#fff;
+    padding:12px;
+    border-radius:5px;
+    opacity:0;
+    visibility:hidden;
+    transition:.3s;
+}
+.notification.show{opacity:1;visibility:visible}
+@media(max-width:600px){
+    body{flex-direction:column}
+    #html1,#html2{width:100%}
+}
+</style>
 </head>
 
 <body>
 
-    <!-- HTML KIRI -->
-    <div id="html1">
-        <h2 style="text-align:center">Kata-kata Hari Ini</h2>
+<!-- KIRI -->
+<div id="html1">
+    <h2 style="text-align:center">Kata-kata Hari Ini</h2>
+    <form id="statusForm">
+        <label>Nama Perangkat</label>
+        <input id="deviceName" required>
+        <label>Status</label>
+        <select id="status">
+            <option value="online">Online</option>
+            <option value="offline">Offline</option>
+        </select>
+        <button id="submitButton" disabled>Tampilkan</button>
+    </form>
+    <pre id="result" style="display:none"></pre>
+    <button id="copyButton" style="display:none">Copy Hasil</button>
+    <textarea id="updateResult" rows="5" readonly style="display:none"></textarea>
+    <button id="copyUpdateButton" style="display:none">Copy Update</button>
+</div>
 
-        <form id="statusForm">
-            <label>Nama Perangkat :</label>
-            <input type="text" id="deviceName" required>
+<!-- KANAN -->
+<div id="html2">
+<div id="clock"></div>
 
-            <label>Status Ping & Traceroute :</label>
-            <select id="status" required>
-                <option value="online">Online</option>
-                <option value="offline">Offline</option>
-            </select>
+<!-- 1️⃣ MRTG -->
+<div class="message-container">
+    <div class="message-wrapper"><div id="m1"></div><button class="copy-button" onclick="copy('m1')">Copy</button></div>
+    <div class="message-wrapper"><div id="m2"></div><button class="copy-button" onclick="copy('m2')">Copy</button></div>
+    <div class="message-wrapper"><div id="m3"></div><button class="copy-button" onclick="copy('m3')">Copy</button></div>
+    <div class="message-wrapper"><div id="m4"></div><button class="copy-button" onclick="copy('m4')">Copy</button></div>
+    <div class="message-wrapper"><div id="m5"></div><button class="copy-button" onclick="copy('m5')">Copy</button></div>
+    <div class="message-wrapper"><div id="m6"></div><button class="copy-button" onclick="copy('m6')">Copy</button></div>
+</div>
 
-            <button id="submitButton" disabled>Tampilkan Hasil</button>
-        </form>
+<!-- 2️⃣ DASHBOARD -->
+<div class="message-container">
+    <div class="message-wrapper"><div>DASHBOARD NETWORK BACKHAUL UKER PSCF & BSCF</div><button class="copy-button" onclick="copyText(this)">Copy</button></div>
+    <div class="message-wrapper"><div>DASHBOARD NETWORK BACKHAUL H2H PSCF, BSCF & ODC</div><button class="copy-button" onclick="copyText(this)">Copy</button></div>
+    <div class="message-wrapper"><div>DASHBOARD BACKHAUL UKER TRAFFIC UTILIZATION PSCF & BSCF</div><button class="copy-button" onclick="copyText(this)">Copy</button></div>
+</div>
 
-        <div id="result"></div>
-        <button id="copyButton" style="display:none">Copy Hasil</button>
+<!-- 3️⃣ WLC / LAN / DLL -->
+<div class="message-container">
+    <div class="message-wrapper"><div id="m7"></div><button class="copy-button" onclick="copy('m7')">Copy</button></div>
+    <div class="message-wrapper"><div id="m8"></div><button class="copy-button" onclick="copy('m8')">Copy</button></div>
+    <div class="message-wrapper"><div id="m9"></div><button class="copy-button" onclick="copy('m9')">Copy</button></div>
+    <div class="message-wrapper"><div id="m10"></div><button class="copy-button" onclick="copy('m10')">Copy</button></div>
+</div>
 
-        <textarea id="updateResult" rows="5" readonly></textarea>
-        <button id="copyUpdateButton" style="display:none">Copy Update</button>
-    </div>
+</div>
 
-    <!-- HTML KANAN -->
-    <div id="html2">
-        <div id="clock"></div>
+<div id="notif" class="notification">Copied!</div>
 
-        <div class="container">
+<script>
+function copy(id){
+    navigator.clipboard.writeText(document.getElementById(id).innerText);
+    show();
+}
+function copyText(btn){
+    navigator.clipboard.writeText(btn.previousElementSibling.innerText);
+    show();
+}
+function show(){
+    notif.classList.add('show');
+    setTimeout(()=>notif.classList.remove('show'),2000);
+}
+function updateClock(){
+    const n=new Date();
+    clock.innerText=n.toLocaleTimeString();
+    let h=n.getHours();
+    if(n.getMinutes()>=30)h++;
+    if(h===24)h=0;
+    const t=`${String(h).padStart(2,'0')}:00 WIB`;
 
-            <!-- MRTG H2H -->
-            <div class="message-container">
-                <div class="message-wrapper"><div id="message1"></div><button class="copy-button" onclick="copyMessage('message1')">Copy</button></div>
-                <div class="message-wrapper"><div id="message2"></div><button class="copy-button" onclick="copyMessage('message2')">Copy</button></div>
-                <div class="message-wrapper"><div id="message3"></div><button class="copy-button" onclick="copyMessage('message3')">Copy</button></div>
-                <div class="message-wrapper"><div id="message4"></div><button class="copy-button" onclick="copyMessage('message4')">Copy</button></div>
-                <div class="message-wrapper"><div id="message5"></div><button class="copy-button" onclick="copyMessage('message5')">Copy</button></div>
-                <div class="message-wrapper"><div id="message6"></div><button class="copy-button" onclick="copyMessage('message6')">Copy</button></div>
-            </div>
+    m1.innerText=`Berikut MRTG Link H2H SDWAN BI-FAST & SKN PSCF via Lintas pada pukul ${t}`;
+    m2.innerText=`Berikut MRTG Link H2H SDWAN BI-FAST & RTGS PSCF via Telkom pada pukul ${t}`;
+    m3.innerText=`Berikut MRTG Link H2H SDWAN BI-FAST ODC via Lintas pada pukul ${t}`;
+    m4.innerText=`Berikut MRTG Link H2H SDWAN BI-FAST ODC via Telkom pada pukul ${t}`;
+    m5.innerText=`Berikut MRTG Link H2H SDWAN BI-FAST BSCF via Lintas pada pukul ${t}`;
+    m6.innerText=`Berikut MRTG Link H2H SDWAN BI-FAST BSCF via Telkom pada pukul ${t}`;
 
-            <!-- PANEL BARU UPDATE PER JAM -->
-            <div class="message-container">
-                <div class="message-wrapper"><div id="message9"></div><button class="copy-button" onclick="copyMessage('message9')">Copy</button></div>
-                <div class="message-wrapper"><div id="message10"></div><button class="copy-button" onclick="copyMessage('message10')">Copy</button></div>
-                <div class="message-wrapper"><div id="message11"></div><button class="copy-button" onclick="copyMessage('message11')">Copy</button></div>
-                <div class="message-wrapper"><div id="message12"></div><button class="copy-button" onclick="copyMessage('message12')">Copy</button></div>
-            </div>
-
-            <!-- PANEL STATIS -->
-            <div class="message-container">
-                <div class="message-wrapper"><div>DASHBOARD NETWORK BACKHAUL UKER PSCF & BSCF</div><button class="copy-button" onclick="copyMessageText(this)">Copy</button></div>
-                <div class="message-wrapper"><div>DASHBOARD NETWORK BACKHAUL H2H PSCF, BSCF & ODC</div><button class="copy-button" onclick="copyMessageText(this)">Copy</button></div>
-                <div class="message-wrapper"><div>DASHBOARD BACKHAUL UKER TRAFFIC UTILIZATION PSCF & BSCF</div><button class="copy-button" onclick="copyMessageText(this)">Copy</button></div>
-            </div>
-
-        </div>
-    </div>
-
-    <div id="notification" class="notification">Message copied!</div>
-
-    <script>
-        document.getElementById('statusForm').addEventListener('input', () => {
-            submitButton.disabled = !deviceName.value.trim();
-        });
-
-        document.getElementById('statusForm').addEventListener('submit', e => {
-            e.preventDefault();
-            const d = deviceName.value.trim();
-            const s = status.value;
-
-            result.textContent =
-                s === 'online'
-                    ? `FYI,\n\nKami informasikan bahwa status koneksi *${d}* termonitor DOWN pada dashboard monica, namun hasil pengecekan trace dan ping ONLINE.\n\nTerimakasih.`
-                    : `FYI,\n\nKami informasikan bahwa status koneksi *${d}* termonitor DOWN pada dashboard monica, hasil pengecekan traceroute dan ping OFFLINE dan saat ini dalam pengecekan.\n\nTerimakasih.`;
-
-            result.style.display = 'block';
-            copyButton.style.display = 'block';
-
-            updateResult.value =
-                `UPDATE,\n\nKami informasikan kembali remote *${d}* sudah termonitor ONLINE kembali pada dashboard monica.\n\nTerimakasih.`;
-
-            updateResult.style.display = 'block';
-            copyUpdateButton.style.display = 'block';
-        });
-
-        function copyMessage(id) {
-            navigator.clipboard.writeText(document.getElementById(id).innerText);
-            showNotif();
-        }
-
-        function copyMessageText(btn) {
-            navigator.clipboard.writeText(btn.previousElementSibling.innerText);
-            showNotif();
-        }
-
-        function showNotif() {
-            notification.classList.add('show');
-            setTimeout(() => notification.classList.remove('show'), 2000);
-        }
-
-        function updateClock() {
-            const now = new Date();
-            clock.textContent = now.toLocaleTimeString();
-
-            let h = now.getHours();
-            if (now.getMinutes() >= 30) h++;
-            if (h === 24) h = 0;
-
-            const time = `${String(h).padStart(2, '0')}:00 WIB`;
-
-            message1.textContent = `Berikut MRTG Link H2H SDWAN BI-FAST & SKN PSCF via Lintas pada pukul ${time}`;
-            message2.textContent = `Berikut MRTG Link H2H SDWAN BI-FAST & RTGS PSCF via Telkom pada pukul ${time}`;
-            message3.textContent = `Berikut MRTG Link H2H SDWAN BI-FAST ODC via Lintas pada pukul ${time}`;
-            message4.textContent = `Berikut MRTG Link H2H SDWAN BI-FAST ODC via Telkom pada pukul ${time}`;
-            message5.textContent = `Berikut MRTG Link H2H SDWAN BI-FAST BSCF via Lintas pada pukul ${time}`;
-            message6.textContent = `Berikut MRTG Link H2H SDWAN BI-FAST BSCF via Telkom pada pukul ${time}`;
-
-            message9.textContent = `WLC Detail Pukul ${time}`;
-            message10.textContent = `Global Monitoring LAN – LCO Pukul ${time}`;
-            message11.textContent = `Menara Brilian Pukul ${time}`;
-            message12.textContent = `DHCP & DNS Pukul ${time}`;
-        }
-
-        setInterval(updateClock, 1000);
-        updateClock();
-    </script>
+    m7.innerText=`WLC Detail Pukul ${t}`;
+    m8.innerText=`Global Monitoring LAN – LCO Pukul ${t}`;
+    m9.innerText=`Menara Brilian Pukul ${t}`;
+    m10.innerText=`DHCP & DNS Pukul ${t}`;
+}
+setInterval(updateClock,1000);
+updateClock();
+</script>
 
 </body>
-
 </html>

@@ -264,6 +264,14 @@
                     <div id="dashboard3">DASHBOARD BACKHAUL UKER TRAFFIC UTILIZATION PSCF & BSCF</div>
                     <button class="copy-button" onclick="copyMessage('dashboard3')">Copy</button>
                 </div>
+                <div class="message-wrapper">
+                    <div id="dashboard3">Traffic BH-ICON-H2H-primary</div>
+                    <button class="copy-button" onclick="copyMessage('dashboard3')">Copy</button>
+                </div>
+                <div class="message-wrapper">
+                    <div id="dashboard3">Traffic XL GCP</div>
+                    <button class="copy-button" onclick="copyMessage('dashboard3')">Copy</button>
+                </div>				
             </div>
 
             <!-- Panel Update per jam -->
@@ -284,6 +292,10 @@
                     <div id="update4"></div>
                     <button class="copy-button" onclick="copyMessage('update4')">Copy</button>
                 </div>
+                <div class="message-wrapper">
+                    <div id="update5"></div>
+                    <button class="copy-button" onclick="copyMessage('update5')">Copy</button>
+                </div>				
             </div>
 
         </div>
@@ -367,10 +379,11 @@
             document.getElementById('message6').textContent = `Berikut MRTG Link H2H SDWAN BI-FAST BSCF via Telkom pada pukul ${messageTime}`;
 
             // Update per jam
-            document.getElementById('update1').textContent = `WLC Detail Pukul ${messageTime}`;
+            document.getElementById('update1').textContent = `Temporary Dashboard Monitoring Refreshment WiFi (SUD-RGN-TBN) Pukul ${messageTime}`;
             document.getElementById('update2').textContent = `Global Monitoring LAN – LCO Pukul ${messageTime}`;
             document.getElementById('update3').textContent = `Menara Brilian Pukul ${messageTime}`;
             document.getElementById('update4').textContent = `DHCP & DNS Pukul ${messageTime}`;
+			document.getElementById('update5').textContent = `LPM Dashboard Monitoring Rumah Dinas Direksi ${messageTime}`;
         }
 
         setInterval(updateClock, 1000);

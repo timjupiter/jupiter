@@ -1,142 +1,243 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verifikasi</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verifikasi</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+.container-grid {
+    display: grid;
+    gap: 1.5rem;
+}
+
+@media (orientation: landscape) {
+    .container-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (orientation: portrait) {
+    .container-grid {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+</style>
+
 </head>
-<body class="font-sans bg-gray-100 p-4">
 
-    <div class="container mx-auto max-w-3xl bg-white p-6 rounded-lg shadow-md">
-        <!-- Copas Req From Provider Section -->
-        <div class="mb-6 p-4 border-2 border-blue-500 rounded-lg bg-gray-50 shadow-sm">
-            <label for="inputText" class="block text-lg font-semibold mb-2">Copas Req Dari Provider disini:</label>
-            <textarea id="inputText" class="w-full h-28 p-4 text-lg border border-gray-300 rounded-lg mb-4" placeholder="Masukkan teks..."></textarea>
+<body class="bg-gray-100 p-4 font-sans">
 
-            <!-- Beam, SQF, and ESNO Inputs in a single row -->
-            <div class="flex flex-wrap gap-4 mb-4">
-                <div class="flex-1 min-w-[150px]">
-                    <label for="beam" class="block text-sm font-semibold mb-2">Beam:</label>
-                    <input type="text" id="beam" class="w-full p-3 text-lg border border-gray-300 rounded-lg" placeholder="Masukkan Beam">
-                </div>
-                <div class="flex-1 min-w-[150px]">
-                    <label for="sqf" class="block text-sm font-semibold mb-2">SQF:</label>
-                    <input type="text" id="sqf" class="w-full p-3 text-lg border border-gray-300 rounded-lg" placeholder="Masukkan SQF">
-                </div>
-                <div class="flex-1 min-w-[150px]">
-                    <label for="esno" class="block text-sm font-semibold mb-2">ESNO:</label>
-                    <input type="text" id="esno" class="w-full p-3 text-lg border border-gray-300 rounded-lg" placeholder="Masukkan ESNO">
-                </div>
-            </div>
+<div class="container-grid">
 
-            <!-- Status Latitude and Longitude -->
-            <div class="mb-4">
-                <label class="block text-sm font-semibold text-red-500 mb-2">Status Latitude dan Longitude:</label>
-                <div class="flex flex-wrap gap-4">
-                    <label class="inline-flex items-center text-sm">
-                        <input type="radio" name="latitudeStatus" value="Sesuai" class="mr-2"> <strong>Sesuai</strong>
-                    </label>
-                    <label class="inline-flex items-center text-sm">
-                        <input type="radio" name="latitudeStatus" value="Belum Sesuai" class="mr-2"> <strong>Belum Sesuai</strong>
-                    </label>
-                </div>
-            </div>
+<!-- ================= FORM 1 ================= -->
+<div class="bg-white rounded-xl shadow-md border">
 
-            <div class="flex justify-end gap-4">
-                <button class="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-lg text-sm hover:bg-gradient-to-l transition ease-in-out" onclick="clearInput()">Clear</button>
-            </div>
-        </div>
+<div class="bg-blue-600 text-white px-4 py-2 rounded-t-xl font-semibold">
+    Form Verifikasi 1
+</div>
 
-        <!-- Verifikasi and Temporary Side by Side -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Verifikasi Section -->
-            <div class="flex flex-col gap-2">
-                <label for="verifikasi" class="text-xl font-bold">Verifikasi:</label>
-                <textarea id="verifikasi" class="w-full h-48 p-4 text-lg border border-gray-300 rounded-lg"></textarea>
-                <div class="flex justify-end">
-                    <button class="px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-lg text-lg hover:bg-gradient-to-l transition ease-in-out" onclick="copyToClipboard('verifikasi')">Copy</button>
-                </div>
-            </div>
+<div class="p-4 space-y-3">
 
-            <!-- Temporary Section -->
-            <div class="flex flex-col gap-2">
-                <label for="temporary" class="text-xl font-bold">Temporary:</label>
-                <textarea id="temporary" class="w-full h-48 p-4 text-lg border border-gray-300 rounded-lg"></textarea>
-                <div class="flex justify-end">
-                    <button class="px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-lg text-lg hover:bg-gradient-to-l transition ease-in-out" onclick="copyToClipboard('temporary')">Copy</button>
-                </div>
-            </div>
-        </div>
+<textarea id="input1" class="w-full p-3 border rounded-lg" placeholder="Paste dari request provider..."></textarea>
 
-        <!-- Notification -->
-        <div id="notification" class="absolute top-10 left-1/2 transform -translate-x-1/2 bg-green-500 text-white p-2 rounded-lg font-semibold opacity-0 transition-opacity duration-500">Teks telah disalin!</div>
-    </div>
+<div class="flex gap-2">
+<input id="beam1" placeholder="Beam" class="flex-1 border p-2 rounded-lg">
+<input id="sqf1" placeholder="SQF" class="flex-1 border p-2 rounded-lg">
+<input id="esno1" placeholder="ESNO" class="flex-1 border p-2 rounded-lg">
+</div>
 
-    <script>
-        // Update textareas with input and live updates
-        function updateTextareas() {
-            const inputValue = document.getElementById('inputText').value;
-            const beamValue = document.getElementById('beam').value;
-            const sqfValue = document.getElementById('sqf').value;
-            const esnoValue = document.getElementById('esno').value;
-            const latitudeStatus = document.querySelector('input[name="latitudeStatus"]:checked')?.value || '';
+<!-- LAT LONG -->
+<div>
+<label class="text-sm font-semibold text-red-500">
+Status Latitude dan Longitude:
+</label>
 
-            // Create a common string for the Latitude and Longitude status
-            const latitudeStatusText = latitudeStatus === 'Sesuai'
-                ? 'Latitude dan Longtitude Sudah Sesuai'
-                : latitudeStatus === 'Belum Sesuai'
-                ? 'Latitude dan Longtitude Belum Sesuai'
-                : '';
+<div class="flex gap-4 text-sm mt-1">
+<label><input type="radio" name="lat1" value="Sesuai"> ✅ Sesuai</label>
+<label><input type="radio" name="lat1" value="Belum"> ❌ Belum</label>
+</div>
+</div>
 
-            // Update Verifikasi and Temporary textareas
-            document.getElementById('verifikasi').value = `*Summary sudah sesuai standarisasi*\n\n${inputValue}\n\n*Note :  -*\n*Beam : ${beamValue}*\n*SQF : ${sqfValue}*\n*ESNO : ${esnoValue}*\n*${latitudeStatusText}*`;
-            document.getElementById('temporary').value = `*Summary Temporary*\n\n${inputValue}\n\n*Note :   XPOLL Belum Lolos (RECHECK), SQF dan ESNO Sesuai Standarisasi*\n*Beam : ${beamValue}*\n*SQF : ${sqfValue}*\n*ESNO : ${esnoValue}*\n*${latitudeStatusText}*`;
-        }
+<!-- VERIF -->
+<div class="space-y-2">
+<label class="text-sm font-semibold">Verifikasi</label>
+<textarea id="verif1" class="w-full h-32 border rounded-lg p-2 bg-gray-50"></textarea>
+<button onclick="copyText('verif1')" 
+class="w-full bg-blue-600 text-white py-2 rounded-lg">
+📋 Copy Verifikasi
+</button>
+</div>
 
-        // Event listener for input fields to update live
-        document.getElementById('inputText').addEventListener('input', updateTextareas);
-        document.getElementById('beam').addEventListener('input', updateTextareas);
-        document.getElementById('sqf').addEventListener('input', updateTextareas);
-        document.getElementById('esno').addEventListener('input', updateTextareas);
+<div class="mt-5"></div>
 
-        // Add event listeners for radio buttons
-        document.querySelectorAll('input[name="latitudeStatus"]').forEach(radio => {
-            radio.addEventListener('change', updateTextareas); // Ensure it triggers update when the radio button changes
+<!-- TEMP -->
+<div class="space-y-2">
+<label class="text-sm font-semibold">Temporary</label>
+<textarea id="temp1" class="w-full h-32 border rounded-lg p-2 bg-gray-50"></textarea>
+<button onclick="copyText('temp1')" 
+class="w-full bg-indigo-500 text-white py-2 rounded-lg">
+📋 Copy Temporary
+</button>
+</div>
+
+<button onclick="clearForm(1)" class="w-full bg-gray-300 py-2 rounded-lg mt-3">
+Clear
+</button>
+
+</div>
+</div>
+
+
+<!-- ================= FORM 2 ================= -->
+<div class="bg-white rounded-xl shadow-md border">
+
+<div class="bg-green-600 text-white px-4 py-2 rounded-t-xl font-semibold">
+    Form Verifikasi 2
+</div>
+
+<div class="p-4 space-y-3">
+
+<textarea id="input2" class="w-full p-3 border rounded-lg" placeholder="Paste dari request provider..."></textarea>
+
+<div class="flex gap-2">
+<input id="beam2" placeholder="Beam" class="flex-1 border p-2 rounded-lg">
+<input id="sqf2" placeholder="SQF" class="flex-1 border p-2 rounded-lg">
+<input id="esno2" placeholder="ESNO" class="flex-1 border p-2 rounded-lg">
+</div>
+
+<!-- LAT LONG -->
+<div>
+<label class="text-sm font-semibold text-red-500">
+Status Latitude dan Longitude:
+</label>
+
+<div class="flex gap-4 text-sm mt-1">
+<label><input type="radio" name="lat2" value="Sesuai"> ✅ Sesuai</label>
+<label><input type="radio" name="lat2" value="Belum"> ❌ Belum</label>
+</div>
+</div>
+
+<!-- VERIF -->
+<div class="space-y-2">
+<label class="text-sm font-semibold">Verifikasi</label>
+<textarea id="verif2" class="w-full h-32 border rounded-lg p-2 bg-gray-50"></textarea>
+<button onclick="copyText('verif2')" 
+class="w-full bg-green-600 text-white py-2 rounded-lg">
+📋 Copy Verifikasi
+</button>
+</div>
+
+<div class="mt-5"></div>
+
+<!-- TEMP -->
+<div class="space-y-2">
+<label class="text-sm font-semibold">Temporary</label>
+<textarea id="temp2" class="w-full h-32 border rounded-lg p-2 bg-gray-50"></textarea>
+<button onclick="copyText('temp2')" 
+class="w-full bg-teal-500 text-white py-2 rounded-lg">
+📋 Copy Temporary
+</button>
+</div>
+
+<button onclick="clearForm(2)" class="w-full bg-gray-300 py-2 rounded-lg mt-3">
+Clear
+</button>
+
+</div>
+</div>
+
+</div>
+
+
+<script>
+
+function update(f) {
+
+    const input = document.getElementById(`input${f}`).value;
+    const beam = document.getElementById(`beam${f}`).value;
+    const sqf = document.getElementById(`sqf${f}`).value;
+    const esno = document.getElementById(`esno${f}`).value;
+
+    const selected = document.querySelector(`input[name="lat${f}"]:checked`)?.value;
+
+    let latText = '';
+    if (selected === 'Sesuai') {
+        latText = 'Latitude dan Longtitude Sudah Sesuai';
+    } else if (selected === 'Belum') {
+        latText = 'Latitude dan Longtitude Belum Sesuai';
+    }
+
+    document.getElementById(`verif${f}`).value =
+`*Summary sudah sesuai standarisasi*
+
+${input}
+
+*Note :  -*
+*Beam : ${beam}*
+*SQF : ${sqf}*
+*ESNO : ${esno}*
+*${latText}*`;
+
+    document.getElementById(`temp${f}`).value =
+`*Summary Temporary*
+
+${input}
+
+*Note :   XPOLL Belum Lolos (RECHECK), SQF dan ESNO Sesuai Standarisasi*
+*Beam : ${beam}*
+*SQF : ${sqf}*
+*ESNO : ${esno}*
+*${latText}*`;
+}
+
+
+[1,2].forEach(f => {
+
+    ['input','beam','sqf','esno'].forEach(id => {
+        document.getElementById(id+f).addEventListener('input', () => update(f));
+    });
+
+    document.querySelectorAll(`input[name="lat${f}"]`).forEach(r => {
+
+        r.addEventListener('click', function() {
+
+            if (this.prev) this.checked = false;
+
+            document.querySelectorAll(`input[name="lat${f}"]`)
+                .forEach(x => x.prev = false);
+
+            this.prev = this.checked;
+
+            update(f);
         });
 
-        // Copy text to clipboard function
-        function copyToClipboard(textareaId) {
-            const textarea = document.getElementById(textareaId);
-            textarea.select();
-            document.execCommand('copy');
-            
-            const notification = document.getElementById('notification');
-            notification.style.display = 'block';
-            notification.style.opacity = 1;
+    });
 
-            // Fade out effect
-            setTimeout(() => {
-                notification.style.opacity = 0;
-                setTimeout(() => {
-                    notification.style.display = 'none';
-                }, 500);
-            }, 1500);
-        }
+});
 
-        // Clear input textarea
-        function clearInput() {
-            document.getElementById('inputText').value = '';
-            document.getElementById('verifikasi').value = '';
-            document.getElementById('temporary').value = '';
-            document.getElementById('beam').value = '';
-            document.getElementById('sqf').value = '';
-            document.getElementById('esno').value = '';
-            document.querySelectorAll('input[name="latitudeStatus"]').forEach(radio => radio.checked = false);
-            updateTextareas(); // Recalculate the textareas after clearing
-        }
-    </script>
+
+function copyText(id) {
+    const el = document.getElementById(id);
+    el.select();
+    document.execCommand('copy');
+}
+
+
+function clearForm(f) {
+    ['input','beam','sqf','esno','verif','temp'].forEach(id=>{
+        document.getElementById(id+f).value='';
+    });
+
+    document.querySelectorAll(`input[name="lat${f}"]`).forEach(r=>{
+        r.checked=false;
+        r.prev=false;
+    });
+}
+
+</script>
+
 </body>
 </html>

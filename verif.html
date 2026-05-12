@@ -3,150 +3,408 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Verifikasi</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
 
 <style>
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: #e5e7eb;
+    font-family: sans-serif;
+}
+
 .container-grid {
     display: grid;
-    gap: 1.5rem;
+    grid-template-columns: repeat(2, 1fr);
+
+    width: 100%;
+    height: 100vh;
+
+    gap: 4px;
+    padding: 4px;
 }
 
-@media (orientation: landscape) {
-    .container-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
+.form-card {
+    background: white;
+
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    height: 100%;
+
+    overflow: hidden;
+
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
 }
 
-@media (orientation: portrait) {
-    .container-grid {
-        grid-template-columns: repeat(1, 1fr);
-    }
+.form-header {
+    padding: 10px 14px;
+
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
 }
+
+.blue {
+    background: #2563eb;
+}
+
+.green {
+    background: #16a34a;
+}
+
+.form-body {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+
+    padding: 10px;
+
+    overflow: hidden;
+}
+
+.big-textarea {
+    width: 100%;
+
+    flex: 1;
+
+    min-height: 180px;
+
+    border: 1px solid #ccc;
+    border-radius: 8px;
+
+    padding: 10px;
+
+    resize: none;
+
+    font-size: 14px;
+}
+
+.output-textarea {
+    width: 100%;
+
+    height: 120px;
+
+    border: 1px solid #ccc;
+    border-radius: 8px;
+
+    padding: 10px;
+
+    resize: none;
+
+    background: #f9fafb;
+
+    font-size: 13px;
+}
+
+.input-row {
+    display: flex;
+    gap: 6px;
+}
+
+.input-row input {
+    flex: 1;
+
+    padding: 9px;
+
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.label {
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.radio-group {
+    display: flex;
+    gap: 16px;
+
+    font-size: 13px;
+}
+
+.section {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 6px;
+}
+
+.copy-btn,
+.clear-btn {
+
+    width: 100%;
+
+    border: none;
+
+    padding: 9px;
+
+    border-radius: 8px;
+
+    color: white;
+
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.copy-blue {
+    background: #2563eb;
+}
+
+.copy-indigo {
+    background: #6366f1;
+}
+
+.copy-green {
+    background: #16a34a;
+}
+
+.copy-teal {
+    background: #14b8a6;
+}
+
+.clear-btn {
+    background: #9ca3af;
+}
+
+@media (max-width: 900px) {
+
+    body {
+        overflow: auto;
+    }
+
+    .container-grid {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+
+}
+
 </style>
 
 </head>
 
-<body class="bg-gray-100 p-4 font-sans">
+<body>
 
 <div class="container-grid">
 
 <!-- ================= FORM 1 ================= -->
-<div class="bg-white rounded-xl shadow-md border">
 
-<div class="bg-blue-600 text-white px-4 py-2 rounded-t-xl font-semibold">
-    Form Verifikasi 1
+<div class="form-card">
+
+<div class="form-header blue">
+Form Verifikasi 1
 </div>
 
-<div class="p-4 space-y-3">
+<div class="form-body">
 
-<textarea id="input1" class="w-full p-3 border rounded-lg" placeholder="Paste dari request provider..."></textarea>
+<textarea
+id="input1"
+class="big-textarea"
+placeholder="Paste dari request provider..."
+></textarea>
 
-<div class="flex gap-2">
-<input id="beam1" placeholder="Beam" class="flex-1 border p-2 rounded-lg">
-<input id="sqf1" placeholder="SQF" class="flex-1 border p-2 rounded-lg">
-<input id="esno1" placeholder="ESNO" class="flex-1 border p-2 rounded-lg">
+<div class="input-row">
+
+<input id="beam1" placeholder="Beam">
+<input id="sqf1" placeholder="SQF">
+<input id="esno1" placeholder="ESNO">
+
 </div>
 
-<!-- LAT LONG -->
 <div>
-<label class="text-sm font-semibold text-red-500">
+
+<div class="label" style="color:red;">
 Status Latitude dan Longitude:
+</div>
+
+<div class="radio-group">
+
+<label>
+<input type="radio" name="lat1" value="Sesuai">
+✅ Sesuai
 </label>
 
-<div class="flex gap-4 text-sm mt-1">
-<label><input type="radio" name="lat1" value="Sesuai"> ✅ Sesuai</label>
-<label><input type="radio" name="lat1" value="Belum"> ❌ Belum</label>
+<label>
+<input type="radio" name="lat1" value="Belum">
+❌ Belum
+</label>
+
 </div>
+
 </div>
 
 <!-- VERIF -->
-<div class="space-y-2">
-<label class="text-sm font-semibold">Verifikasi</label>
-<textarea id="verif1" class="w-full h-32 border rounded-lg p-2 bg-gray-50"></textarea>
-<button onclick="copyText('verif1')" 
-class="w-full bg-blue-600 text-white py-2 rounded-lg">
+
+<div class="section">
+
+<div class="label">
+Verifikasi
+</div>
+
+<textarea
+id="verif1"
+class="output-textarea flex-1"
+></textarea>
+
+<button
+onclick="copyText('verif1')"
+class="copy-btn copy-blue"
+>
 📋 Copy Verifikasi
 </button>
-</div>
 
-<div class="mt-5"></div>
+</div>
 
 <!-- TEMP -->
-<div class="space-y-2">
-<label class="text-sm font-semibold">Temporary</label>
-<textarea id="temp1" class="w-full h-32 border rounded-lg p-2 bg-gray-50"></textarea>
-<button onclick="copyText('temp1')" 
-class="w-full bg-indigo-500 text-white py-2 rounded-lg">
-📋 Copy Temporary
-</button>
+
+<div class="section">
+
+<div class="label">
+Temporary
 </div>
 
-<button onclick="clearForm(1)" class="w-full bg-gray-300 py-2 rounded-lg mt-3">
+<textarea
+id="temp1"
+class="output-textarea flex-1"
+></textarea>
+
+<button
+onclick="copyText('temp1')"
+class="copy-btn copy-indigo"
+>
+📋 Copy Temporary
+</button>
+
+</div>
+
+<button
+onclick="clearForm(1)"
+class="clear-btn"
+>
 Clear
 </button>
 
 </div>
+
 </div>
 
 
 <!-- ================= FORM 2 ================= -->
-<div class="bg-white rounded-xl shadow-md border">
 
-<div class="bg-green-600 text-white px-4 py-2 rounded-t-xl font-semibold">
-    Form Verifikasi 2
+<div class="form-card">
+
+<div class="form-header green">
+Form Verifikasi 2
 </div>
 
-<div class="p-4 space-y-3">
+<div class="form-body">
 
-<textarea id="input2" class="w-full p-3 border rounded-lg" placeholder="Paste dari request provider..."></textarea>
+<textarea
+id="input2"
+class="big-textarea"
+placeholder="Paste dari request provider..."
+></textarea>
 
-<div class="flex gap-2">
-<input id="beam2" placeholder="Beam" class="flex-1 border p-2 rounded-lg">
-<input id="sqf2" placeholder="SQF" class="flex-1 border p-2 rounded-lg">
-<input id="esno2" placeholder="ESNO" class="flex-1 border p-2 rounded-lg">
+<div class="input-row">
+
+<input id="beam2" placeholder="Beam">
+<input id="sqf2" placeholder="SQF">
+<input id="esno2" placeholder="ESNO">
+
 </div>
 
-<!-- LAT LONG -->
 <div>
-<label class="text-sm font-semibold text-red-500">
+
+<div class="label" style="color:red;">
 Status Latitude dan Longitude:
+</div>
+
+<div class="radio-group">
+
+<label>
+<input type="radio" name="lat2" value="Sesuai">
+✅ Sesuai
 </label>
 
-<div class="flex gap-4 text-sm mt-1">
-<label><input type="radio" name="lat2" value="Sesuai"> ✅ Sesuai</label>
-<label><input type="radio" name="lat2" value="Belum"> ❌ Belum</label>
+<label>
+<input type="radio" name="lat2" value="Belum">
+❌ Belum
+</label>
+
 </div>
+
 </div>
 
 <!-- VERIF -->
-<div class="space-y-2">
-<label class="text-sm font-semibold">Verifikasi</label>
-<textarea id="verif2" class="w-full h-32 border rounded-lg p-2 bg-gray-50"></textarea>
-<button onclick="copyText('verif2')" 
-class="w-full bg-green-600 text-white py-2 rounded-lg">
+
+<div class="section">
+
+<div class="label">
+Verifikasi
+</div>
+
+<textarea
+id="verif2"
+class="output-textarea flex-1"
+></textarea>
+
+<button
+onclick="copyText('verif2')"
+class="copy-btn copy-green"
+>
 📋 Copy Verifikasi
 </button>
-</div>
 
-<div class="mt-5"></div>
+</div>
 
 <!-- TEMP -->
-<div class="space-y-2">
-<label class="text-sm font-semibold">Temporary</label>
-<textarea id="temp2" class="w-full h-32 border rounded-lg p-2 bg-gray-50"></textarea>
-<button onclick="copyText('temp2')" 
-class="w-full bg-teal-500 text-white py-2 rounded-lg">
-📋 Copy Temporary
-</button>
+
+<div class="section">
+
+<div class="label">
+Temporary
 </div>
 
-<button onclick="clearForm(2)" class="w-full bg-gray-300 py-2 rounded-lg mt-3">
+<textarea
+id="temp2"
+class="output-textarea flex-1"
+></textarea>
+
+<button
+onclick="copyText('temp2')"
+class="copy-btn copy-teal"
+>
+📋 Copy Temporary
+</button>
+
+</div>
+
+<button
+onclick="clearForm(2)"
+class="clear-btn"
+>
 Clear
 </button>
 
 </div>
+
 </div>
 
 </div>
@@ -156,17 +414,28 @@ Clear
 
 function update(f) {
 
-    const input = document.getElementById(`input${f}`).value;
-    const beam = document.getElementById(`beam${f}`).value;
-    const sqf = document.getElementById(`sqf${f}`).value;
-    const esno = document.getElementById(`esno${f}`).value;
+    const input =
+        document.getElementById(`input${f}`).value;
 
-    const selected = document.querySelector(`input[name="lat${f}"]:checked`)?.value;
+    const beam =
+        document.getElementById(`beam${f}`).value;
+
+    const sqf =
+        document.getElementById(`sqf${f}`).value;
+
+    const esno =
+        document.getElementById(`esno${f}`).value;
+
+    const selected =
+        document.querySelector(`input[name="lat${f}"]:checked`)?.value;
 
     let latText = '';
+
     if (selected === 'Sesuai') {
         latText = 'Latitude dan Longtitude Sudah Sesuai';
-    } else if (selected === 'Belum') {
+    }
+
+    else if (selected === 'Belum') {
         latText = 'Latitude dan Longtitude Belum Sesuai';
     }
 
@@ -175,10 +444,10 @@ function update(f) {
 
 ${input}
 
-*Note :  -*
-*Beam : ${beam}*
-*SQF : ${sqf}*
-*ESNO : ${esno}*
+*Note : -*  
+*Beam : ${beam}*  
+*SQF : ${sqf}*  
+*ESNO : ${esno}*  
 *${latText}*`;
 
     document.getElementById(`temp${f}`).value =
@@ -186,31 +455,30 @@ ${input}
 
 ${input}
 
-*Note :   XPOLL Belum Lolos (RECHECK), SQF dan ESNO Sesuai Standarisasi*
-*Beam : ${beam}*
-*SQF : ${sqf}*
-*ESNO : ${esno}*
+*Note : XPOLL Belum Lolos (RECHECK), SQF dan ESNO Sesuai Standarisasi*  
+*Beam : ${beam}*  
+*SQF : ${sqf}*  
+*ESNO : ${esno}*  
 *${latText}*`;
-}
 
+}
 
 [1,2].forEach(f => {
 
-    ['input','beam','sqf','esno'].forEach(id => {
-        document.getElementById(id+f).addEventListener('input', () => update(f));
+    ['input','beam','sqf','esno']
+    .forEach(id => {
+
+        document
+        .getElementById(id + f)
+        .addEventListener('input', () => update(f));
+
     });
 
-    document.querySelectorAll(`input[name="lat${f}"]`).forEach(r => {
+    document
+    .querySelectorAll(`input[name="lat${f}"]`)
+    .forEach(r => {
 
-        r.addEventListener('click', function() {
-
-            if (this.prev) this.checked = false;
-
-            document.querySelectorAll(`input[name="lat${f}"]`)
-                .forEach(x => x.prev = false);
-
-            this.prev = this.checked;
-
+        r.addEventListener('change', () => {
             update(f);
         });
 
@@ -218,23 +486,31 @@ ${input}
 
 });
 
-
 function copyText(id) {
+
     const el = document.getElementById(id);
-    el.select();
-    document.execCommand('copy');
+
+    navigator.clipboard.writeText(el.value);
+
 }
 
-
 function clearForm(f) {
-    ['input','beam','sqf','esno','verif','temp'].forEach(id=>{
-        document.getElementById(id+f).value='';
+
+    ['input','beam','sqf','esno','verif','temp']
+    .forEach(id => {
+
+        document.getElementById(id + f).value = '';
+
     });
 
-    document.querySelectorAll(`input[name="lat${f}"]`).forEach(r=>{
-        r.checked=false;
-        r.prev=false;
+    document
+    .querySelectorAll(`input[name="lat${f}"]`)
+    .forEach(r => {
+
+        r.checked = false;
+
     });
+
 }
 
 </script>

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -329,8 +330,9 @@
             <button data-tab="jadwal" class="tab-button active"><i class="fas fa-calendar"></i><span class="label">JADWAL</span></button>
             <button data-tab="verif" class="tab-button"><i class="fas fa-check-circle"></i><span class="label">VERIFIKASI</span></button>
             <button data-tab="monitoring" class="tab-button"><i class="fas fa-tachometer-alt"></i><span class="label">MONITORING</span></button>
-            <button data-tab="h2h" class="tab-button"><i class="fas fa-users"></i><span class="label">H2H</span></button>
-            <button data-tab="test" class="tab-button"><i class="fas fa-flask"></i><span class="label">TEST</span></button>
+			<button data-tab="h2h" class="tab-button"><i class="fas fa-users"></i><span class="label">H2H</span></button>
+			<button data-tab="latlong" class="tab-button"><i class="fas fa-map-marker-alt"></i><span class="label">LATLONG</span></button>
+			<button data-tab="test" class="tab-button"><i class="fas fa-flask"></i><span class="label">TEST</span></button>
             <div class="line"></div>
         </div>
 
@@ -344,12 +346,17 @@
             <div id="monitoring" class="tab-content">
                 <iframe src="dashboard_monitoring.html"></iframe>
             </div>
-            <div id="h2h" class="tab-content">
-                <iframe src="h2h.html"></iframe>
-            </div>
-            <div id="test" class="tab-content">
-                <iframe src="test.html"></iframe>
-            </div>
+			<div id="h2h" class="tab-content">
+				<iframe src="h2h.html"></iframe>
+			</div>
+
+			<div id="latlong" class="tab-content">
+				<iframe src="latlong.html"></iframe>
+			</div>
+
+			<div id="test" class="tab-content">
+				<iframe src="test.html"></iframe>
+			</div>
         </div>
 
         <button class="logout-button">

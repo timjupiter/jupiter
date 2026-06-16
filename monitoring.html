@@ -1,367 +1,745 @@
-
-
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitoring Jupiter</title>
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #e9ecef;
-            font-family: 'Arial', sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Monitoring Jupiter</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
 
-        #clock {
-            font-size: 60px;
-            background-color: #343a40;
-            color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            margin-bottom: 50px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
+/* =====================
+   RESET & BASE
+   ===================== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        .container {
-            display: flex;
-            justify-content: space-between;
-            width: 90%;
-            max-width: 1200px;
-            padding: 30px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 15px;
-            background-color: #ffffff;
-        }
+body {
+  font-family: Arial, sans-serif;
+  background: #e9ecef;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 20px;
+  min-height: 100vh;
+}
 
-        .message-container {
-            flex: 1;
-            margin: 0 10px;
-            padding: 15px;
-            border-radius: 8px;
-            margin-left: 35px;
-            margin-right: 35px;
-            background-color: #f8f9fa;
-        }
+/* =====================
+   CLOCK
+   ===================== */
+#clock {
+  font-size: 60px;
+  background: #343a40;
+  color: #fff;
+  padding: 20px 40px;
+  border-radius: 10px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,.5);
+  margin-bottom: 30px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.1);
+  letter-spacing: 2px;
+  font-variant-numeric: tabular-nums;
+}
 
-        .message-wrapper {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            border-bottom: 1px solid #dee2e6;
-            padding: 10px 0;
-        }
+/* =====================
+   MAIN CONTAINER
+   ===================== */
+.container {
+  display: flex;
+  gap: 30px;
+  width: 90%;
+  max-width: 1200px;
+  background: #fff;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 2px 10px rgba(0,0,0,.1);
+}
 
-        .message-wrapper:last-child {
-            border-bottom: none;
-        }
+/* =====================
+   PANEL KIRI — TEMPLATE LIST
+   ===================== */
+.panel-left {
+  flex: 1;
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
 
-        .custom-textarea {
-            width: 95.5%; /* Menyamakan lebar dengan select */
-            height: 150px;
-            padding: 10px; /* Sesuaikan padding agar lebih seimbang */
-            border-radius: 5px;
-            border: 1px solid #ced4da;
-            background-color: #fdfdfe;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-            font-weight: bold;
-            text-align: left;
-            margin-bottom: 5px;
-            overflow-y: auto;
-            white-space: pre-wrap; /* Menjaga format teks dengan new lines */
-        }
+.panel-left h3 {
+  margin-bottom: 10px;
+  font-size: 15px;
+  color: #343a40;
+}
 
-        select {
-            width: 100%;
-            margin-bottom: 10px;
-            margin-top: 5px;
-            padding: 12px;
-            border-radius: 5px;
-            border: 1px solid #ced4da;
-            background-color: #ffffff;
-            font-size: 16px;
-        }
+/* search */
+.search-input {
+  width: 100%;
+  padding: 7px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 13px;
+  margin-bottom: 10px;
+}
+.search-input:focus { outline: none; border-color: #007bff; }
 
-        .hidden {
-            display: none;
-        }
+/* add button */
+.addBtn {
+  background: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: opacity .15s;
+}
+.addBtn:hover { opacity: .85; }
 
-        .copy-button {
-            padding: 9px;
-            background: linear-gradient(45deg, #007bff, #0056b3);
-            color: #fff;
-            border: none;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-            font-size: 13px;
-            width: 33%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+/* rows */
+.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 0;
+  border-bottom: 1px solid #dee2e6;
+  cursor: grab;
+  transition: background .15s;
+}
+.row:last-child { border-bottom: none; }
+.row.drag-over { background: #e8f4ff; border-radius: 5px; }
+.row.dragging  { opacity: .4; }
 
-        .copy-button:hover {
-            background: linear-gradient(45deg, #0056b3, #007bff);
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
+.text {
+  flex: 1;
+  font-size: 14px;
+  word-break: break-word;
+}
 
-        .notification {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #28a745;
-            color: #fff;
-            padding: 15px;
-            border-radius: 5px;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.5s ease-out, visibility 0.5s ease-out;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        }
+.copy-btn, .edit-btn, .del-btn {
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  color: #fff;
+  padding: 7px 10px;
+  font-size: 12px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: opacity .15s;
+}
+.copy-btn { background: #007bff; }
+.edit-btn  { background: #ffc107; color: #000; }
+.del-btn   { background: #dc3545; }
+.copy-btn:hover, .edit-btn:hover, .del-btn:hover { opacity: .85; }
 
-        .notification.show {
-            opacity: 1;
-            visibility: visible;
-        }
+/* skeleton */
+.skeleton {
+  background: linear-gradient(90deg, #e0e0e0 25%, #f0f0f0 50%, #e0e0e0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite;
+  border-radius: 4px;
+  height: 14px;
+  margin: 8px 0;
+}
+.skeleton.short { width: 60%; }
+.skeleton.long  { width: 90%; }
 
-        .form-actions {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 10px;
-        }
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
 
-        @media (max-width: 600px) {
-            .container {
-                flex-direction: column;
-            }
+.empty-msg {
+  color: #999;
+  font-size: 13px;
+  padding: 8px 0;
+}
 
-            .message-container {
-                margin-bottom: 20px;
-            }
-        }
-    </style>
+/* =====================
+   PANEL KANAN — FORM
+   ===================== */
+.panel-right {
+  flex: 1;
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.panel-right select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 5px;
+  border: 1px solid #ced4da;
+  background: #fff;
+  font-size: 15px;
+}
+
+.hidden { display: none !important; }
+
+.custom-textarea {
+  width: 100%;
+  min-height: 130px;
+  padding: 12px;
+  border-radius: 5px;
+  border: 1px solid #ced4da;
+  background: #fdfdfe;
+  font-size: 14px;
+  font-weight: bold;
+  white-space: pre-wrap;
+  word-break: break-word;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,.1);
+}
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.action-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  color: #fff;
+  font-size: 14px;
+  background: linear-gradient(45deg, #007bff, #0056b3);
+  transition: transform .2s, box-shadow .2s;
+}
+.action-btn:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 15px rgba(0,0,0,.2);
+}
+.action-btn.clear {
+  background: linear-gradient(45deg, #6c757d, #495057);
+}
+
+/* =====================
+   NOTIFICATION
+   ===================== */
+#notification {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #28a745;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 5px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .3s, visibility .3s;
+  z-index: 9999;
+  pointer-events: none;
+}
+#notification.show { opacity: 1; visibility: visible; }
+
+/* =====================
+   RESPONSIVE
+   ===================== */
+@media (max-width: 768px) {
+  .container { flex-direction: column; }
+}
+
+</style>
 </head>
 <body>
-    <div id="clock"></div>
-    <div class="container">
-        <div class="message-container left1">
-            <div class="message-wrapper">
-                <div id="message1" class="message"></div>
-                <button class="copy-button" onclick="copyMessage('message1')">Copy</button>
-            </div>
-            <div class="message-wrapper">
-                <div id="message2" class="message"></div>
-                <button class="copy-button" onclick="copyMessage('message2')">Copy</button>
-            </div>
-            <div class="message-wrapper">
-                <div id="message3" class="message"></div>
-                <button class="copy-button" onclick="copyMessage('message3')">Copy</button>
-            </div>
-            <div class="message-wrapper">
-                <div id="message4" class="message"></div>
-                <button class="copy-button" onclick="copyMessage('message4')">Copy</button>
-            </div>
-            <div class="message-wrapper">
-                <div id="message5" class="message"></div>
-                <button class="copy-button" onclick="copyMessage('message5')">Copy</button>
-            </div>
-            <div class="message-wrapper">
-                <div id="message6" class="message"></div>
-                <button class="copy-button" onclick="copyMessage('message6')">Copy</button>
-            </div>
-        </div>
-        <div class="message-container right">
-            <div class="message-wrapper-right">
-                <select id="menuSelect">
-                    <option value="">Select Menu</option>
-                    <option value="C-BAND">C-BAND</option>
-                    <option value="EXT-C">EXT C</option>
-                    <option value="KU BAND">KU BAND</option>
-                    <option value="SATDIV">SATDIV</option>
-                    <option value="Beam XXX">BEAM</option>
-                </select>
-            </div>
-            
-            <div class="message-wrapper-right hidden" id="beamOptionsWrapper">
-                <select id="beamSelect">
-                    <option value="">Select Beam</option>
-                    <option value="BEAM 101 - C BAND">BEAM 101 - C BAND</option>
-                    <option value="BEAM 201 - C BAND">BEAM 201 - C BAND</option>
-                    <option value="BEAM 102 - EXT C">BEAM 102 - EXT C</option>
-                    <option value="BEAM 202 - EXT C">BEAM 202 - EXT C</option>
-                    <option value="BEAM 103 - KU BAND">BEAM 103 - KU BAND</option>
-                    <option value="BEAM 203 - KU BAND">BEAM 203 - KU BAND</option>
-                    <option value="BEAM 104 - C BAND">BEAM 104 - C BAND</option>
-                    <option value="BEAM 204 - C BAND">BEAM 204 - C BAND</option>
-                    <option value="BEAM 105 - EXT C">BEAM 105 - EXT C</option>
-                    <option value="BEAM 205 - EXT C">BEAM 205 - EXT C</option>
-                    <option value="BEAM 106 - EXT C">BEAM 106 - EXT C</option>
-                    <option value="BEAM 206 - EXT C">BEAM 206 - EXT C</option>
-                    <option value="BEAM 107 - C BAND">BEAM 107 - C BAND</option>
-                    <option value="BEAM 207 - C BAND">BEAM 207 - C BAND</option>
-                </select>
-            </div>
 
-            <div id="infoTextarea" class="custom-textarea" contenteditable="true"></div>
-            
-            <div class="form-actions">
-                <button class="copy-button" onclick="copyTextarea()" style="width: 48%;">Copy Text</button>
-                <button class="copy-button" onclick="clearForm()" style="width: 48%;">Clear Form</button>
-            </div>
+<div id="clock">00:00:00</div>
 
-            <div id="updateMessage" class="custom-textarea" contenteditable="true" style="margin-top: 20px;"></div>
-            
-            <div class="form-actions">
-                <button class="copy-button" onclick="updateMessageText()" style="width: 48%;">Copy Update</button>
-                <button class="copy-button" onclick="clearUpdateMessage()" style="width: 48%;">Clear Update</button>
-            </div>
-        </div>
+<div class="container">
+
+  <!-- ===== PANEL KIRI ===== -->
+  <div class="panel-left" id="templatePanel">
+    <div class="skeleton long"></div>
+    <div class="skeleton short"></div>
+    <div class="skeleton long"></div>
+    <div class="skeleton short"></div>
+  </div>
+
+  <!-- ===== PANEL KANAN ===== -->
+  <div class="panel-right">
+
+    <select id="menuSelect">
+      <option value="">Pilih Menu</option>
+      <option value="C-BAND">C-BAND</option>
+      <option value="EXT-C">EXT C</option>
+      <option value="KU BAND">KU BAND</option>
+      <option value="SATDIV">SATDIV</option>
+      <option value="Beam XXX">BEAM</option>
+    </select>
+
+    <div id="beamOptionsWrapper" class="hidden">
+      <select id="beamSelect">
+        <option value="">Pilih Beam</option>
+        <option value="BEAM 101 - C BAND">BEAM 101 - C BAND</option>
+        <option value="BEAM 201 - C BAND">BEAM 201 - C BAND</option>
+        <option value="BEAM 102 - EXT C">BEAM 102 - EXT C</option>
+        <option value="BEAM 202 - EXT C">BEAM 202 - EXT C</option>
+        <option value="BEAM 103 - KU BAND">BEAM 103 - KU BAND</option>
+        <option value="BEAM 203 - KU BAND">BEAM 203 - KU BAND</option>
+        <option value="BEAM 104 - C BAND">BEAM 104 - C BAND</option>
+        <option value="BEAM 204 - C BAND">BEAM 204 - C BAND</option>
+        <option value="BEAM 105 - EXT C">BEAM 105 - EXT C</option>
+        <option value="BEAM 205 - EXT C">BEAM 205 - EXT C</option>
+        <option value="BEAM 106 - EXT C">BEAM 106 - EXT C</option>
+        <option value="BEAM 206 - EXT C">BEAM 206 - EXT C</option>
+        <option value="BEAM 107 - C BAND">BEAM 107 - C BAND</option>
+        <option value="BEAM 207 - C BAND">BEAM 207 - C BAND</option>
+      </select>
     </div>
-    <div id="notification" class="notification">Message copied to clipboard!</div>
-    <script>
-        function updateClock() {
-            const now = new Date();
-            const hours = now.getHours();
-            const minutes = now.getMinutes();
-            const seconds = now.getSeconds();
-            
-            const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
-            
-            const clockElement = document.getElementById('clock');
-            clockElement.textContent = `${formattedTime}:${String(seconds).padStart(2, '0')}`;
-            
-            document.title = `${formattedTime} | Jupiter Dashboard`;
-            
-            const messageTime = hours % 2 === 1 
-                ? `${String((hours + 1) % 24).padStart(2, '0')}:00` 
-                : `${String(hours).padStart(2, '0')}:00`;
-        
-            document.getElementById('message1').textContent = `Brisat & Satdiv Pukul ${messageTime} WIB`;
-            document.getElementById('message2').textContent = `All Beam Pukul ${messageTime} WIB`;
-            document.getElementById('message3').textContent = `All beam Inroute & Outroute PSCF Pukul ${messageTime} WIB`;
-            document.getElementById('message4').textContent = `All beam Inroute & Outroute BSCF Pukul ${messageTime} WIB`;			
-            document.getElementById('message5').textContent = `Inroute & Outroute All Gateway Pukul ${messageTime} WIB`;
-			document.getElementById('message6').textContent = `CPU, Memory & Storage Pukul ${messageTime} WIB`;
-        }
 
-        document.getElementById('menuSelect').addEventListener('change', function() {
-            const selectedMenu = this.value;
-            const beamOptionsWrapper = document.getElementById('beamOptionsWrapper');
-            const beamSelect = document.getElementById('beamSelect');
+    <div id="infoTextarea" class="custom-textarea" contenteditable="true"></div>
 
-            if (selectedMenu === 'Beam XXX') {
-                beamOptionsWrapper.classList.remove('hidden');
-                updateTextarea('Beam XXX', '');
-            } else {
-                beamOptionsWrapper.classList.add('hidden');
-                beamSelect.value = '';
-                updateTextarea(selectedMenu, '');
-            }
-        });
+    <div class="form-actions">
+      <button class="action-btn" onclick="copyTextarea('infoTextarea')">Copy FYI</button>
+      <button class="action-btn clear" onclick="clearForm()">Clear</button>
+    </div>
 
-        document.getElementById('beamSelect').addEventListener('change', function() {
-            const selectedBeam = this.value;
-            const selectedMenu = document.getElementById('menuSelect').value;
-            updateTextarea(selectedMenu, selectedBeam);
-        });
+    <div id="updateMessage" class="custom-textarea" contenteditable="true" style="margin-top:5px;"></div>
 
-        function updateTextarea(mainMenu, beam) {
-            const textarea = document.getElementById('infoTextarea');
-            const updateMessage = document.getElementById('updateMessage');
-            
-            let menuText = beam || mainMenu;
+    <div class="form-actions">
+      <button class="action-btn" onclick="copyTextarea('updateMessage')">Copy Update</button>
+      <button class="action-btn clear" onclick="clearUpdate()">Clear</button>
+    </div>
 
-            if (menuText) {
-                // Text with asterisks for WhatsApp (and newlines for display in textarea)
-                const messageText = `*Fyi,*<br><br>Termonitor terjadi penurunan presentase *Jupiter ${menuText}* pada dashboard BETA-INMS, Saat ini sedang dalam pengecekan.<br><br>Terima kasih`;
-                const updateText = `*Update*<br><br>Termonitor presentase *Jupiter ${menuText}* sudah berangsur normal kembali pada dashboard BETA-INMS.<br><br>Terima kasih`;
+  </div>
+</div>
 
-                // Set the text in the textarea (will show line breaks correctly)
-                textarea.innerHTML = messageText;
+<div id="notification">✓ Berhasil disalin!</div>
 
-                // Optionally display this in another div or text area for copying
-                updateMessage.innerHTML = updateText;
-                
-            } else {
-                textarea.innerHTML = 'Pilih pada drop-down diatas';
-                updateMessage.innerHTML = 'Pilih pada drop-down diatas';
-            }
-        }
+<script>
 
-        function clearForm() {
-            document.getElementById('menuSelect').value = '';
-            document.getElementById('beamSelect').value = '';
-            document.getElementById('beamOptionsWrapper').classList.add('hidden');
-            document.getElementById('infoTextarea').innerHTML = '';
-        }
+/* ============================================================
+   SUPABASE
+   ============================================================ */
+const SUPABASE_URL = "https://eaqmgrchnbetoetojdgu.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVhcW1ncmNobmJldG9ldG9qZGd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwODY2NzEsImV4cCI6MjA5NjY2MjY3MX0.7v3yBoDiQbX1Y3Ass75MyaehdbiK0EjDPIIQKYdioM8";
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-		function clearUpdateMessage() {
-			const defaultMessage = 'Pilih pada drop-down diatas';
 
-			// Setel teks default untuk kedua textarea menggunakan value
-			document.getElementById('updateMessage').value = defaultMessage;
-			document.getElementById('infoTextarea').value = defaultMessage;
-		}
+/* ============================================================
+   HELPERS
+   ============================================================ */
+function pad(n) { return String(n).padStart(2, "0"); }
 
-		function clearUpdateMessage() {
-			const defaultMessage = 'Pilih pada drop-down diatas';
+function debounce(fn, ms) {
+  let t;
+  return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), ms); };
+}
 
-			// Setel teks default untuk semua textarea
-			document.getElementById('updateMessage').innerHTML = defaultMessage;
-			document.getElementById('infoTextarea').innerHTML = defaultMessage;
-		}
+// Jupiter: per 2 jam
+// Jam genap (0,2,4,...) → jam sekarang :00
+// Jam ganjil (1,3,5,...) → jam +1 :00
+function getCurrentTimeLabel() {
+  const h = new Date().getHours();
+  const reportH = h % 2 === 1 ? (h + 1) % 24 : h;
+  return `${pad(reportH)}:00 WIB`;
+}
 
-        function copyTextarea() {
-            const textarea = document.getElementById('infoTextarea');
-            navigator.clipboard.writeText(textarea.innerText).then(() => {
-                showNotification('Message copied to clipboard!');
-            }).catch(err => {
-                console.error('Failed to copy message: ', err);
-            });
-        }
 
-        function updateMessageText() {
-            const updateMessage = document.getElementById('updateMessage');
-            navigator.clipboard.writeText(updateMessage.innerText).then(() => {
-                showNotification('Update message copied to clipboard!');
-            }).catch(err => {
-                console.error('Failed to copy update message: ', err);
-            });
-        }
+/* ============================================================
+   CACHE & STATE
+   ============================================================ */
+let cache      = null;
+let dragSrc    = null;
+let searchQuery = "";
 
-        function showNotification(text) {
-            const notification = document.getElementById('notification');
-            notification.textContent = text;
-            notification.classList.add('show');
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, 2000);
-        }
 
-		function copyMessage(messageId) {
-			const messageElement = document.getElementById(messageId);
-			const messageText = messageElement.textContent || messageElement.innerText;
+/* ============================================================
+   SKELETON
+   ============================================================ */
+function renderSkeleton() {
+  document.getElementById("templatePanel").innerHTML = `
+    <div class="skeleton long"></div>
+    <div class="skeleton short"></div>
+    <div class="skeleton long"></div>
+    <div class="skeleton short"></div>`;
+}
 
-			navigator.clipboard.writeText(messageText).then(() => {
-				showNotification('Message copied to clipboard!');
-			}).catch(err => {
-				console.error('Failed to copy message: ', err);
-			});
-		}
 
-        setInterval(updateClock, 1000);
-        updateClock();
-    </script>
+/* ============================================================
+   RENDER PANEL KIRI  (diff-aware)
+   ============================================================ */
+function renderPanel(data) {
+  const panel    = document.getElementById("templatePanel");
+  const query    = searchQuery.toLowerCase();
+  const filtered = data.filter(x => x.template.toLowerCase().includes(query));
+
+  // ── header (idempotent) ─────────────────────────────────
+  let header = panel.querySelector(".panel-header");
+  if (!header) {
+    header = document.createElement("div");
+    header.className = "panel-header";
+    header.innerHTML = `
+      <h3>Template Pesan</h3>
+      <button class="addBtn">+ Tambah</button>
+      <input class="search-input" placeholder="Cari template…" value="${searchQuery}">`;
+    header.querySelector(".addBtn").addEventListener("click", addData);
+    header.querySelector(".search-input").addEventListener("input", function () {
+      searchQuery = this.value;
+      renderPanel(cache || []);
+    });
+    panel.innerHTML = "";
+    panel.appendChild(header);
+  }
+
+  // ── diff rows ────────────────────────────────────────────
+  const existingRows = {};
+  panel.querySelectorAll(".row[data-id]").forEach(el => {
+    existingRows[el.dataset.id] = el;
+  });
+
+  const ordered = [];
+  filtered.forEach(x => {
+    const sid = String(x.id);
+    let row = existingRows[sid];
+
+    if (row) {
+      const textEl = row.querySelector(".text");
+      if (textEl.dataset.template !== x.template) {
+        textEl.dataset.template = x.template;
+        textEl.textContent = x.template.replaceAll("{TIME}", getCurrentTimeLabel());
+      }
+      delete existingRows[sid];
+    } else {
+      row = buildRow(x);
+    }
+    ordered.push(row);
+  });
+
+  Object.values(existingRows).forEach(el => el.remove());
+  ordered.forEach(row => panel.appendChild(row));
+
+  // empty state
+  let empty = panel.querySelector(".empty-msg");
+  if (filtered.length === 0) {
+    if (!empty) {
+      empty = document.createElement("p");
+      empty.className = "empty-msg";
+      empty.textContent = "Tidak ada template.";
+    }
+    panel.appendChild(empty);
+  } else if (empty) {
+    empty.remove();
+  }
+}
+
+function buildRow(x) {
+  const row = document.createElement("div");
+  row.className  = "row";
+  row.dataset.id = x.id;
+  row.draggable  = true;
+
+  const textDiv = document.createElement("div");
+  textDiv.className        = "text";
+  textDiv.dataset.template = x.template;
+  textDiv.textContent      = x.template.replaceAll("{TIME}", getCurrentTimeLabel());
+
+  const copyBtn = document.createElement("button");
+  copyBtn.className   = "copy-btn";
+  copyBtn.textContent = "Copy";
+  copyBtn.addEventListener("click", () =>
+    copyToClipboard(x.template.replaceAll("{TIME}", getCurrentTimeLabel()))
+  );
+
+  const editBtn = document.createElement("button");
+  editBtn.className   = "edit-btn";
+  editBtn.textContent = "Edit";
+  editBtn.addEventListener("click", () => editData(x.id));
+
+  const delBtn = document.createElement("button");
+  delBtn.className   = "del-btn";
+  delBtn.textContent = "X";
+  delBtn.addEventListener("click", () => deleteData(x.id));
+
+  // drag events
+  row.addEventListener("dragstart", e => {
+    dragSrc = row;
+    row.classList.add("dragging");
+    e.dataTransfer.effectAllowed = "move";
+  });
+  row.addEventListener("dragend", () => {
+    row.classList.remove("dragging");
+    document.querySelectorAll(".row.drag-over")
+      .forEach(el => el.classList.remove("drag-over"));
+  });
+  row.addEventListener("dragover", e => {
+    e.preventDefault();
+    if (dragSrc && dragSrc !== row) row.classList.add("drag-over");
+  });
+  row.addEventListener("dragleave", () => row.classList.remove("drag-over"));
+  row.addEventListener("drop", e => {
+    e.stopPropagation();
+    row.classList.remove("drag-over");
+    if (!dragSrc || dragSrc === row) return;
+
+    const parent = row.parentNode;
+    const rows   = [...parent.querySelectorAll(".row[data-id]")];
+    const srcIdx = rows.indexOf(dragSrc);
+    const tgtIdx = rows.indexOf(row);
+    if (srcIdx < tgtIdx) parent.insertBefore(dragSrc, row.nextSibling);
+    else                  parent.insertBefore(dragSrc, row);
+
+    saveSortOrder(parent);
+  });
+
+  row.append(textDiv, copyBtn, editBtn, delBtn);
+  return row;
+}
+
+async function saveSortOrder(parent) {
+  const rows = [...parent.querySelectorAll(".row[data-id]")];
+  await Promise.all(
+    rows.map((el, i) =>
+      db.from("jupiter_messages").update({ sort_order: i }).eq("id", el.dataset.id)
+    )
+  );
+}
+
+
+/* ============================================================
+   LOAD
+   ============================================================ */
+const MAX_RETRIES = 3;
+
+function isRetryable(error) {
+  if (!error) return false;
+  const msg  = (error.message || "").toLowerCase();
+  const code = (error.code    || "");
+  if (msg.includes("datacloneerror")) return false;
+  if (msg.includes("postmessage"))    return false;
+  if (/^(pgrst|[0-9A-Z]{5})/.test(code)) return false;
+  return true;
+}
+
+async function loadData(showSkeleton = false, retryCount = 0) {
+  if (showSkeleton && !cache) renderSkeleton();
+
+  let data, error;
+  try {
+    ({ data, error } = await db
+      .from("jupiter_messages")
+      .select("*")
+      .order("sort_order"));
+  } catch (e) {
+    if (cache) renderPanel(cache);
+    return;
+  }
+
+  if (error) {
+    if (isRetryable(error) && retryCount < MAX_RETRIES) {
+      const delay = 1000 * 2 ** retryCount;
+      console.warn(`[jupiter] retry ${retryCount + 1} in ${delay}ms…`, error.message);
+      setTimeout(() => loadData(false, retryCount + 1), delay);
+    } else {
+      if (cache) {
+        renderPanel(cache);
+      } else {
+        document.getElementById("templatePanel").innerHTML =
+          `<p style="color:red;">Gagal memuat data. Coba refresh halaman.</p>`;
+      }
+    }
+    return;
+  }
+
+  cache = data || [];
+  renderPanel(cache);
+}
+
+const debouncedLoad = debounce(() => loadData(), 400);
+
+loadData(true);
+
+
+/* ============================================================
+   REALTIME
+   ============================================================ */
+let realtimeChannel = null;
+
+function subscribeRealtime() {
+  if (realtimeChannel) {
+    db.removeChannel(realtimeChannel);
+    realtimeChannel = null;
+  }
+
+  realtimeChannel = db.channel("jupiter-sync")
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "jupiter_messages" },
+      () => debouncedLoad()
+    )
+    .subscribe();
+}
+
+subscribeRealtime();
+
+window.addEventListener("beforeunload", () => {
+  if (realtimeChannel) db.removeChannel(realtimeChannel);
+});
+
+
+/* ============================================================
+   CRUD
+   ============================================================ */
+async function addData() {
+  const t = prompt(
+`CATATAN:
+- Gunakan {TIME} untuk jam otomatis.
+
+Contoh:
+All Beam Pukul {TIME}`
+  );
+  if (!t) return;
+  await db.from("jupiter_messages").insert({ template: t, sort_order: 999 });
+}
+
+async function editData(id) {
+  const { data } = await db
+    .from("jupiter_messages")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  const t = prompt("Edit template:", data.template);
+  if (!t) return;
+  await db.from("jupiter_messages").update({ template: t }).eq("id", id);
+}
+
+async function deleteData(id) {
+  if (!confirm("Hapus template ini?")) return;
+  await db.from("jupiter_messages").delete().eq("id", id);
+}
+
+
+/* ============================================================
+   CLOCK
+   ============================================================ */
+let lastHourLabel = "";
+let lastMinute    = -1;
+
+function updateTimeDisplay() {
+  document.querySelectorAll(".text[data-template]").forEach(el => {
+    if (el.dataset.template.includes("{TIME}")) {
+      el.textContent = el.dataset.template.replaceAll("{TIME}", getCurrentTimeLabel());
+    }
+  });
+  // juga update textarea panel kanan kalau sedang aktif
+  refreshDropdownTextareas();
+}
+
+function updateClock() {
+  const now = new Date();
+  const h   = now.getHours();
+  const m   = now.getMinutes();
+  const s   = now.getSeconds();
+
+  document.getElementById("clock").textContent =
+    `${pad(h)}:${pad(m)}:${pad(s)}`;
+
+  document.title = `${pad(h)}:${pad(m)} | Jupiter Dashboard`;
+
+  // update display {TIME} setiap menit
+  if (m !== lastMinute) {
+    lastMinute = m;
+    updateTimeDisplay();
+  }
+
+  // trigger reload setiap jam berubah (per 2 jam logic tidak perlu reload,
+  // cukup updateTimeDisplay sudah handle tampilan)
+  const reportH = h % 2 === 1 ? (h + 1) % 24 : h;
+  const label   = `${pad(reportH)}:00`;
+  if (label !== lastHourLabel) {
+    lastHourLabel = label;
+    debouncedLoad();
+  }
+}
+
+setInterval(updateClock, 1000);
+updateClock();
+
+
+/* ============================================================
+   DROPDOWN — PANEL KANAN
+   ============================================================ */
+document.getElementById("menuSelect").addEventListener("change", function () {
+  const val              = this.value;
+  const beamWrapper      = document.getElementById("beamOptionsWrapper");
+  const beamSelect       = document.getElementById("beamSelect");
+
+  if (val === "Beam XXX") {
+    beamWrapper.classList.remove("hidden");
+    beamSelect.value = "";
+    updateTextareas(val, "");
+  } else {
+    beamWrapper.classList.add("hidden");
+    beamSelect.value = "";
+    updateTextareas(val, "");
+  }
+});
+
+document.getElementById("beamSelect").addEventListener("change", function () {
+  const mainMenu = document.getElementById("menuSelect").value;
+  updateTextareas(mainMenu, this.value);
+});
+
+function updateTextareas(mainMenu, beam) {
+  const fyi    = document.getElementById("infoTextarea");
+  const update = document.getElementById("updateMessage");
+  const label  = beam || mainMenu;
+
+  if (label) {
+    fyi.innerHTML    = `*Fyi,*<br><br>Termonitor terjadi penurunan presentase *Jupiter ${label}* pada dashboard BETA-INMS, Saat ini sedang dalam pengecekan.<br><br>Terima kasih`;
+    update.innerHTML = `*Update*<br><br>Termonitor presentase *Jupiter ${label}* sudah berangsur normal kembali pada dashboard BETA-INMS.<br><br>Terima kasih`;
+  } else {
+    fyi.innerHTML    = "Pilih pada drop-down diatas";
+    update.innerHTML = "Pilih pada drop-down diatas";
+  }
+}
+
+// dipanggil saat menit berubah — refresh textarea kalau sedang diisi
+function refreshDropdownTextareas() {
+  const mainMenu = document.getElementById("menuSelect").value;
+  const beam     = document.getElementById("beamSelect").value;
+  if (mainMenu) updateTextareas(mainMenu, beam);
+}
+
+function copyTextarea(id) {
+  const el   = document.getElementById(id);
+  const text = el.innerText;
+  copyToClipboard(text);
+}
+
+function clearForm() {
+  document.getElementById("menuSelect").value  = "";
+  document.getElementById("beamSelect").value  = "";
+  document.getElementById("beamOptionsWrapper").classList.add("hidden");
+  document.getElementById("infoTextarea").innerHTML   = "";
+  document.getElementById("updateMessage").innerHTML  = "";
+}
+
+function clearUpdate() {
+  document.getElementById("updateMessage").innerHTML = "";
+}
+
+
+/* ============================================================
+   CLIPBOARD + TOAST
+   ============================================================ */
+let toastTimer;
+
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    const notif = document.getElementById("notification");
+    notif.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => notif.classList.remove("show"), 2000);
+  });
+}
+
+</script>
 </body>
 </html>

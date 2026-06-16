@@ -1,5 +1,6 @@
 
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -174,7 +175,11 @@
             <div class="message-wrapper">
                 <div id="message5" class="message"></div>
                 <button class="copy-button" onclick="copyMessage('message5')">Copy</button>
-            </div>			
+            </div>
+            <div class="message-wrapper">
+                <div id="message6" class="message"></div>
+                <button class="copy-button" onclick="copyMessage('message6')">Copy</button>
+            </div>
         </div>
         <div class="message-container right">
             <div class="message-wrapper-right">
@@ -242,11 +247,12 @@
                 ? `${String((hours + 1) % 24).padStart(2, '0')}:00` 
                 : `${String(hours).padStart(2, '0')}:00`;
         
-            document.getElementById('message1').textContent = `Brisat & Satdiv pukul ${messageTime} WIB`;
-            document.getElementById('message2').textContent = `All Beam pukul ${messageTime} WIB`;
-            document.getElementById('message3').textContent = `All beam Inroute & Outroute PSCF pukul ${messageTime} WIB`;
-            document.getElementById('message4').textContent = `All beam Inroute & Outroute BSCF pukul ${messageTime} WIB`;			
-            document.getElementById('message5').textContent = `Inroute & Outroute All Gateway ${messageTime} WIB`;
+            document.getElementById('message1').textContent = `Brisat & Satdiv Pukul ${messageTime} WIB`;
+            document.getElementById('message2').textContent = `All Beam Pukul ${messageTime} WIB`;
+            document.getElementById('message3').textContent = `All beam Inroute & Outroute PSCF Pukul ${messageTime} WIB`;
+            document.getElementById('message4').textContent = `All beam Inroute & Outroute BSCF Pukul ${messageTime} WIB`;			
+            document.getElementById('message5').textContent = `Inroute & Outroute All Gateway Pukul ${messageTime} WIB`;
+			document.getElementById('message6').textContent = `CPU, Memory & Storage Pukul ${messageTime} WIB`;
         }
 
         document.getElementById('menuSelect').addEventListener('change', function() {

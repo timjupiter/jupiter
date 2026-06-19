@@ -3,514 +3,339 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Verifikasi</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
 
 <style>
 
-html,
-body {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background: #e5e7eb;
-    font-family: sans-serif;
+html,body{
+    margin:0;
+    padding:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    font-family:Segoe UI,sans-serif;
+    background:#f1f5f9;
 }
 
-.container-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+*{box-sizing:border-box;}
 
-    width: 100%;
-    height: 100vh;
-
-    gap: 4px;
-    padding: 4px;
+.container-grid{
+    width:100%;
+    height:100vh;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+    padding:18px;
 }
 
-.form-card {
-    background: white;
-
-    display: flex;
-    flex-direction: column;
-
-    width: 100%;
-    height: 100%;
-
-    overflow: hidden;
-
-    border-radius: 8px;
-    border: 1px solid #d1d5db;
+.form-card{
+    background:#fff;
+    border-radius:20px;
+    border:1px solid #e5e7eb;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+    box-shadow:0 8px 24px rgba(0,0,0,.06);
 }
 
-.form-header {
-    padding: 10px 14px;
-
-    color: white;
-    font-size: 15px;
-    font-weight: bold;
+.form-header{
+    padding:16px 20px;
+    color:white;
+    font-weight:700;
 }
 
-.blue {
-    background: #2563eb;
+.blue{background:linear-gradient(135deg,#2563eb,#1d4ed8);}
+.green{background:linear-gradient(135deg,#16a34a,#15803d);}
+
+.form-body{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    padding:18px;
+    overflow:hidden;
 }
 
-.green {
-    background: #16a34a;
+.big-textarea{
+    flex:1;
+    border:1px solid #e5e7eb;
+    border-radius:16px;
+    padding:14px;
+    resize:none;
+    background:#fbfcfd;
 }
 
-.form-body {
-    flex: 1;
-
-    display: flex;
-    flex-direction: column;
-
-    gap: 8px;
-
-    padding: 10px;
-
-    overflow: hidden;
+.output-textarea{
+    height:130px;
+    border:1px solid #e5e7eb;
+    border-radius:16px;
+    padding:12px;
+    resize:none;
+    background:#f8fafc;
 }
 
-.big-textarea {
-    width: 100%;
-
-    flex: 1;
-
-    min-height: 180px;
-
-    border: 1px solid #ccc;
-    border-radius: 8px;
-
-    padding: 10px;
-
-    resize: none;
-
-    font-size: 14px;
+.input-row{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
 }
 
-.output-textarea {
-    width: 100%;
-
-    height: 120px;
-
-    border: 1px solid #ccc;
-    border-radius: 8px;
-
-    padding: 10px;
-
-    resize: none;
-
-    background: #f9fafb;
-
-    font-size: 13px;
+.input-row input{
+    padding:12px;
+    border-radius:14px;
+    border:1px solid #e5e7eb;
 }
 
-.input-row {
-    display: flex;
-    gap: 6px;
+.label{
+    font-weight:700;
+    font-size:13px;
 }
 
-.input-row input {
-    flex: 1;
-
-    padding: 9px;
-
-    border-radius: 8px;
-    border: 1px solid #ccc;
+.section{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
 }
 
-.label {
-    font-size: 13px;
-    font-weight: bold;
+/* TOGGLE */
+.toggle-group{
+    display:flex;
+    gap:10px;
 }
 
-.radio-group {
-    display: flex;
-    gap: 16px;
-
-    font-size: 13px;
+.toggle-btn{
+    flex:1;
+    padding:10px;
+    border-radius:12px;
+    border:1px solid #e5e7eb;
+    background:#f8fafc;
+    cursor:pointer;
+    font-weight:600;
 }
 
-.section {
-    flex: 1;
-
-    display: flex;
-    flex-direction: column;
-
-    gap: 6px;
+.toggle-btn.active{
+    background:#2563eb;
+    color:white;
+    border-color:#2563eb;
 }
 
-.copy-btn,
-.clear-btn {
-
-    width: 100%;
-
-    border: none;
-
-    padding: 9px;
-
-    border-radius: 8px;
-
-    color: white;
-
-    font-weight: 600;
-
-    cursor: pointer;
+/* BUTTON */
+.copy-btn,.clear-btn{
+    width:100%;
+    padding:12px;
+    border:none;
+    border-radius:14px;
+    color:white;
+    font-weight:600;
+    cursor:pointer;
 }
 
-.copy-blue {
-    background: #2563eb;
+.copy-blue{background:#2563eb;}
+.copy-indigo{background:#6366f1;}
+.copy-green{background:#16a34a;}
+.copy-teal{background:#14b8a6;}
+.clear-btn{background:#6b7280;}
+
+/* TOAST */
+.toast{
+    position:fixed;
+    bottom:20px;
+    right:20px;
+    background:#111827;
+    color:white;
+    padding:10px 16px;
+    border-radius:10px;
+    opacity:0;
+    transition:.3s;
 }
 
-.copy-indigo {
-    background: #6366f1;
-}
+.toast.show{opacity:1;}
 
-.copy-green {
-    background: #16a34a;
-}
-
-.copy-teal {
-    background: #14b8a6;
-}
-
-.clear-btn {
-    background: #9ca3af;
-}
-
-@media (max-width: 900px) {
-
-    body {
-        overflow: auto;
-    }
-
-    .container-grid {
-        grid-template-columns: 1fr;
-        height: auto;
-    }
-
+@media(max-width:900px){
+    .container-grid{grid-template-columns:1fr;height:auto;}
+    body{overflow:auto;}
 }
 
 </style>
-
 </head>
 
 <body>
 
 <div class="container-grid">
 
-<!-- ================= FORM 1 ================= -->
-
+<!-- FORM 1 -->
 <div class="form-card">
-
-<div class="form-header blue">
-Form Verifikasi 1
-</div>
+<div class="form-header blue">Form Verifikasi 1</div>
 
 <div class="form-body">
 
-<textarea
-id="input1"
-class="big-textarea"
-placeholder="Paste dari request provider..."
-></textarea>
+<textarea id="input1" class="big-textarea" placeholder="Paste data..."></textarea>
 
 <div class="input-row">
-
 <input id="beam1" placeholder="Beam">
 <input id="sqf1" placeholder="SQF">
 <input id="esno1" placeholder="ESNO">
-
 </div>
 
 <div>
+<div class="label">Latitude & Longitude</div>
 
-<div class="label" style="color:red;">
-Status Latitude dan Longitude:
+<div class="toggle-group">
+<button type="button" id="lat1-sesuai" class="toggle-btn">Sesuai</button>
+<button type="button" id="lat1-belum" class="toggle-btn">Belum</button>
 </div>
-
-<div class="radio-group">
-
-<label>
-<input type="radio" name="lat1" value="Sesuai">
-✅ Sesuai
-</label>
-
-<label>
-<input type="radio" name="lat1" value="Belum">
-❌ Belum
-</label>
-
 </div>
-
-</div>
-
-<!-- VERIF -->
 
 <div class="section">
-
-<div class="label">
-Verifikasi
+<div class="label">Verifikasi</div>
+<textarea id="verif1" class="output-textarea"></textarea>
+<button onclick="copyText('verif1')" class="copy-btn copy-blue">Copy</button>
 </div>
-
-<textarea
-id="verif1"
-class="output-textarea flex-1"
-></textarea>
-
-<button
-onclick="copyText('verif1')"
-class="copy-btn copy-blue"
->
-📋 Copy Verifikasi
-</button>
-
-</div>
-
-<!-- TEMP -->
 
 <div class="section">
-
-<div class="label">
-Temporary
+<div class="label">Temporary</div>
+<textarea id="temp1" class="output-textarea"></textarea>
+<button onclick="copyText('temp1')" class="copy-btn copy-indigo">Copy</button>
 </div>
 
-<textarea
-id="temp1"
-class="output-textarea flex-1"
-></textarea>
-
-<button
-onclick="copyText('temp1')"
-class="copy-btn copy-indigo"
->
-📋 Copy Temporary
-</button>
+<button onclick="clearForm(1)" class="clear-btn">Clear</button>
 
 </div>
-
-<button
-onclick="clearForm(1)"
-class="clear-btn"
->
-Clear
-</button>
-
 </div>
 
-</div>
-
-
-<!-- ================= FORM 2 ================= -->
-
+<!-- FORM 2 -->
 <div class="form-card">
-
-<div class="form-header green">
-Form Verifikasi 2
-</div>
+<div class="form-header green">Form Verifikasi 2</div>
 
 <div class="form-body">
 
-<textarea
-id="input2"
-class="big-textarea"
-placeholder="Paste dari request provider..."
-></textarea>
+<textarea id="input2" class="big-textarea" placeholder="Paste data..."></textarea>
 
 <div class="input-row">
-
 <input id="beam2" placeholder="Beam">
 <input id="sqf2" placeholder="SQF">
 <input id="esno2" placeholder="ESNO">
-
 </div>
 
 <div>
+<div class="label">Latitude & Longitude</div>
 
-<div class="label" style="color:red;">
-Status Latitude dan Longitude:
+<div class="toggle-group">
+<button type="button" id="lat2-sesuai" class="toggle-btn">Sesuai</button>
+<button type="button" id="lat2-belum" class="toggle-btn">Belum</button>
 </div>
-
-<div class="radio-group">
-
-<label>
-<input type="radio" name="lat2" value="Sesuai">
-✅ Sesuai
-</label>
-
-<label>
-<input type="radio" name="lat2" value="Belum">
-❌ Belum
-</label>
-
 </div>
-
-</div>
-
-<!-- VERIF -->
 
 <div class="section">
-
-<div class="label">
-Verifikasi
+<div class="label">Verifikasi</div>
+<textarea id="verif2" class="output-textarea"></textarea>
+<button onclick="copyText('verif2')" class="copy-btn copy-green">Copy</button>
 </div>
-
-<textarea
-id="verif2"
-class="output-textarea flex-1"
-></textarea>
-
-<button
-onclick="copyText('verif2')"
-class="copy-btn copy-green"
->
-📋 Copy Verifikasi
-</button>
-
-</div>
-
-<!-- TEMP -->
 
 <div class="section">
-
-<div class="label">
-Temporary
+<div class="label">Temporary</div>
+<textarea id="temp2" class="output-textarea"></textarea>
+<button onclick="copyText('temp2')" class="copy-btn copy-teal">Copy</button>
 </div>
 
-<textarea
-id="temp2"
-class="output-textarea flex-1"
-></textarea>
-
-<button
-onclick="copyText('temp2')"
-class="copy-btn copy-teal"
->
-📋 Copy Temporary
-</button>
+<button onclick="clearForm(2)" class="clear-btn">Clear</button>
 
 </div>
-
-<button
-onclick="clearForm(2)"
-class="clear-btn"
->
-Clear
-</button>
-
 </div>
 
 </div>
 
-</div>
-
+<div id="toast" class="toast">Copied!</div>
 
 <script>
 
-function update(f) {
+let latState = {1:null,2:null};
 
-    const input =
-        document.getElementById(`input${f}`).value;
+function setupToggle(f){
 
-    const beam =
-        document.getElementById(`beam${f}`).value;
+    const yes = document.getElementById(`lat${f}-sesuai`);
+    const no  = document.getElementById(`lat${f}-belum`);
 
-    const sqf =
-        document.getElementById(`sqf${f}`).value;
+    function render(){
+        yes.classList.remove('active');
+        no.classList.remove('active');
 
-    const esno =
-        document.getElementById(`esno${f}`).value;
+        if(latState[f]==='Sesuai') yes.classList.add('active');
+        if(latState[f]==='Belum') no.classList.add('active');
+    }
 
-    const selected =
-        document.querySelector(`input[name="lat${f}"]:checked`)?.value;
+    yes.onclick = () => {
+        latState[f] = (latState[f]==='Sesuai') ? null : 'Sesuai';
+        render(); update(f);
+    }
+
+    no.onclick = () => {
+        latState[f] = (latState[f]==='Belum') ? null : 'Belum';
+        render(); update(f);
+    }
+
+    render();
+}
+
+[1,2].forEach(setupToggle);
+
+function update(f){
+
+    const input = document.getElementById(`input${f}`).value;
+    const beam  = document.getElementById(`beam${f}`).value;
+    const sqf   = document.getElementById(`sqf${f}`).value;
+    const esno  = document.getElementById(`esno${f}`).value;
+
+    const selected = latState[f];
 
     let latText = '';
 
-    if (selected === 'Sesuai') {
-        latText = 'Latitude dan Longtitude Sudah Sesuai';
-    }
-
-    else if (selected === 'Belum') {
-        latText = 'Latitude dan Longtitude Belum Sesuai';
-    }
+    if(selected==='Sesuai') latText='Latitude dan Longitude Sudah Sesuai';
+    if(selected==='Belum') latText='Latitude dan Longitude Belum Sesuai';
 
     document.getElementById(`verif${f}`).value =
-`*Summary sudah sesuai standarisasi*
+`*Summary*
 
 ${input}
 
-*Note : -*  
-*Beam : ${beam}*  
-*SQF : ${sqf}*  
-*ESNO : ${esno}*  
+*Beam : ${beam}*
+*SQF : ${sqf}*
+*ESNO : ${esno}*
 *${latText}*`;
 
     document.getElementById(`temp${f}`).value =
-`*Summary Temporary*
+`*Temporary*
 
 ${input}
 
-*Note : XPOLL Belum Lolos (RECHECK), SQF dan ESNO Sesuai Standarisasi*  
-*Beam : ${beam}*  
-*SQF : ${sqf}*  
-*ESNO : ${esno}*  
+*Beam : ${beam}*
+*SQF : ${sqf}*
+*ESNO : ${esno}*
 *${latText}*`;
-
 }
 
-[1,2].forEach(f => {
-
-    ['input','beam','sqf','esno']
-    .forEach(id => {
-
-        document
-        .getElementById(id + f)
-        .addEventListener('input', () => update(f));
-
-    });
-
-    document
-    .querySelectorAll(`input[name="lat${f}"]`)
-    .forEach(r => {
-
-        r.addEventListener('change', () => {
-            update(f);
-        });
-
-    });
-
+[1,2].forEach(f=>{
+['input','beam','sqf','esno'].forEach(id=>{
+document.getElementById(id+f).addEventListener('input',()=>update(f));
+});
 });
 
-function copyText(id) {
-
-    const el = document.getElementById(id);
-
-    navigator.clipboard.writeText(el.value);
-
+function copyText(id){
+navigator.clipboard.writeText(document.getElementById(id).value);
+const t=document.getElementById("toast");
+t.classList.add("show");
+setTimeout(()=>t.classList.remove("show"),1200);
 }
 
-function clearForm(f) {
+function clearForm(f){
 
-    ['input','beam','sqf','esno','verif','temp']
-    .forEach(id => {
+['input','beam','sqf','esno','verif','temp'].forEach(id=>{
+document.getElementById(id+f).value='';
+});
 
-        document.getElementById(id + f).value = '';
-
-    });
-
-    document
-    .querySelectorAll(`input[name="lat${f}"]`)
-    .forEach(r => {
-
-        r.checked = false;
-
-    });
-
+latState[f]=null;
+setupToggle(f);
+update(f);
 }
 
 </script>

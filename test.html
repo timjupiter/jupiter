@@ -1,220 +1,1459 @@
-<!DOCTYPE html><html lang="id"><head><meta charset="UTF-8"><!-- This site is hosted on Netlify. Anyone can build and deploy a site     like this one for free: https://netlify.new/?utm_campaign=ai-legible&utm_source=comment&utm_medium=referral&utm_id=4cbcb6ff-1746-47cb-90f5-dcdda4791810     Netlify hosting facts for this site: static/SSR served via Netlify Edge. --><meta name="hosting-provider" content="Netlify"><meta name="netlify-deploy" content="https://netlify.new/?utm_campaign=ai-legible&amp;utm_source=meta&amp;utm_medium=referral&amp;utm_id=4cbcb6ff-1746-47cb-90f5-dcdda4791810"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>XPOLL SATDIV REALTIME</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-html,body{    margin:0;    padding:0;    font-family:Segoe UI,sans-serif;    background:#f1f5f9;}
-.container-grid{    display:grid;    grid-template-columns:repeat(3,1fr);    gap:18px;    padding:18px;}
-.form-card{    background:#fff;    border-radius:20px;    overflow:hidden;    box-shadow:0 8px 24px rgba(0,0,0,.06);    display:flex;    flex-direction:column;}
-.form-header{    padding:14px;    color:#fff;    text-align:center;    font-weight:700;    transition:.3s;    line-height:1.4;}
-.frq-input{    background:transparent;    border:1px dashed rgba(255,255,255,0.6);    color:#fff;    font-size:18px;    font-weight:700;    text-align:center;    width:80%;    margin:0 auto 4px auto;    outline:none;    border-radius:6px;    padding:2px 4px;}
-.frq-input:focus{    border-color:#fff;    background:rgba(255,255,255,0.2);}
-.blue{background:linear-gradient(135deg,#2563eb,#1d4ed8);}.red{background:linear-gradient(135deg,#dc2626,#b91c1c);}.green{background:linear-gradient(135deg,#16a34a,#15803d);}
-.body{    padding:16px;    display:flex;    flex-direction:column;    gap:10px;}
-input,select{    padding:10px;    border:1px solid #e5e7eb;    border-radius:12px;}
-.label{    font-size:12px;    font-weight:700;}
-.provider{    padding:10px;    border:1px solid #e5e7eb;    border-radius:12px;    background:#f8fafc;}
-.btn-row{    display:flex;    gap:10px;}
-button{    flex:1;    padding:10px;    border:none;    border-radius:12px;    cursor:pointer;    font-weight:700;}
-.copy{background:#2563eb;color:#fff;}.clear{background:#6b7280;color:#fff;}
-.toast{    position:fixed;    bottom:20px;    left:50%;    transform:translateX(-50%);    background:#111827;    color:#fff;    padding:12px 18px;    border-radius:12px;    opacity:0;    transition:.3s;    text-align:center;    white-space:pre-line;    line-height:1.4;}
-.toast.show{opacity:1;}
-@media(max-width:900px){    .container-grid{grid-template-columns:1fr;}}
-</style></head>
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>XPOLL SATDIV REALTIME</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Segoe UI, sans-serif;
+            background: #f1f5f9;
+        }
+
+        .container-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            padding: 18px;
+        }
+
+        .form-card {
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, .06);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-header {
+            padding: 14px;
+            color: #fff;
+            text-align: center;
+            font-weight: 700;
+            transition: .3s;
+            line-height: 1.4;
+        }
+
+        .frq-input {
+            background: transparent;
+            border: 1px dashed rgba(255, 255, 255, 0.6);
+            color: #fff;
+            font-size: 18px;
+            font-weight: 700;
+            text-align: center;
+            width: 80%;
+            margin: 0 auto 4px auto;
+            outline: none;
+            border-radius: 6px;
+            padding: 2px 4px;
+        }
+
+        .frq-input:focus {
+            border-color: #fff;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .blue {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        }
+
+        .red {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+        }
+
+        .green {
+            background: linear-gradient(135deg, #16a34a, #15803d);
+        }
+
+        .body {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        input,
+        select {
+            padding: 10px;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .label {
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .provider {
+            padding: 10px;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            background: #f8fafc;
+            min-height: 18px;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .copy {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        .clear {
+            background: #6b7280;
+            color: #fff;
+        }
+
+        button:active {
+            transform: scale(.98);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #111827;
+            color: #fff;
+            padding: 12px 18px;
+            border-radius: 12px;
+            opacity: 0;
+            transition: .3s;
+            text-align: center;
+            white-space: pre-line;
+            line-height: 1.4;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        .connection-status {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 6px 10px;
+            border-radius: 8px;
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            z-index: 9999;
+        }
+
+        .online {
+            background: #16a34a;
+        }
+
+        .offline {
+            background: #dc2626;
+        }
+
+        .loading {
+            background: #f59e0b;
+        }
+
+        @media(max-width: 900px) {
+            .container-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
 <body>
-<div class="container-grid" id="app"></div>
-<div class="toast" id="toast">COPIED ✓</div>
-<script>
-// ================= SUPABASE =================
-const SUPABASE_URL = "https://eaqmgrchnbetoetojdgu.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVhcW1ncmNobmJldG9ldG9qZGd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwODY2NzEsImV4cCI6MjA5NjY2MjY3MX0.7v3yBoDiQbX1Y3Ass75MyaehdbiK0EjDPIIQKYdioM8";
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// ================= DATA =================
-let FRQ_LIST = ["60143000","60144000","60145000"];
-const PROVIDER = {"1":"BRI","2":"PT. TELEKOMUNIKASI INDONESIA","3":"PT. SATKOMINDO MEDIYASA","4":"PT. TANGARA MITRAKOM","5":"PT. PASIFIK SATELIT NUSANTARA","6":"PT. PATRA TELEKOMUNIKASI INDONESIA","7":"TELKOMSEL","8":"INDOSAT","9":"XL","A":"PT. Indonesia Comnets Plus","B":"PT. CSM","C":"PT. LINTASARTA","D":"PT. TELKOMCELL","E":"PT. Mega Akses Persada","F":"PT. INDUSTRI TELEKOMUNIKASI INDONESIA","G":"SATLINK","H":"PT. Mora Telematika Indonesia","K":"PT. TELKOMSAT"};
+    <div id="connection-status" class="connection-status loading">
+        CONNECTING...
+    </div>
 
-// ================= RENDER UI =================
-const app = document.getElementById("app");
+    <div class="container-grid" id="app"></div>
 
-function renderApp() {
-    app.innerHTML = "";
-    FRQ_LIST.forEach((frq, idx) => {
-        app.innerHTML += `<div class="form-card" id="card-${idx}">
-        <div class="form-header blue" id="header-${idx}">
-            <input class="frq-input" id="frq-val-${idx}" value="${frq}" onchange="onFrqChange(${idx})">
-            <div id="status-text-${idx}">AVAILABLE</div>
-        </div>
-        <div class="body">
-        <div class="label">ESN</div><input id="esn-${idx}" oninput="onFieldInput(${idx})">
-        <div class="label">SITE ID</div><input id="site-${idx}" oninput="onFieldInput(${idx})">
-        <div class="label">LFT</div><input id="lft-${idx}" oninput="onFieldInput(${idx})">
-        <div class="label">EXECUTOR</div><select id="exec-${idx}" onchange="onFieldInput(${idx})"><option value="" selected>-- PILIH --</option><option>RAGUNAN</option><option>TABANAN</option></select>
-        <div class="label">PROVIDER</div><div class="provider" id="prov-${idx}">-</div>
-        <div class="btn-row"><button class="copy" onclick="copyData(${idx})">COPY</button><button class="clear" onclick="clearCard(${idx})">CLEAR</button></div>
-        </div></div>`;
-    });
-}
-renderApp();
+    <div class="toast" id="toast">
+        COPIED ✓
+    </div>
 
-// ================= DEBOUNCE HELPER =================
-const debounceTimers = {};
-function debounce(key, fn, delay = 400){
-    clearTimeout(debounceTimers[key]);
-    debounceTimers[key] = setTimeout(fn, delay);
-}
-const suppressUpsert = {};
 
-// ================= INPUT & FRQ HANDLERS =================
-function onFieldInput(idx){
-    updateLocalUI(idx);
-    if(suppressUpsert[idx]) return;
-    debounce(idx, ()=>saveToSupabase(idx));
-}
+    <script>
 
-async function onFrqChange(idx) {
-    const oldFrq = FRQ_LIST[idx];
-    const newFrq = document.getElementById(`frq-val-${idx}`).value.trim();
-    if (!newFrq) return;
+        // ============================================================
+        // SUPABASE CONFIG
+        // ============================================================
 
-    FRQ_LIST[idx] = newFrq;
-    
-    // Hapus data frekuensi lama dari Supabase jika frekuensi berubah
-    if (oldFrq !== newFrq) {
-        await supabaseClient.from("satdiv_xpoll").delete().eq("frq", oldFrq);
-    }
-    
-    saveToSupabase(idx);
-}
+        const SUPABASE_URL =
+            "https://eaqmgrchnbetoetojdgu.supabase.co";
 
-// ================= UPDATE UI (LOKAL) =================
-function updateLocalUI(idx){
-    const frq = document.getElementById(`frq-val-${idx}`).value;
-    const esn = document.getElementById(`esn-${idx}`).value;
-    const header = document.getElementById(`header-${idx}`);
-    const statusText = document.getElementById(`status-text-${idx}`);
+        const SUPABASE_KEY =
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVhcW1ncmNobmJldG9ldG9qZGd1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODEwODY2NzEsImV4cCI6MjA5NjY2MjY3MX0.7v3yBoDiQbX1Y3Ass75MyaehdbiK0EjDPIIQKYdioM8";
 
-    if(esn){
-        header.className = "form-header red";
-        const now = new Date();
-        const hari = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
-        const dateString = `${hari[now.getDay()]}, ${now.toLocaleString("id-ID")} WIB`;
-        statusText.innerHTML = `<div>Onprogres</div><div>${dateString}</div>`;
-    }else{
-        header.className = "form-header blue";
-        statusText.innerHTML = `AVAILABLE`;
-    }
+        const supabaseClient =
+            window.supabase.createClient(
+                SUPABASE_URL,
+                SUPABASE_KEY
+            );
 
-    // Provider calculation
-    const site = document.getElementById(`site-${idx}`).value;
-    const p = site ? (PROVIDER[site.charAt(0).toUpperCase()] || "CHECK SITE ID") : "-";
-    document.getElementById(`prov-${idx}`).innerText = p;
 
-    return { frq, esn, site, provider: p };
-}
+        // ============================================================
+        // DATA
+        // ============================================================
 
-// ================= SAVE TO SUPABASE =================
-async function saveToSupabase(idx){
-    const frq  = document.getElementById(`frq-val-${idx}`).value;
-    const esn  = document.getElementById(`esn-${idx}`).value;
-    const site = document.getElementById(`site-${idx}`).value;
-    const lft  = document.getElementById(`lft-${idx}`).value;
-    const exec = document.getElementById(`exec-${idx}`).value;
-    const provider = site ? (PROVIDER[site.charAt(0).toUpperCase()] || "CHECK SITE ID") : "-";
+        let FRQ_LIST = [
+            "60143000",
+            "60144000",
+            "60145000"
+        ];
 
-    const { error } = await supabaseClient.from("satdiv_xpoll").upsert({
-        frq,
-        esn,
-        site_id: site,
-        lft,
-        executor: exec,
-        provider,
-        status: esn ? "ONPROGRES" : "AVAILABLE",
-        updated_at: new Date().toISOString()
-    }, { onConflict: "frq" });
+        const PROVIDER = {
+            "1": "BRI",
+            "2": "PT. TELEKOMUNIKASI INDONESIA",
+            "3": "PT. SATKOMINDO MEDIYASA",
+            "4": "PT. TANGARA MITRAKOM",
+            "5": "PT. PASIFIK SATELIT NUSANTARA",
+            "6": "PT. PATRA TELEKOMUNIKASI INDONESIA",
+            "7": "TELKOMSEL",
+            "8": "INDOSAT",
+            "9": "XL",
+            "A": "PT. Indonesia Comnets Plus",
+            "B": "PT. CSM",
+            "C": "PT. LINTASARTA",
+            "D": "PT. TELKOMCELL",
+            "E": "PT. Mega Akses Persada",
+            "F": "PT. INDUSTRI TELEKOMUNIKASI INDONESIA",
+            "G": "SATLINK",
+            "H": "PT. Mora Telematika Indonesia",
+            "K": "PT. TELKOMSAT"
+        };
 
-    if(error){
-        console.error("Supabase upsert error:", error.message);
-        showToast("GAGAL SIMPAN ✗");
-    }
-}
 
-// ================= COPY =================
-function copyData(idx){
-    const frq = document.getElementById(`frq-val-${idx}`).value;
-    const text = `ESN : ${document.getElementById(`esn-${idx}`).value}\nSID : ${document.getElementById(`site-${idx}`).value}\nLFT : ${document.getElementById(`lft-${idx}`).value}\nFRQ : ${frq}\n\n*CW ON*`;
+        // ============================================================
+        // GLOBAL STATE
+        // ============================================================
 
-    if(navigator.clipboard && navigator.clipboard.writeText){
-        navigator.clipboard.writeText(text)
-            .then(()=>showToast("COPIED ✓"))
-            .catch(()=>fallbackCopy(text));
-    } else {
-        fallbackCopy(text);
-    }
-}
+        const app = document.getElementById("app");
 
-function fallbackCopy(text){
-    const ta = document.createElement("textarea");
-    ta.value = text;
-    ta.style.position = "fixed";
-    ta.style.opacity = "0";
-    document.body.appendChild(ta);
-    ta.focus();
-    ta.select();
-    try{
-        document.execCommand("copy");
-        showToast("COPIED ✓");
-    }catch(e){
-        showToast("COPY GAGAL ✗");
-    }
-    document.body.removeChild(ta);
-}
+        const debounceTimers = {};
 
-// ================= CLEAR =================
-function clearCard(idx){
-    document.getElementById(`esn-${idx}`).value="";
-    document.getElementById(`site-${idx}`).value="";
-    document.getElementById(`lft-${idx}`).value="";
-    document.getElementById(`exec-${idx}`).value="";
+        /*
+         * Dipakai supaya perubahan yang datang dari realtime
+         * tidak disimpan kembali ke Supabase.
+         */
+        const suppressUpsert = {};
 
-    updateLocalUI(idx);
-    saveToSupabase(idx);
-}
+        /*
+         * Menandai proses loading awal.
+         */
+        let initialLoading = true;
 
-// ================= REALTIME =================
-supabaseClient.channel("xpoll").on("postgres_changes",
-    { event:"*", schema:"public", table:"satdiv_xpoll" },
-    payload => {
-        const d = payload.new;
-        if(!d || !d.frq) return;
+        /*
+         * Menyimpan status koneksi realtime.
+         */
+        let realtimeReady = false;
 
-        // Cari index kartu yang mencakup frekuensi ini
-        const idx = FRQ_LIST.indexOf(d.frq);
-        if(idx === -1) return;
 
-        suppressUpsert[idx] = true;
+        // ============================================================
+        // RENDER UI
+        // ============================================================
 
-        const esnEl  = document.getElementById(`esn-${idx}`);
-        const siteEl = document.getElementById(`site-${idx}`);
-        const lftEl  = document.getElementById(`lft-${idx}`);
-        const execEl = document.getElementById(`exec-${idx}`);
+        function renderApp() {
 
-        if(esnEl)  esnEl.value  = d.esn || "";
-        if(siteEl) siteEl.value = d.site_id || "";
-        if(lftEl)  lftEl.value  = d.lft || "";
-        if(execEl) execEl.value = d.executor || "";
+            app.innerHTML = "";
 
-        updateLocalUI(idx);
+            FRQ_LIST.forEach((frq, idx) => {
 
-        suppressUpsert[idx] = false;
-    }).subscribe((status, err)=>{
-    if(err) console.error("Realtime subscribe error:", err);
-});
+                app.innerHTML += `
 
-// ================= TOAST =================
-function showToast(message = "COPIED ✓"){
-    const t = document.getElementById("toast");
-    t.innerText = message;
-    t.classList.add("show");
-    setTimeout(()=>t.classList.remove("show"),1200);
-}
-</script>
-</body></html>
+                    <div class="form-card" id="card-${idx}">
+
+                        <div
+                            class="form-header blue"
+                            id="header-${idx}"
+                        >
+
+                            <input
+                                class="frq-input"
+                                id="frq-val-${idx}"
+                                value="${escapeHtml(frq)}"
+                                onchange="onFrqChange(${idx})"
+                            >
+
+                            <div id="status-text-${idx}">
+                                AVAILABLE
+                            </div>
+
+                        </div>
+
+
+                        <div class="body">
+
+                            <div class="label">
+                                ESN
+                            </div>
+
+                            <input
+                                id="esn-${idx}"
+                                autocomplete="off"
+                                oninput="onFieldInput(${idx})"
+                            >
+
+
+                            <div class="label">
+                                SITE ID
+                            </div>
+
+                            <input
+                                id="site-${idx}"
+                                autocomplete="off"
+                                oninput="onFieldInput(${idx})"
+                            >
+
+
+                            <div class="label">
+                                LFT
+                            </div>
+
+                            <input
+                                id="lft-${idx}"
+                                autocomplete="off"
+                                oninput="onFieldInput(${idx})"
+                            >
+
+
+                            <div class="label">
+                                EXECUTOR
+                            </div>
+
+                            <select
+                                id="exec-${idx}"
+                                onchange="onFieldInput(${idx})"
+                            >
+
+                                <option value="" selected>
+                                    -- PILIH --
+                                </option>
+
+                                <option value="RAGUNAN">
+                                    RAGUNAN
+                                </option>
+
+                                <option value="TABANAN">
+                                    TABANAN
+                                </option>
+
+                            </select>
+
+
+                            <div class="label">
+                                PROVIDER
+                            </div>
+
+                            <div
+                                class="provider"
+                                id="prov-${idx}"
+                            >
+                                -
+                            </div>
+
+
+                            <div class="btn-row">
+
+                                <button
+                                    class="copy"
+                                    onclick="copyData(${idx})"
+                                >
+                                    COPY
+                                </button>
+
+                                <button
+                                    class="clear"
+                                    onclick="clearCard(${idx})"
+                                >
+                                    CLEAR
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                `;
+            });
+        }
+
+
+        // ============================================================
+        // ESCAPE HTML
+        // ============================================================
+
+        function escapeHtml(value) {
+
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+
+        // ============================================================
+        // DEBOUNCE
+        // ============================================================
+
+        function debounce(key, fn, delay = 400) {
+
+            clearTimeout(debounceTimers[key]);
+
+            debounceTimers[key] =
+                setTimeout(fn, delay);
+        }
+
+
+        // ============================================================
+        // INPUT HANDLER
+        // ============================================================
+
+        function onFieldInput(idx) {
+
+            updateLocalUI(idx);
+
+            if (suppressUpsert[idx]) {
+                return;
+            }
+
+            debounce(
+                idx,
+                () => saveToSupabase(idx),
+                400
+            );
+        }
+
+
+        // ============================================================
+        // FRQ CHANGE
+        // ============================================================
+
+        async function onFrqChange(idx) {
+
+            const input =
+                document.getElementById(`frq-val-${idx}`);
+
+            if (!input) return;
+
+            const oldFrq =
+                FRQ_LIST[idx];
+
+            const newFrq =
+                input.value.trim();
+
+            if (!newFrq) {
+
+                input.value = oldFrq;
+
+                showToast(
+                    "FRQ TIDAK BOLEH KOSONG ✗"
+                );
+
+                return;
+            }
+
+
+            if (oldFrq === newFrq) {
+                return;
+            }
+
+
+            /*
+             * Cek apakah FRQ baru sudah dipakai.
+             */
+
+            const { data: existing, error: checkError } =
+                await supabaseClient
+                    .from("satdiv_xpoll")
+                    .select("frq")
+                    .eq("frq", newFrq)
+                    .maybeSingle();
+
+
+            if (checkError) {
+
+                console.error(
+                    "FRQ check error:",
+                    checkError.message
+                );
+
+                input.value = oldFrq;
+
+                showToast(
+                    "GAGAL CEK FRQ ✗"
+                );
+
+                return;
+            }
+
+
+            if (existing) {
+
+                input.value = oldFrq;
+
+                showToast(
+                    "FRQ SUDAH DIGUNAKAN ✗"
+                );
+
+                return;
+            }
+
+
+            /*
+             * Hapus data FRQ lama.
+             */
+
+            const { error: deleteError } =
+                await supabaseClient
+                    .from("satdiv_xpoll")
+                    .delete()
+                    .eq("frq", oldFrq);
+
+
+            if (deleteError) {
+
+                console.error(
+                    "Delete old FRQ error:",
+                    deleteError.message
+                );
+
+                input.value = oldFrq;
+
+                showToast(
+                    "GAGAL GANTI FRQ ✗"
+                );
+
+                return;
+            }
+
+
+            FRQ_LIST[idx] = newFrq;
+
+
+            /*
+             * Simpan isi kartu menggunakan FRQ baru.
+             */
+
+            await saveToSupabase(idx);
+
+            showToast(
+                "FRQ BERHASIL DIUBAH ✓"
+            );
+        }
+
+
+        // ============================================================
+        // UPDATE LOCAL UI
+        // ============================================================
+
+        function updateLocalUI(idx) {
+
+            const frq =
+                document.getElementById(
+                    `frq-val-${idx}`
+                ).value;
+
+            const esn =
+                document.getElementById(
+                    `esn-${idx}`
+                ).value.trim();
+
+            const site =
+                document.getElementById(
+                    `site-${idx}`
+                ).value.trim();
+
+
+            const header =
+                document.getElementById(
+                    `header-${idx}`
+                );
+
+            const statusText =
+                document.getElementById(
+                    `status-text-${idx}`
+                );
+
+
+            if (esn) {
+
+                header.className =
+                    "form-header red";
+
+                const now =
+                    new Date();
+
+                const hari = [
+                    "Minggu",
+                    "Senin",
+                    "Selasa",
+                    "Rabu",
+                    "Kamis",
+                    "Jumat",
+                    "Sabtu"
+                ];
+
+                const dateString =
+                    `${hari[now.getDay()]}, ` +
+                    `${now.toLocaleString("id-ID")} WIB`;
+
+                statusText.innerHTML =
+                    `<div>Onprogres</div>
+                     <div>${dateString}</div>`;
+
+            } else {
+
+                header.className =
+                    "form-header blue";
+
+                statusText.innerHTML =
+                    "AVAILABLE";
+            }
+
+
+            /*
+             * Provider berdasarkan karakter pertama Site ID.
+             */
+
+            const firstChar =
+                site
+                    ? site.charAt(0).toUpperCase()
+                    : "";
+
+            const provider =
+                site
+                    ? (
+                        PROVIDER[firstChar]
+                        || "CHECK SITE ID"
+                    )
+                    : "-";
+
+
+            document.getElementById(
+                `prov-${idx}`
+            ).innerText = provider;
+
+
+            return {
+                frq,
+                esn,
+                site,
+                provider
+            };
+        }
+
+
+        // ============================================================
+        // SAVE TO SUPABASE
+        // ============================================================
+
+        async function saveToSupabase(idx) {
+
+            /*
+             * Jangan simpan ketika sedang menerima
+             * data dari realtime.
+             */
+
+            if (suppressUpsert[idx]) {
+                return;
+            }
+
+
+            const frq =
+                document.getElementById(
+                    `frq-val-${idx}`
+                ).value.trim();
+
+            const esn =
+                document.getElementById(
+                    `esn-${idx}`
+                ).value.trim();
+
+            const site =
+                document.getElementById(
+                    `site-${idx}`
+                ).value.trim();
+
+            const lft =
+                document.getElementById(
+                    `lft-${idx}`
+                ).value.trim();
+
+            const exec =
+                document.getElementById(
+                    `exec-${idx}`
+                ).value;
+
+
+            if (!frq) {
+                return;
+            }
+
+
+            const firstChar =
+                site
+                    ? site.charAt(0).toUpperCase()
+                    : "";
+
+            const provider =
+                site
+                    ? (
+                        PROVIDER[firstChar]
+                        || "CHECK SITE ID"
+                    )
+                    : "-";
+
+
+            const payload = {
+
+                frq: frq,
+
+                esn: esn,
+
+                site_id: site,
+
+                lft: lft,
+
+                executor: exec,
+
+                provider: provider,
+
+                status:
+                    esn
+                        ? "ONPROGRES"
+                        : "AVAILABLE",
+
+                updated_at:
+                    new Date().toISOString()
+            };
+
+
+            const { error } =
+                await supabaseClient
+                    .from("satdiv_xpoll")
+                    .upsert(
+                        payload,
+                        {
+                            onConflict: "frq"
+                        }
+                    );
+
+
+            if (error) {
+
+                console.error(
+                    "Supabase upsert error:",
+                    error
+                );
+
+                showToast(
+                    "GAGAL SIMPAN ✗"
+                );
+
+                return;
+            }
+
+
+            console.log(
+                "Data tersimpan:",
+                payload
+            );
+        }
+
+
+        // ============================================================
+        // LOAD DATA DARI SUPABASE
+        // ============================================================
+
+        async function loadFromSupabase() {
+
+            console.log(
+                "Loading data dari Supabase..."
+            );
+
+
+            const { data, error } =
+                await supabaseClient
+                    .from("satdiv_xpoll")
+                    .select("*")
+                    .in("frq", FRQ_LIST);
+
+
+            if (error) {
+
+                console.error(
+                    "Gagal load data:",
+                    error
+                );
+
+                setConnectionStatus(
+                    "offline",
+                    "DATABASE ERROR"
+                );
+
+                showToast(
+                    "GAGAL LOAD DATA ✗"
+                );
+
+                initialLoading = false;
+
+                return;
+            }
+
+
+            console.log(
+                "Data dari Supabase:",
+                data
+            );
+
+
+            /*
+             * Isi masing-masing kartu.
+             */
+
+            data.forEach(d => {
+
+                const idx =
+                    FRQ_LIST.indexOf(
+                        d.frq
+                    );
+
+                if (idx === -1) {
+                    return;
+                }
+
+
+                suppressUpsert[idx] =
+                    true;
+
+
+                const esnEl =
+                    document.getElementById(
+                        `esn-${idx}`
+                    );
+
+                const siteEl =
+                    document.getElementById(
+                        `site-${idx}`
+                    );
+
+                const lftEl =
+                    document.getElementById(
+                        `lft-${idx}`
+                    );
+
+                const execEl =
+                    document.getElementById(
+                        `exec-${idx}`
+                    );
+
+
+                if (esnEl) {
+                    esnEl.value =
+                        d.esn || "";
+                }
+
+                if (siteEl) {
+                    siteEl.value =
+                        d.site_id || "";
+                }
+
+                if (lftEl) {
+                    lftEl.value =
+                        d.lft || "";
+                }
+
+                if (execEl) {
+                    execEl.value =
+                        d.executor || "";
+                }
+
+
+                updateLocalUI(idx);
+
+
+                suppressUpsert[idx] =
+                    false;
+            });
+
+
+            initialLoading = false;
+
+
+            console.log(
+                "Load data selesai."
+            );
+        }
+
+
+        // ============================================================
+        // COPY
+        // ============================================================
+
+        function copyData(idx) {
+
+            const frq =
+                document.getElementById(
+                    `frq-val-${idx}`
+                ).value;
+
+            const esn =
+                document.getElementById(
+                    `esn-${idx}`
+                ).value;
+
+            const site =
+                document.getElementById(
+                    `site-${idx}`
+                ).value;
+
+            const lft =
+                document.getElementById(
+                    `lft-${idx}`
+                ).value;
+
+
+            const text =
+                `ESN : ${esn}
+SID : ${site}
+LFT : ${lft}
+FRQ : ${frq}
+
+*CW ON*`;
+
+
+            if (
+                navigator.clipboard &&
+                navigator.clipboard.writeText
+            ) {
+
+                navigator.clipboard
+                    .writeText(text)
+
+                    .then(() => {
+
+                        showToast(
+                            "COPIED ✓"
+                        );
+
+                    })
+
+                    .catch(() => {
+
+                        fallbackCopy(text);
+
+                    });
+
+            } else {
+
+                fallbackCopy(text);
+            }
+        }
+
+
+        // ============================================================
+        // FALLBACK COPY
+        // ============================================================
+
+        function fallbackCopy(text) {
+
+            const ta =
+                document.createElement(
+                    "textarea"
+                );
+
+            ta.value = text;
+
+            ta.style.position =
+                "fixed";
+
+            ta.style.opacity =
+                "0";
+
+            document.body.appendChild(
+                ta
+            );
+
+            ta.focus();
+
+            ta.select();
+
+
+            try {
+
+                document.execCommand(
+                    "copy"
+                );
+
+                showToast(
+                    "COPIED ✓"
+                );
+
+            } catch (e) {
+
+                showToast(
+                    "COPY GAGAL ✗"
+                );
+            }
+
+
+            document.body.removeChild(
+                ta
+            );
+        }
+
+
+        // ============================================================
+        // CLEAR CARD
+        // ============================================================
+
+        async function clearCard(idx) {
+
+            const frq =
+                document.getElementById(
+                    `frq-val-${idx}`
+                ).value.trim();
+
+
+            /*
+             * Kosongkan UI dulu.
+             */
+
+            suppressUpsert[idx] =
+                true;
+
+
+            document.getElementById(
+                `esn-${idx}`
+            ).value = "";
+
+            document.getElementById(
+                `site-${idx}`
+            ).value = "";
+
+            document.getElementById(
+                `lft-${idx}`
+            ).value = "";
+
+            document.getElementById(
+                `exec-${idx}`
+            ).value = "";
+
+
+            updateLocalUI(idx);
+
+
+            suppressUpsert[idx] =
+                false;
+
+
+            /*
+             * Update record menjadi AVAILABLE.
+             *
+             * Jangan DELETE row karena row tersebut
+             * dibutuhkan sebagai record permanen
+             * untuk realtime antar-PC.
+             */
+
+            const { error } =
+                await supabaseClient
+                    .from("satdiv_xpoll")
+                    .upsert(
+                        {
+                            frq: frq,
+                            esn: "",
+                            site_id: "",
+                            lft: "",
+                            executor: "",
+                            provider: "-",
+                            status: "AVAILABLE",
+                            updated_at:
+                                new Date().toISOString()
+                        },
+                        {
+                            onConflict: "frq"
+                        }
+                    );
+
+
+            if (error) {
+
+                console.error(
+                    "Clear error:",
+                    error
+                );
+
+                showToast(
+                    "CLEAR GAGAL ✗"
+                );
+
+                return;
+            }
+
+
+            showToast(
+                "CLEARED ✓"
+            );
+        }
+
+
+        // ============================================================
+        // REALTIME
+        // ============================================================
+
+        function setupRealtime() {
+
+            const channel =
+                supabaseClient
+                    .channel(
+                        "xpoll-realtime"
+                    )
+
+                    .on(
+                        "postgres_changes",
+                        {
+                            event: "*",
+                            schema: "public",
+                            table: "satdiv_xpoll"
+                        },
+
+                        payload => {
+
+                            console.log(
+                                "REALTIME EVENT:",
+                                payload
+                            );
+
+
+                            /*
+                             * Untuk INSERT / UPDATE
+                             * gunakan new.
+                             *
+                             * Untuk DELETE gunakan old.
+                             */
+
+                            const d =
+                                payload.new ||
+                                payload.old;
+
+
+                            if (
+                                !d ||
+                                !d.frq
+                            ) {
+                                return;
+                            }
+
+
+                            const idx =
+                                FRQ_LIST.indexOf(
+                                    d.frq
+                                );
+
+
+                            /*
+                             * Kalau FRQ tidak termasuk
+                             * kartu yang sedang ditampilkan,
+                             * abaikan.
+                             */
+
+                            if (idx === -1) {
+                                return;
+                            }
+
+
+                            suppressUpsert[idx] =
+                                true;
+
+
+                            const esnEl =
+                                document.getElementById(
+                                    `esn-${idx}`
+                                );
+
+                            const siteEl =
+                                document.getElementById(
+                                    `site-${idx}`
+                                );
+
+                            const lftEl =
+                                document.getElementById(
+                                    `lft-${idx}`
+                                );
+
+                            const execEl =
+                                document.getElementById(
+                                    `exec-${idx}`
+                                );
+
+
+                            if (
+                                payload.eventType ===
+                                "DELETE"
+                            ) {
+
+                                if (esnEl) {
+                                    esnEl.value = "";
+                                }
+
+                                if (siteEl) {
+                                    siteEl.value = "";
+                                }
+
+                                if (lftEl) {
+                                    lftEl.value = "";
+                                }
+
+                                if (execEl) {
+                                    execEl.value = "";
+                                }
+
+                            } else {
+
+                                if (esnEl) {
+                                    esnEl.value =
+                                        d.esn || "";
+                                }
+
+                                if (siteEl) {
+                                    siteEl.value =
+                                        d.site_id || "";
+                                }
+
+                                if (lftEl) {
+                                    lftEl.value =
+                                        d.lft || "";
+                                }
+
+                                if (execEl) {
+                                    execEl.value =
+                                        d.executor || "";
+                                }
+                            }
+
+
+                            updateLocalUI(idx);
+
+
+                            suppressUpsert[idx] =
+                                false;
+                        }
+                    )
+
+                    .subscribe(
+                        (status, err) => {
+
+                            console.log(
+                                "Realtime status:",
+                                status
+                            );
+
+
+                            if (err) {
+
+                                console.error(
+                                    "Realtime error:",
+                                    err
+                                );
+
+                                realtimeReady =
+                                    false;
+
+                                setConnectionStatus(
+                                    "offline",
+                                    "REALTIME ERROR"
+                                );
+
+                                return;
+                            }
+
+
+                            if (
+                                status ===
+                                "SUBSCRIBED"
+                            ) {
+
+                                realtimeReady =
+                                    true;
+
+                                setConnectionStatus(
+                                    "online",
+                                    "REALTIME ONLINE"
+                                );
+
+                                console.log(
+                                    "Realtime connected."
+                                );
+
+                            } else if (
+                                status ===
+                                "CHANNEL_ERROR"
+                            ) {
+
+                                realtimeReady =
+                                    false;
+
+                                setConnectionStatus(
+                                    "offline",
+                                    "CHANNEL ERROR"
+                                );
+
+                            } else if (
+                                status ===
+                                "TIMED_OUT"
+                            ) {
+
+                                realtimeReady =
+                                    false;
+
+                                setConnectionStatus(
+                                    "offline",
+                                    "TIMEOUT"
+                                );
+                            }
+                        }
+                    );
+
+
+            return channel;
+        }
+
+
+        // ============================================================
+        // CONNECTION STATUS
+        // ============================================================
+
+        function setConnectionStatus(
+            type,
+            text
+        ) {
+
+            const el =
+                document.getElementById(
+                    "connection-status"
+                );
+
+            if (!el) return;
+
+
+            el.className =
+                "connection-status " +
+                type;
+
+            el.innerText =
+                text;
+        }
+
+
+        // ============================================================
+        // TOAST
+        // ============================================================
+
+        function showToast(
+            message = "COPIED ✓"
+        ) {
+
+            const t =
+                document.getElementById(
+                    "toast"
+                );
+
+            t.innerText =
+                message;
+
+            t.classList.add(
+                "show"
+            );
+
+
+            setTimeout(
+                () => {
+                    t.classList.remove(
+                        "show"
+                    );
+                },
+                1200
+            );
+        }
+
+
+        // ============================================================
+        // INITIALIZE
+        // ============================================================
+
+        async function init() {
+
+            /*
+             * Render kartu terlebih dahulu.
+             */
+
+            renderApp();
+
+
+            /*
+             * Load data lama dari Supabase.
+             *
+             * Ini yang membuat data tidak hilang
+             * ketika browser di-refresh.
+             */
+
+            await loadFromSupabase();
+
+
+            /*
+             * Setelah data awal selesai di-load,
+             * aktifkan realtime.
+             */
+
+            setupRealtime();
+
+
+            /*
+             * Update UI lokal.
+             */
+
+            FRQ_LIST.forEach(
+                (_, idx) => {
+                    updateLocalUI(idx);
+                }
+            );
+        }
+
+
+        // Jalankan aplikasi
+        init();
+
+
+    </script>
+
+</body>
+</html>
